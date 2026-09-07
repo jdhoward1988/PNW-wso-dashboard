@@ -1,0 +1,586 @@
+<div class="pnwcal-widget">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+  .pnwcal-widget{
+    --pnwcal-cream:#EDEAE1;
+    --pnwcal-cream-2:#E2DDCF;
+    --pnwcal-card:#FBFAF6;
+    --pnwcal-ink:#1D1C19;
+    --pnwcal-ink-dim:#635C4E;
+    --pnwcal-ink-faint:#948C7A;
+    --pnwcal-rule:#D7D1C1;
+    --pnwcal-green:#1E3B2A;
+    --pnwcal-green-text:#F3F1E7;
+    --pnwcal-red:#9E3A2E;
+    --pnwcal-gold:#B8822C;
+    --pnwcal-radius:14px;
+    --pnwcal-radius-sm:10px;
+  }
+  .pnwcal-widget, .pnwcal-widget *{box-sizing:border-box;}
+  .pnwcal-widget{
+    background:var(--pnwcal-cream);
+    color:var(--pnwcal-ink);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.5;
+  }
+  .pnwcal-widget h1,.pnwcal-widget h2,.pnwcal-widget h3,.pnwcal-widget .pnwcal-display{
+    font-family:'Poppins', sans-serif;
+    font-weight:700;
+    margin:0;
+  }
+  .pnwcal-widget a{color:inherit;}
+  .pnwcal-wrap{ max-width:1080px; margin:0 auto; padding-left:24px; padding-right:24px; }
+  .pnwcal-wrap-narrow{ max-width:720px; margin:0 auto; padding-left:24px; padding-right:24px; }
+
+  .pnwcal-pill-btn{
+    display:inline-flex; align-items:center; gap:6px;
+    border:1.5px solid currentColor; border-radius:999px; padding:9px 20px;
+    font-family:'Inter', sans-serif; font-weight:600; font-size:11.5px;
+    letter-spacing:0.1em; text-transform:uppercase; text-decoration:none;
+    background:transparent; cursor:pointer; transition:background 0.15s ease, color 0.15s ease;
+    white-space:nowrap; border:1.5px solid currentColor;
+  }
+  .pnwcal-pill-btn.pnwcal-dark{ color:var(--pnwcal-ink); }
+  .pnwcal-pill-btn.pnwcal-dark:hover{ background:var(--pnwcal-ink); color:var(--pnwcal-cream); }
+  .pnwcal-pill-btn.pnwcal-on-green{ color:var(--pnwcal-green-text); }
+  .pnwcal-pill-btn.pnwcal-on-green:hover{ background:var(--pnwcal-green-text); color:var(--pnwcal-green); }
+  .pnwcal-pill-btn.pnwcal-solid{ background:var(--pnwcal-green); border-color:var(--pnwcal-green); color:#fff; }
+  .pnwcal-pill-btn.pnwcal-solid:hover{ background:var(--pnwcal-green-text); color:var(--pnwcal-green); }
+  .pnwcal-pill-btn:focus-visible{ outline:2px solid var(--pnwcal-gold); outline-offset:2px; }
+  .pnwcal-pill-btn:disabled{ opacity:0.6; cursor:default; }
+
+  /* ---------- MISSION / HERO ---------- */
+  .pnwcal-mission{ background:var(--pnwcal-green); color:var(--pnwcal-green-text); padding:26px 0; }
+  .pnwcal-mission p{ margin:0; max-width:760px; font-size:14px; font-weight:500; opacity:0.92; }
+  .pnwcal-hero{ background:var(--pnwcal-green); color:var(--pnwcal-green-text); padding:56px 0 60px; }
+  .pnwcal-hero .pnwcal-eyebrow{ font-size:11.5px; letter-spacing:0.18em; text-transform:uppercase; opacity:0.75; margin-bottom:14px; }
+  .pnwcal-hero h1{ font-size:clamp(38px, 6vw, 64px); line-height:0.98; color:#fff; }
+  .pnwcal-hero .pnwcal-sub{ margin-top:16px; max-width:540px; font-size:15px; font-weight:500; opacity:0.85; }
+  .pnwcal-hero .pnwcal-cta-row{ margin-top:26px; display:flex; gap:12px; flex-wrap:wrap; }
+
+  /* ---------- LEGEND ---------- */
+  .pnwcal-legend{ background:var(--pnwcal-cream-2); padding:18px 0; border-bottom:1px solid var(--pnwcal-rule); }
+  .pnwcal-legend-inner{ display:flex; gap:26px; flex-wrap:wrap; align-items:center; }
+  .pnwcal-legend-item{ display:flex; align-items:center; gap:9px; font-size:12.5px; color:var(--pnwcal-ink-dim); }
+  .pnwcal-plate{ width:16px;height:16px; border-radius:50%; flex-shrink:0; }
+  .pnwcal-plate.pnwcal-red{background:var(--pnwcal-red);} .pnwcal-plate.pnwcal-green{background:var(--pnwcal-green);}
+  .pnwcal-legend-item b{ color:var(--pnwcal-ink); font-weight:600; }
+
+  /* ---------- CONTROLS ---------- */
+  .pnwcal-controls{ padding:26px 0 0; display:flex; gap:10px; flex-wrap:wrap; }
+  .pnwcal-filter-btn{
+    border:1.5px solid var(--pnwcal-ink); background:transparent; color:var(--pnwcal-ink); border-radius:999px;
+    padding:9px 18px; font-family:'Inter', sans-serif; font-weight:600; font-size:11.5px;
+    letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; transition:all 0.15s ease;
+  }
+  .pnwcal-filter-btn:hover{ background:var(--pnwcal-cream-2); }
+  .pnwcal-filter-btn.pnwcal-active{ background:var(--pnwcal-ink); color:var(--pnwcal-cream); }
+  .pnwcal-filter-btn:focus-visible{ outline:2px solid var(--pnwcal-gold); outline-offset:2px; }
+
+  /* ---------- TIMELINE / ROWS ---------- */
+  .pnwcal-timeline{ padding:22px 0 8px; }
+  .pnwcal-event-row{
+    display:grid; grid-template-columns:130px 5px 1fr auto; gap:0 18px; align-items:center;
+    background:var(--pnwcal-card); border:1px solid var(--pnwcal-rule); border-radius:var(--pnwcal-radius);
+    padding:18px 20px; margin-bottom:12px;
+  }
+  .pnwcal-event-row.pnwcal-hide{ display:none; }
+  .pnwcal-event-row.pnwcal-is-past{ opacity:0.5; }
+  .pnwcal-ev-date{ font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--pnwcal-ink-dim); }
+  .pnwcal-ev-stripe{ align-self:stretch; border-radius:4px; }
+  .pnwcal-ev-stripe.pnwcal-red{ background:var(--pnwcal-red); } .pnwcal-ev-stripe.pnwcal-green{ background:var(--pnwcal-green); } .pnwcal-ev-stripe.pnwcal-gold{ background:var(--pnwcal-gold); }
+  .pnwcal-ev-body{ min-width:0; }
+  .pnwcal-ev-name{ font-family:'Poppins', sans-serif; font-size:16px; font-weight:600; color:var(--pnwcal-ink); }
+  .pnwcal-ev-meta{ font-size:12.5px; color:var(--pnwcal-ink-dim); margin-top:3px; }
+  .pnwcal-ev-link{
+    display:inline-block; font-size:11.5px; font-weight:600; margin-top:8px;
+    color:var(--pnwcal-green); text-decoration:none; border-bottom:1.5px solid var(--pnwcal-green);
+  }
+  .pnwcal-ev-link:hover{ opacity:0.75; }
+  .pnwcal-ev-link.pnwcal-muted{ color:var(--pnwcal-ink-faint); border-bottom-color:var(--pnwcal-rule); }
+  .pnwcal-ev-link.pnwcal-muted:hover{ color:var(--pnwcal-ink-dim); }
+  .pnwcal-ev-tags{ display:flex; gap:8px; align-items:center; flex-shrink:0; justify-self:end; }
+  .pnwcal-tag{
+    font-size:10px; font-weight:600; letter-spacing:0.07em; text-transform:uppercase;
+    padding:5px 11px; border-radius:999px; border:1.5px solid var(--pnwcal-rule); color:var(--pnwcal-ink-dim); white-space:nowrap;
+  }
+  .pnwcal-tag.pnwcal-next{ background:var(--pnwcal-gold); color:#fff; border-color:var(--pnwcal-gold); font-weight:700; }
+
+  /* ---------- SECTION HEADERS ---------- */
+  .pnwcal-section-head{ margin:48px auto 0; padding:0 0 12px; display:flex; align-items:baseline; justify-content:space-between; gap:12px; border-bottom:1px solid var(--pnwcal-rule); flex-wrap:wrap; }
+  .pnwcal-section-head h2{ font-size:20px; color:var(--pnwcal-ink); }
+  .pnwcal-section-head .pnwcal-count{ font-size:11.5px; color:var(--pnwcal-ink-faint); font-family:'Inter', sans-serif; }
+  .pnwcal-section-intro{ font-size:13px; color:var(--pnwcal-ink-dim); max-width:640px; margin:16px 0 0; }
+
+  /* ---------- INTEREST LIST ---------- */
+  .pnwcal-interest-status{
+    font-size:12px; color:var(--pnwcal-ink-faint); margin:16px 0 0; padding:12px 16px;
+    background:var(--pnwcal-cream-2); border-radius:var(--pnwcal-radius-sm); border:1px dashed var(--pnwcal-rule);
+  }
+  .pnwcal-interest-list{ padding:16px 0 8px; }
+  .pnwcal-interest-row{
+    display:grid; grid-template-columns:110px 1fr auto; gap:0 16px; align-items:center;
+    background:var(--pnwcal-card); border:1px solid var(--pnwcal-rule); border-radius:var(--pnwcal-radius-sm);
+    padding:14px 18px; margin-bottom:10px;
+  }
+  .pnwcal-interest-row .pnwcal-ev-date{ font-size:11.5px; }
+  .pnwcal-interest-row .pnwcal-ev-name{ font-size:14.5px; }
+  .pnwcal-interest-row .pnwcal-ev-meta{ font-size:11.5px; }
+
+  /* ---------- LEADERSHIP ---------- */
+  .pnwcal-leadership{ padding:20px 0 8px; display:grid; grid-template-columns:repeat(auto-fill, minmax(230px, 1fr)); gap:14px; }
+  .pnwcal-rep-card{ background:var(--pnwcal-card); border:1px solid var(--pnwcal-rule); border-radius:var(--pnwcal-radius-sm); padding:16px 18px; }
+  .pnwcal-rep-name{ font-family:'Poppins', sans-serif; font-size:14px; font-weight:600; color:var(--pnwcal-ink); }
+  .pnwcal-rep-name em{ color:var(--pnwcal-ink-faint); font-style:normal; font-weight:500; font-size:11.5px; }
+  .pnwcal-rep-loc{ font-size:11.5px; color:var(--pnwcal-ink-dim); margin-top:3px; }
+  .pnwcal-rep-email{ font-size:11.5px; font-weight:600; color:var(--pnwcal-green); margin-top:10px; word-break:break-all; display:inline-block; text-decoration:none; }
+  .pnwcal-rep-email:hover{ text-decoration:underline; }
+
+  /* ---------- HOST-A-MEET FORM ---------- */
+  .pnwcal-host-section{ background:var(--pnwcal-cream-2); margin-top:48px; padding:44px 0 52px; border-top:1px solid var(--pnwcal-rule); border-bottom:1px solid var(--pnwcal-rule); }
+  .pnwcal-host-section .pnwcal-section-head{ margin-top:0; }
+  .pnwcal-field{ margin-bottom:20px; }
+  .pnwcal-field label{ display:block; font-family:'Poppins', sans-serif; font-weight:600; font-size:13px; margin-bottom:7px; color:var(--pnwcal-ink); }
+  .pnwcal-field .pnwcal-hint{ font-size:11.5px; color:var(--pnwcal-ink-faint); font-weight:400; margin-left:6px; }
+  .pnwcal-field input, .pnwcal-field select, .pnwcal-field textarea{
+    width:100%; font-family:'Inter', sans-serif; font-size:14px; color:var(--pnwcal-ink); background:var(--pnwcal-card);
+    border:1.5px solid var(--pnwcal-rule); border-radius:var(--pnwcal-radius-sm); padding:11px 14px;
+  }
+  .pnwcal-field input:focus, .pnwcal-field select:focus, .pnwcal-field textarea:focus{ outline:none; border-color:var(--pnwcal-green); }
+  .pnwcal-field textarea{ min-height:90px; resize:vertical; }
+  .pnwcal-row2{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .pnwcal-row3{ display:grid; grid-template-columns:2fr 1fr 1fr; gap:16px; }
+  @media (max-width:560px){ .pnwcal-row2, .pnwcal-row3{ grid-template-columns:1fr; } }
+  .pnwcal-widget fieldset{ border:none; padding:0; margin:0 0 26px; }
+  .pnwcal-widget legend{ font-family:'Poppins', sans-serif; font-weight:700; font-size:14.5px; padding:0 0 10px; margin-bottom:10px; border-bottom:1px solid var(--pnwcal-rule); width:100%; }
+  .pnwcal-form-note{ margin-top:14px; font-size:11.5px; color:var(--pnwcal-ink-faint); max-width:520px; }
+  .pnwcal-success-box{
+    display:none; background:var(--pnwcal-green); color:var(--pnwcal-green-text); border-radius:var(--pnwcal-radius);
+    padding:22px 24px; font-size:14px; font-weight:500;
+  }
+  .pnwcal-success-box.pnwcal-show{ display:block; }
+  #pnwcal-hostForm.pnwcal-hidden{ display:none; }
+
+  /* ---------- FOOTER ---------- */
+  .pnwcal-widget footer{ margin-top:0; background:var(--pnwcal-cream); border-top:1px solid var(--pnwcal-rule); padding:26px 0 48px; }
+  .pnwcal-widget footer .pnwcal-note{ color:var(--pnwcal-ink-dim); font-size:12px; margin-bottom:16px; max-width:680px; }
+  .pnwcal-widget footer ul{ list-style:none; margin:0; padding:0; }
+  .pnwcal-widget footer li{ margin-bottom:7px; font-size:12px; }
+  .pnwcal-widget footer a{ color:var(--pnwcal-ink-dim); text-decoration:none; }
+  .pnwcal-widget footer a:hover{ color:var(--pnwcal-green); text-decoration:underline; }
+
+  @media (max-width:640px){
+    .pnwcal-event-row{ grid-template-columns:5px 1fr; grid-template-areas:"stripe body" "stripe tags"; row-gap:10px; }
+    .pnwcal-ev-stripe{ grid-area:stripe; } .pnwcal-ev-body{ grid-area:body; }
+    .pnwcal-ev-date{ display:block; margin-bottom:5px; } .pnwcal-ev-tags{ grid-area:tags; justify-self:start; }
+    .pnwcal-interest-row{ grid-template-columns:1fr; row-gap:6px; }
+  }
+</style>
+
+
+<div class="pnwcal-mission">
+  <div class="pnwcal-wrap">
+    <p>Serving the weightlifting community across Alaska, Oregon &amp; Washington under USA Weightlifting. This page tracks every national and PNW WSO local meet in one place.</p>
+  </div>
+</div>
+
+<div class="pnwcal-hero">
+  <div class="pnwcal-wrap">
+    <div class="pnwcal-eyebrow">2026–27 Season</div>
+    <h1>Competition<br>Calendar</h1>
+    <p class="pnwcal-sub">USAW national events and PNW WSO&#8209;sanctioned local meets — for WSO reps, coaches, and athletes across AK, OR &amp; WA.</p>
+    <div class="pnwcal-cta-row">
+      <a class="pnwcal-pill-btn pnwcal-on-green" href="#pnwcal-timeline">See the schedule ↓</a>
+      <a class="pnwcal-pill-btn pnwcal-on-green" href="#pnwcal-host">Host a meet ↓</a>
+    </div>
+  </div>
+</div>
+
+<div class="pnwcal-legend">
+  <div class="pnwcal-wrap pnwcal-legend-inner">
+    <div class="pnwcal-legend-item"><span class="pnwcal-plate pnwcal-red"></span><span><b>National</b> — USA Weightlifting</span></div>
+    <div class="pnwcal-legend-item"><span class="pnwcal-plate pnwcal-green"></span><span><b>Local</b> — PNW WSO sanctioned</span></div>
+  </div>
+</div>
+
+<div class="pnwcal-wrap">
+  <div class="pnwcal-controls">
+    <button class="pnwcal-filter-btn pnwcal-active" data-filter="all">All events</button>
+    <button class="pnwcal-filter-btn" data-filter="national">National</button>
+    <button class="pnwcal-filter-btn" data-filter="local">Local (PNW WSO)</button>
+  </div>
+
+  <div class="pnwcal-timeline" id="pnwcal-timeline">
+
+    <div class="pnwcal-event-row" data-tier="local" data-start="2026-08-29">
+      <div class="pnwcal-ev-date">Aug 29–30, 2026</div>
+      <div class="pnwcal-ev-stripe pnwcal-green"></div>
+      <div class="pnwcal-ev-body">
+        <div class="pnwcal-ev-name">Paramount Grand Prix</div>
+        <div class="pnwcal-ev-meta">Paramount Barbell · Contact: Kayla Jones</div>
+        <a class="pnwcal-ev-link pnwcal-muted" href="https://docs.google.com/spreadsheets/d/1TKmTIMT-Hm0bQHlxFZ7ZC_g9FJgRmO_wdLdfOiTQyl4/edit#gid=0" target="_blank" rel="noopener">Meet info →</a>
+      </div>
+      <div class="pnwcal-ev-tags"><span class="pnwcal-tag">Local</span></div>
+    </div>
+
+    <div class="pnwcal-event-row" data-tier="national" data-start="2026-09-11">
+      <div class="pnwcal-ev-date">Sep 11–13, 2026</div>
+      <div class="pnwcal-ev-stripe pnwcal-red"></div>
+      <div class="pnwcal-ev-body">
+        <div class="pnwcal-ev-name">Virus Weightlifting Series 2 Championships</div>
+        <div class="pnwcal-ev-meta">Fort Worth Convention Center · Fort Worth, TX</div>
+        <a class="pnwcal-ev-link" href="https://www.usaweightlifting.org/2026-virus-weightlifting-series-2-championships" target="_blank" rel="noopener">Register →</a>
+      </div>
+      <div class="pnwcal-ev-tags"><span class="pnwcal-tag">National</span></div>
+    </div>
+
+    <div class="pnwcal-event-row" data-tier="national" data-start="2026-09-25">
+      <div class="pnwcal-ev-date">Sep 25–27, 2026</div>
+      <div class="pnwcal-ev-stripe pnwcal-red"></div>
+      <div class="pnwcal-ev-body">
+        <div class="pnwcal-ev-name">USAW x Gymreapers Wodapalooza SoCal</div>
+        <div class="pnwcal-ev-meta">Huntington Beach, CA</div>
+        <a class="pnwcal-ev-link" href="https://www.usaweightlifting.org/2026-usaw-x-gymreapers-wodapalooza-socal" target="_blank" rel="noopener">Register →</a>
+      </div>
+      <div class="pnwcal-ev-tags"><span class="pnwcal-tag">National</span></div>
+    </div>
+
+    <div class="pnwcal-event-row" data-tier="local" data-start="2026-10-03">
+      <div class="pnwcal-ev-date">Oct 3–4, 2026</div>
+      <div class="pnwcal-ev-stripe pnwcal-green"></div>
+      <div class="pnwcal-ev-body">
+        <div class="pnwcal-ev-name">PNW WSO Championship</div>
+        <div class="pnwcal-ev-meta">Holiday Inn · Portland, OR · Contact: Joe Beck</div>
+        <a class="pnwcal-ev-link pnwcal-muted" href="https://usaweightlifting.sport80.com/public/widget/1" target="_blank" rel="noopener">Registration via USAW →</a>
+      </div>
+      <div class="pnwcal-ev-tags"><span class="pnwcal-tag">Local · WSO Champs</span></div>
+    </div>
+
+    <div class="pnwcal-event-row" data-tier="local" data-start="2026-10-31">
+      <div class="pnwcal-ev-date">Oct 31, 2026</div>
+      <div class="pnwcal-ev-stripe pnwcal-green"></div>
+      <div class="pnwcal-ev-body">
+        <div class="pnwcal-ev-name">Nightmare on the Platform</div>
+        <div class="pnwcal-ev-meta">Bellingham Weightlifting Club · Contact: Ryan Belsito</div>
+        <a class="pnwcal-ev-link pnwcal-muted" href="https://usaweightlifting.sport80.com/public/widget/1" target="_blank" rel="noopener">Registration via USAW →</a>
+      </div>
+      <div class="pnwcal-ev-tags"><span class="pnwcal-tag">Local</span></div>
+    </div>
+
+    <div class="pnwcal-event-row" data-tier="local" data-start="2026-11-22">
+      <div class="pnwcal-ev-date">Nov 22, 2026</div>
+      <div class="pnwcal-ev-stripe pnwcal-green"></div>
+      <div class="pnwcal-ev-body">
+        <div class="pnwcal-ev-name">Valley Strength Harvest Strength Classic</div>
+        <div class="pnwcal-ev-meta">Harvest Valley CrossFit · Contact: Sarah Sarff</div>
+        <a class="pnwcal-ev-link pnwcal-muted" href="https://usaweightlifting.sport80.com/public/widget/1" target="_blank" rel="noopener">Registration via USAW →</a>
+      </div>
+      <div class="pnwcal-ev-tags"><span class="pnwcal-tag">Local</span></div>
+    </div>
+
+    <div class="pnwcal-event-row" data-tier="national" data-start="2026-12-03">
+      <div class="pnwcal-ev-date">Dec 3–6, 2026</div>
+      <div class="pnwcal-ev-stripe pnwcal-red"></div>
+      <div class="pnwcal-ev-body">
+        <div class="pnwcal-ev-name">Virus Weightlifting Finals</div>
+        <div class="pnwcal-ev-meta">Alameda County Fairgrounds · Pleasanton, CA</div>
+        <a class="pnwcal-ev-link" href="https://www.usaweightlifting.org/2026-virus-weightlifting-finals" target="_blank" rel="noopener">Register →</a>
+      </div>
+      <div class="pnwcal-ev-tags"><span class="pnwcal-tag">National</span></div>
+    </div>
+
+    <div class="pnwcal-event-row" data-tier="local" data-start="2027-02-06">
+      <div class="pnwcal-ev-date">Feb 6, 2027</div>
+      <div class="pnwcal-ev-stripe pnwcal-green"></div>
+      <div class="pnwcal-ev-body">
+        <div class="pnwcal-ev-name">Cully Strength Winter Open</div>
+        <div class="pnwcal-ev-meta">Cully Strength · Contact: Joey Cole</div>
+        <a class="pnwcal-ev-link pnwcal-muted" href="https://usaweightlifting.sport80.com/public/widget/1" target="_blank" rel="noopener">Registration via USAW →</a>
+      </div>
+      <div class="pnwcal-ev-tags"><span class="pnwcal-tag">Local</span></div>
+    </div>
+
+    <div class="pnwcal-event-row" data-tier="national" data-start="2027-03-04">
+      <div class="pnwcal-ev-date">Mar 4–7, 2027</div>
+      <div class="pnwcal-ev-stripe pnwcal-red"></div>
+      <div class="pnwcal-ev-body">
+        <div class="pnwcal-ev-name">Virus Series 1 &amp; USAW National Championships</div>
+        <div class="pnwcal-ev-meta">Greater Columbus Convention Center · Columbus, OH · Senior Nationals on the Rogue Strength Stage</div>
+        <a class="pnwcal-ev-link" href="https://www.usaweightlifting.org/2027-virus-weightlifting-series-1" target="_blank" rel="noopener">Register →</a>
+      </div>
+      <div class="pnwcal-ev-tags"><span class="pnwcal-tag">National</span></div>
+    </div>
+
+    <div class="pnwcal-event-row" data-tier="national" data-start="2027-04-15">
+      <div class="pnwcal-ev-date">Apr 15–18, 2027</div>
+      <div class="pnwcal-ev-stripe pnwcal-red"></div>
+      <div class="pnwcal-ev-body">
+        <div class="pnwcal-ev-name">USAW Masters &amp; University National Championships</div>
+        <div class="pnwcal-ev-meta">Richmond, VA · Run simultaneously — this is a USAW national event, distinct from USA Masters, Inc.</div>
+        <a class="pnwcal-ev-link pnwcal-muted" href="https://www.usaweightlifting.org/national-events" target="_blank" rel="noopener">Event page not yet posted — check here →</a>
+      </div>
+      <div class="pnwcal-ev-tags"><span class="pnwcal-tag">National</span></div>
+    </div>
+
+    <div class="pnwcal-event-row" data-tier="national" data-start="2027-06-22">
+      <div class="pnwcal-ev-date">Jun 22–27, 2027 <em>(tentative)</em></div>
+      <div class="pnwcal-ev-stripe pnwcal-red"></div>
+      <div class="pnwcal-ev-body">
+        <div class="pnwcal-ev-name">Youth, Junior &amp; U25 National Championships</div>
+        <div class="pnwcal-ev-meta">Ed Robson Arena · Colorado Springs, CO</div>
+        <a class="pnwcal-ev-link pnwcal-muted" href="https://www.usaweightlifting.org/national-events" target="_blank" rel="noopener">Event page not yet posted — check here →</a>
+      </div>
+      <div class="pnwcal-ev-tags"><span class="pnwcal-tag">National</span></div>
+    </div>
+
+    <div class="pnwcal-event-row" data-tier="national" data-start="2027-09-09">
+      <div class="pnwcal-ev-date">Sep 9–12, 2027</div>
+      <div class="pnwcal-ev-stripe pnwcal-red"></div>
+      <div class="pnwcal-ev-body">
+        <div class="pnwcal-ev-name">Virus Weightlifting Series 2</div>
+        <div class="pnwcal-ev-meta">Fort Worth, TX</div>
+        <a class="pnwcal-ev-link pnwcal-muted" href="https://www.usaweightlifting.org/national-events" target="_blank" rel="noopener">Event page not yet posted — check here →</a>
+      </div>
+      <div class="pnwcal-ev-tags"><span class="pnwcal-tag">National</span></div>
+    </div>
+
+    <div class="pnwcal-event-row" data-tier="national" data-start="2027-12-02">
+      <div class="pnwcal-ev-date">Dec 2–5, 2027</div>
+      <div class="pnwcal-ev-stripe pnwcal-red"></div>
+      <div class="pnwcal-ev-body">
+        <div class="pnwcal-ev-name">Virus Weightlifting Finals &amp; UMWF World Championships</div>
+        <div class="pnwcal-ev-meta">San Juan, Puerto Rico</div>
+        <a class="pnwcal-ev-link pnwcal-muted" href="https://www.usaweightlifting.org/national-events" target="_blank" rel="noopener">Event page not yet posted — check here →</a>
+      </div>
+      <div class="pnwcal-ev-tags"><span class="pnwcal-tag">National · Intl.</span></div>
+    </div>
+
+  </div>
+
+  <div class="pnwcal-section-head" id="pnwcal-interest">
+    <h2>Meet Director Interest</h2>
+    <span class="pnwcal-count">3 submissions · updated Sep 4, 2026</span>
+  </div>
+  <p class="pnwcal-section-intro">A running list of proposed meets and event ideas — sanctioned or not — submitted by directors across AK, OR &amp; WA. A good place to spot date/venue overlap or reach out directly if something here interests you. Official USAW sanctioning happens separately through Sport80; once a meet is sanctioned, it'll appear on the calendar above.</p>
+  <div class="pnwcal-interest-list" id="pnwcal-interestList">
+
+    <div class="pnwcal-interest-row">
+      <div class="pnwcal-ev-date">2/20/2027</div>
+      <div class="pnwcal-ev-body">
+        <div class="pnwcal-ev-name">Jacob's Test Event</div>
+        <div class="pnwcal-ev-meta">Crossfit Advantage, Everett, Washington · Wolf Pack Weightlifting · <a href="mailto:jdhoward1988@gmail.com" class="pnwcal-ev-link">Jacob Howard</a></div>
+      </div>
+      <div class="pnwcal-ev-tags"><span class="pnwcal-tag">Sanctioned Meet</span></div>
+    </div>
+
+    <div class="pnwcal-interest-row">
+      <div class="pnwcal-ev-date">1/16/2027</div>
+      <div class="pnwcal-ev-body">
+        <div class="pnwcal-ev-name">Test 2</div>
+        <div class="pnwcal-ev-meta">Lynnwood Convention Center, Lynnwood, Washington · Wolf Pack Weightlifting · <a href="mailto:jdhoward1988@gmail.com" class="pnwcal-ev-link">Jacob Howard</a></div>
+      </div>
+      <div class="pnwcal-ev-tags"><span class="pnwcal-tag">Other Lifting Event</span></div>
+    </div>
+
+    <div class="pnwcal-interest-row">
+      <div class="pnwcal-ev-date">1/9/2027</div>
+      <div class="pnwcal-ev-body">
+        <div class="pnwcal-ev-name">Multi Day Supertotal Event</div>
+        <div class="pnwcal-ev-meta">Lynnwood Convention Center, Lynnwood, Washington · Wolf Pack Weightlifting · <a href="mailto:jdhoward1988@gmail.com" class="pnwcal-ev-link">Jacob Howard</a></div>
+      </div>
+      <div class="pnwcal-ev-tags"><span class="pnwcal-tag">Other Lifting Event</span></div>
+    </div>
+
+  </div>
+
+  <div class="pnwcal-section-head"><h2>PNW WSO Leadership</h2><span class="pnwcal-count">7 reps · AK / OR / WA</span></div>
+  <div class="pnwcal-leadership">
+    <div class="pnwcal-rep-card">
+      <div class="pnwcal-rep-name">Mira Kwon Gracia</div>
+      <div class="pnwcal-rep-loc">Portland, OR</div>
+      <a class="pnwcal-rep-email" href="mailto:PNW.WSO.MIRA@gmail.com">PNW.WSO.MIRA@gmail.com</a>
+    </div>
+    <div class="pnwcal-rep-card">
+      <div class="pnwcal-rep-name">Lauren Hatmaker</div>
+      <div class="pnwcal-rep-loc">Eugene, OR</div>
+      <a class="pnwcal-rep-email" href="mailto:Lauren@WeightliftingEugene.com">Lauren@WeightliftingEugene.com</a>
+    </div>
+    <div class="pnwcal-rep-card">
+      <div class="pnwcal-rep-name">Derek Kress</div>
+      <div class="pnwcal-rep-loc">Bothell, WA</div>
+      <a class="pnwcal-rep-email" href="mailto:seattlebarbellclub@gmail.com">seattlebarbellclub@gmail.com</a>
+    </div>
+    <div class="pnwcal-rep-card">
+      <div class="pnwcal-rep-name">Isaac Marron</div>
+      <div class="pnwcal-rep-loc">Beaverton, OR</div>
+      <a class="pnwcal-rep-email" href="mailto:isaac.marron95@gmail.com">isaac.marron95@gmail.com</a>
+    </div>
+    <div class="pnwcal-rep-card">
+      <div class="pnwcal-rep-name">Jennifer Sprague</div>
+      <div class="pnwcal-rep-loc">Renton, WA</div>
+      <a class="pnwcal-rep-email" href="mailto:jennsprague@comcast.net">jennsprague@comcast.net</a>
+    </div>
+    <div class="pnwcal-rep-card">
+      <div class="pnwcal-rep-name">Kim Douglas <em>— Athlete Rep</em></div>
+      <div class="pnwcal-rep-loc">Portland, OR</div>
+      <a class="pnwcal-rep-email" href="mailto:kdouglas1531@gmail.com">kdouglas1531@gmail.com</a>
+    </div>
+    <div class="pnwcal-rep-card">
+      <div class="pnwcal-rep-name">Chelsea Hopkins <em>— Athlete Rep</em></div>
+      <div class="pnwcal-rep-loc">Springfield, OR</div>
+      <a class="pnwcal-rep-email" href="mailto:chelseat76@yahoo.com">chelseat76@yahoo.com</a>
+    </div>
+  </div>
+</div>
+
+<div class="pnwcal-host-section" id="pnwcal-host">
+  <div class="pnwcal-wrap-narrow">
+    <div class="pnwcal-section-head">
+      <h2>Host a Meet</h2>
+    </div>
+    <p class="pnwcal-section-intro">Interested in hosting a meet — sanctioned, unsanctioned, or something else entirely? Submit the basics below and it goes straight into the PNW WSO's event interest list.</p>
+
+    <div class="pnwcal-success-box" id="pnwcal-successBox">✓ Thanks — your interest has been submitted. The PNW WSO board will follow up about next steps.</div>
+
+    <form id="pnwcal-hostForm" action="https://docs.google.com/forms/d/e/1FAIpQLSdsojk2POBbX2_fZln2w9SFLrGQHB4wWKnLajcayiyhjRPoPA/formResponse" method="POST" target="pnwcal-hidden_iframe" style="margin-top:20px;">
+
+      <fieldset>
+        <legend>Meet details</legend>
+        <div class="pnwcal-field">
+          <label for="pnwcal-meetName">Name of event</label>
+          <input type="text" id="pnwcal-meetName" name="entry.2092238618" placeholder="e.g. Cully Strength Winter Open" required>
+        </div>
+        <div class="pnwcal-row2">
+          <div class="pnwcal-field">
+            <label for="pnwcal-meetDate">Proposed meet date</label>
+            <input type="date" id="pnwcal-meetDate" name="entry.772194971" required>
+          </div>
+          <div class="pnwcal-field">
+            <label for="pnwcal-venue">Venue <span class="pnwcal-hint">(optional)</span></label>
+            <input type="text" id="pnwcal-venue" name="entry.1183100420" placeholder="e.g. Paramount Barbell">
+          </div>
+        </div>
+        <div class="pnwcal-field">
+          <label for="pnwcal-meetType">Meet type</label>
+          <select id="pnwcal-meetType" name="entry.1892539300" required>
+            <option value="">Select…</option>
+            <option value="Sanctioned Meet">Sanctioned Meet</option>
+            <option value="Unsanctioned / Mock Meet">Unsanctioned / Mock Meet</option>
+            <option value="Other Lifting Event">Other Lifting Event</option>
+          </select>
+        </div>
+        <div class="pnwcal-field">
+          <label for="pnwcal-meetInfo">Event information <span class="pnwcal-hint">(optional)</span></label>
+          <textarea id="pnwcal-meetInfo" name="entry.1711660579" placeholder="Quick description of event. If other lifting event give some details, e.g. Unsanctioned Super Total, or Clean Speed Ladder etc."></textarea>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Location</legend>
+        <div class="pnwcal-row2">
+          <div class="pnwcal-field">
+            <label for="pnwcal-city">City</label>
+            <input type="text" id="pnwcal-city" name="entry.1556369182" required>
+          </div>
+          <div class="pnwcal-field">
+            <label for="pnwcal-state">State</label>
+            <select id="pnwcal-state" name="entry.412775169" required>
+              <option value="">Select…</option>
+              <option value="Alaska">Alaska</option>
+              <option value="Oregon">Oregon</option>
+              <option value="Washington">Washington</option>
+            </select>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Organizer contact</legend>
+        <div class="pnwcal-row2">
+          <div class="pnwcal-field">
+            <label for="pnwcal-orgName">Contact name</label>
+            <input type="text" id="pnwcal-orgName" name="entry.588393791" required>
+          </div>
+          <div class="pnwcal-field">
+            <label for="pnwcal-clubName">Host club <span class="pnwcal-hint">(optional)</span></label>
+            <input type="text" id="pnwcal-clubName" name="entry.1753222212">
+          </div>
+        </div>
+        <div class="pnwcal-field">
+          <label for="pnwcal-orgEmail">Email</label>
+          <input type="email" id="pnwcal-orgEmail" name="entry.754171568" required>
+        </div>
+      </fieldset>
+
+      <button type="submit" class="pnwcal-pill-btn pnwcal-solid">Submit interest →</button>
+      <p class="pnwcal-form-note">This submits directly into the PNW WSO's event interest list, visible above. Official USAW sanctioning is handled separately through Sport80 — once sanctioned, your meet will appear on the main calendar.</p>
+    </form>
+    <iframe name="pnwcal-hidden_iframe" id="pnwcal-hidden_iframe" style="display:none;"></iframe>
+  </div>
+</div>
+
+<footer>
+  <div class="pnwcal-wrap">
+    <p class="pnwcal-note">Snapshot compiled Aug 28, 2026. Local PNW WSO meets are typically posted only a few months out — check the sources below for additions, especially further into 2027. The calendar timeline above is a static snapshot; the Meet Director Interest list refreshes live from the WSO's sheet.</p>
+    <ul>
+      <li>→ <a href="https://www.usaweightlifting.org/national-events" target="_blank" rel="noopener">USA Weightlifting — National Events</a></li>
+      <li>→ <a href="https://www.pnwwsoweightlifting.com/" target="_blank" rel="noopener">PNW WSO — Official Site</a></li>
+      <li>→ <a href="https://docs.google.com/spreadsheets/d/1TKmTIMT-Hm0bQHlxFZ7ZC_g9FJgRmO_wdLdfOiTQyl4/edit#gid=0" target="_blank" rel="noopener">PNW WSO — Sanctioned Meets Sheet (live)</a></li>
+      <li>→ <a href="https://usaweightlifting.sport80.com/public/widget/7" target="_blank" rel="noopener">USAW — Club Finder (filter by state for full club roster)</a></li>
+      <li>→ <a href="https://www.usaweightlifting.org/club-wso/wso-information/pacific-northwest" target="_blank" rel="noopener">USAW — Pacific Northwest WSO Info</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+  // ---------- Calendar filters ----------
+  const buttons = document.querySelectorAll('.pnwcal-filter-btn');
+  const rows = document.querySelectorAll('.pnwcal-event-row');
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      buttons.forEach(b => b.classList.remove('pnwcal-active'));
+      btn.classList.add('pnwcal-active');
+      const filter = btn.dataset.filter;
+      rows.forEach(row => {
+        if (filter === 'all' || row.dataset.tier === filter) row.classList.remove('pnwcal-hide');
+        else row.classList.add('pnwcal-hide');
+      });
+    });
+  });
+
+  const now = new Date();
+  let nextRow = null, nextDiff = Infinity;
+  rows.forEach(row => {
+    const start = new Date(row.dataset.start + 'T00:00:00');
+    if (start < now) row.classList.add('pnwcal-is-past');
+    else if (start - now < nextDiff) { nextDiff = start - now; nextRow = row; }
+  });
+  if (nextRow) {
+    const tag = document.createElement('span');
+    tag.className = 'pnwcal-tag pnwcal-next';
+    tag.textContent = 'Next up';
+    nextRow.querySelector('.pnwcal-ev-tags').prepend(tag);
+  }
+
+  // ---------- Host-a-Meet form → real Google Form submission ----------
+  const hostForm = document.getElementById('pnwcal-hostForm');
+  const successBox = document.getElementById('pnwcal-successBox');
+  const hiddenIframe = document.getElementById('pnwcal-hidden_iframe');
+  let formSubmitted = false;
+
+  hiddenIframe.addEventListener('load', () => {
+    if (formSubmitted) {
+      hostForm.classList.add('pnwcal-hidden');
+      successBox.classList.add('pnwcal-show');
+    }
+  });
+
+  hostForm.addEventListener('submit', () => {
+    formSubmitted = true;
+  });
+</script>
+
+
+</div>
