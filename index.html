@@ -195,6 +195,63 @@
     .topbar-inner{ flex-direction:column; align-items:flex-start; }
     .interest-row{ grid-template-columns:1fr; row-gap:6px; }
   }
+
+  /* ---------- MOBILE (phones) ---------- */
+  .ev-date{ font-variant-numeric:tabular-nums; }
+  @media (max-width:640px){
+    .wrap, .wrap-narrow{ padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px)); }
+    /* Top bar: brand on one line, actions in an even row of full-size buttons below */
+    .topbar{ padding:14px 0; }
+    /* brand + social icons share the first line; the two buttons split the second line evenly */
+    .topbar-inner{ flex-direction:row; flex-wrap:wrap; align-items:center; gap:12px 10px; }
+    .brand{ flex:1 1 auto; min-width:0; }
+    .topbar-right{ display:contents; }
+    .topbar-right .pill-btn{ flex:1 1 40%; min-width:0; }
+    .icon-link{ width:44px; height:44px; }
+    .pill-btn{ min-height:44px; justify-content:center; padding:10px 14px; font-size:12px; }
+    /* Hero */
+    .hero{ padding:36px 0 40px; }
+    .hero h1{ font-size:42px; }
+    .hero .sub{ font-size:15px; }
+    .hero .cta-row{ display:grid; grid-template-columns:1fr; gap:10px; }
+    .mission{ padding:18px 0; }
+    .mission p{ font-size:13.5px; }
+    /* Legend */
+    .legend-inner{ flex-direction:column; align-items:flex-start; gap:10px; }
+    .legend-item{ font-size:13.5px; }
+    /* Filters: three equal buttons in one row */
+    .controls{ display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:8px; padding-top:20px; }
+    .filter-btn{ min-height:44px; padding:10px 6px; font-size:11.5px; letter-spacing:0.04em; }
+    /* Event cards: full-width, larger text, tag and link on their own lines */
+    .timeline{ padding-top:16px; }
+    .event-row{ grid-template-columns:5px minmax(0,1fr); grid-template-areas:"stripe date" "stripe body" "stripe tags"; gap:6px 14px; padding:16px; border-radius:12px; }
+    .ev-stripe{ grid-area:stripe; } .ev-body{ grid-area:body; min-width:0; }
+    .ev-tags{ grid-area:tags; justify-self:start; flex-wrap:wrap; }
+    .event-row > .ev-date{ grid-area:date; display:block; margin:0; font-size:13px; }
+    .ev-tags{ margin-top:4px; }
+    .ev-name{ font-size:17px; line-height:1.3; }
+    .ev-meta{ font-size:14px; line-height:1.45; overflow-wrap:anywhere; }
+    .ev-link{ display:inline-block; font-size:13.5px; padding:8px 0 2px; margin-top:4px; }
+    .tag{ font-size:11px; padding:6px 12px; }
+    /* Interest list */
+    .section-head{ margin-top:36px; }
+    .section-head h2{ font-size:21px; }
+    .section-intro{ font-size:14px; }
+    .interest-row{ grid-template-columns:minmax(0,1fr); row-gap:6px; padding:14px 16px; }
+    .interest-row .ev-date{ font-size:13px; }
+    .interest-row .ev-name{ font-size:16px; }
+    .interest-row .ev-meta{ font-size:13.5px; }
+    .interest-row .ev-tags{ justify-self:start; }
+    /* Form: 16px inputs stop iOS zooming in; full-width submit */
+    .host-section{ padding:32px 0 40px; margin-top:36px; }
+    .field input, .field select, .field textarea{ font-size:16px; min-height:46px; }
+    #hostForm button[type="submit"], #hostForm .pill-btn{ width:100%; min-height:48px; justify-content:center; }
+    footer li{ font-size:13.5px; margin-bottom:10px; }
+  }
+  @media (max-width:380px){
+    .topbar-right .pill-btn{ white-space:normal; text-align:center; padding:10px 8px; letter-spacing:0.05em; }
+    .filter-btn{ font-size:10.5px; letter-spacing:0.02em; }
+  }
 </style>
 </head>
 <body>
@@ -602,6 +659,21 @@
     return '';
   }
 
+  // Apps Script sends sheet dates as full ISO timestamps (e.g. 2026-11-14T08:00:00.000Z).
+  // Show "Nov 14, 2026", plus "· 6:30 PM" only when the entry has a real time of day.
+  // Pacific time keeps every visitor seeing the same date the director entered.
+  const TZ = 'America/Los_Angeles';
+  const fmtDate = new Intl.DateTimeFormat('en-US', { timeZone: TZ, month: 'short', day: 'numeric', year: 'numeric' });
+  const fmtTime = new Intl.DateTimeFormat('en-US', { timeZone: TZ, hour: 'numeric', minute: '2-digit' });
+  const fmtHM = new Intl.DateTimeFormat('en-GB', { timeZone: TZ, hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
+  function formatWhen(raw) {
+    if (!raw) return '';
+    const d = new Date(raw);
+    if (isNaN(d)) return raw;
+    const date = fmtDate.format(d);
+    return fmtHM.format(d) === '00:00' ? date : date + ' · ' + fmtTime.format(d);
+  }
+
   function renderInterestRows(rowsData) {
     if (!rowsData.length) {
       interestListEl.innerHTML = '<p class="interest-status">No interest submissions yet — be the first to submit one below.</p>';
@@ -610,7 +682,7 @@
     }
     interestCountEl.textContent = rowsData.length + ' submission' + (rowsData.length === 1 ? '' : 's');
     interestListEl.innerHTML = rowsData.map(r => {
-      const dateLabel = pick(r, ['Planned Date', 'Date', 'Proposed meet date', 'Meet Date']) || '—';
+      const dateLabel = formatWhen(pick(r, ['Planned Date', 'Date', 'Proposed meet date', 'Meet Date'])) || '—';
       const name = pick(r, ['Name (Of Event)', 'Name of event', 'Event Name']) || 'Untitled meet';
       const venue = pick(r, ['Venue']);
       const city = pick(r, ['City']);
