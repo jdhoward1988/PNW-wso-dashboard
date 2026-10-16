@@ -252,6 +252,13 @@
     .topbar-right .pill-btn{ white-space:normal; text-align:center; padding:10px 8px; letter-spacing:0.05em; }
     .filter-btn{ font-size:10.5px; letter-spacing:0.02em; }
   }
+  .ev-stripe.proposed{ background:repeating-linear-gradient(180deg, var(--green) 0 6px, transparent 6px 10px); }
+  .ev-links{ display:flex; flex-wrap:wrap; gap:4px 18px; }
+  .interest-card .ev-tags{ flex-wrap:wrap; justify-content:flex-end; }
+  @media (max-width:640px){
+    .interest-card .ev-tags{ justify-content:flex-start; }
+    .ev-links{ gap:0 18px; }
+  }
 </style>
 </head>
 <body>
@@ -542,6 +549,10 @@
           <label for="meetInfo">Event information <span class="hint">(optional)</span></label>
           <textarea id="meetInfo" name="entry.1711660579" placeholder="Quick description of event. If other lifting event give some details, e.g. Unsanctioned Super Total, or Clean Speed Ladder etc."></textarea>
         </div>
+        <div class="field">
+          <label for="meetWebsite">Event website <span class="hint">(optional — registration or info page)</span></label>
+          <input type="text" id="meetWebsite" name="entry.308303072" inputmode="url" autocomplete="url" autocapitalize="off" spellcheck="false" placeholder="e.g. usaweightlifting.sport80.com/… or yourclub.com/meet">
+        </div>
       </fieldset>
 
       <fieldset>
@@ -674,35 +685,61 @@
     return fmtHM.format(d) === '00:00' ? date : date + ' · ' + fmtTime.format(d);
   }
 
+  // Interest submissions come from a public form, so every value is escaped before display.
+  function esc(v) {
+    return String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  // Accept only real web addresses; add https:// when a director types "example.com".
+  function safeUrl(raw) {
+    if (!raw) return '';
+    let u = raw.trim();
+    if (!/^https?:\/\//i.test(u)) u = 'https://' + u;
+    try { const parsed = new URL(u); return /^https?:$/.test(parsed.protocol) && parsed.hostname.includes('.') ? parsed.href : ''; }
+    catch (e) { return ''; }
+  }
+
+  // Cards use the same structure and classes as the calendar's event rows, so they
+  // share its desktop grid and phone layout. Sorted by planned date; past entries
+  // fade, then drop off after ~2 weeks, matching the calendar.
   function renderInterestRows(rowsData) {
-    if (!rowsData.length) {
-      interestListEl.innerHTML = '<p class="interest-status">No interest submissions yet — be the first to submit one below.</p>';
-      interestCountEl.textContent = '0 submissions';
+    const now = new Date();
+    const items = rowsData.map(r => {
+      const rawDate = pick(r, ['Planned Date', 'Date', 'Proposed meet date', 'Meet Date']);
+      const d = new Date(rawDate);
+      return { r, rawDate, time: isNaN(d) ? Infinity : d.getTime() };
+    }).filter(it => it.time === Infinity || now - it.time <= TWO_WEEKS_MS)
+      .sort((a, b) => a.time - b.time);
+
+    if (!items.length) {
+      interestListEl.innerHTML = '<p class="interest-status">No upcoming events submitted yet. Be the first using the Host an Event form below.</p>';
+      interestCountEl.textContent = '0 upcoming';
       return;
     }
-    interestCountEl.textContent = rowsData.length + ' submission' + (rowsData.length === 1 ? '' : 's');
-    interestListEl.innerHTML = rowsData.map(r => {
-      const dateLabel = formatWhen(pick(r, ['Planned Date', 'Date', 'Proposed meet date', 'Meet Date'])) || '—';
-      const name = pick(r, ['Name (Of Event)', 'Name of event', 'Event Name']) || 'Untitled meet';
-      const venue = pick(r, ['Venue']);
-      const city = pick(r, ['City']);
-      const state = pick(r, ['State']);
+    interestCountEl.textContent = items.length + ' upcoming';
+    interestListEl.innerHTML = items.map(({ r, rawDate, time }) => {
+      const dateLabel = formatWhen(rawDate) || 'Date TBD';
+      const name = pick(r, ['Name (Of Event)', 'Name of event', 'Event Name']) || 'Untitled event';
+      const loc = [pick(r, ['Venue']), pick(r, ['City']), pick(r, ['State'])].filter(Boolean).join(', ');
       const hostClub = pick(r, ['Host Club']);
-      const meetType = pick(r, ['Event Type', 'Meet Type', 'Meet type']) || '—';
+      const meetType = pick(r, ['Event Type', 'Meet Type', 'Meet type']);
       const contactName = pick(r, ['Contact Name']);
       const contactEmail = pick(r, ['Contact Email', 'Email']);
-      const loc = [venue, city, state].filter(Boolean).join(', ');
-      const metaParts = [loc, hostClub].filter(Boolean);
-      const contactHtml = contactName && contactEmail
-        ? `<a href="mailto:${contactEmail}" class="ev-link">${contactName}</a>`
-        : (contactName || '');
-      return `<div class="interest-row">
-        <div class="ev-date">${dateLabel}</div>
+      const website = safeUrl(pick(r, ['Event Website', 'Website', 'Event website', 'Registration / Info Website', 'Event Link', 'URL']));
+      const meta = [loc, hostClub, contactName ? 'Contact: ' + contactName : ''].filter(Boolean).map(esc).join(' · ');
+      const links = [
+        website ? `<a class="ev-link" href="${esc(website)}" target="_blank" rel="noopener nofollow">Event website →</a>` : '',
+        contactEmail ? `<a class="ev-link muted" href="mailto:${esc(contactEmail)}">Email ${esc(contactName || 'organizer')} →</a>` : ''
+      ].filter(Boolean).join('');
+      const past = time !== Infinity && time < now.getTime();
+      return `<div class="event-row interest-card${past ? ' is-past' : ''}">
+        <div class="ev-date">${esc(dateLabel)}</div>
+        <div class="ev-stripe proposed"></div>
         <div class="ev-body">
-          <div class="ev-name">${name}</div>
-          <div class="ev-meta">${metaParts.join(' · ')}${contactHtml ? (metaParts.length ? ' · ' : '') + contactHtml : ''}</div>
+          <div class="ev-name">${esc(name)}</div>
+          ${meta ? `<div class="ev-meta">${meta}</div>` : ''}
+          ${links ? `<div class="ev-links">${links}</div>` : ''}
         </div>
-        <div class="ev-tags"><span class="tag">${meetType}</span></div>
+        <div class="ev-tags"><span class="tag">Proposed</span>${meetType ? `<span class="tag">${esc(meetType)}</span>` : ''}</div>
       </div>`;
     }).join('');
   }
@@ -729,6 +766,10 @@
   });
 
   hostForm.addEventListener('submit', () => {
+    // Store a full address so the link works on the list ("example.com" -> "https://example.com")
+    const w = document.getElementById('meetWebsite');
+    const v = w.value.trim();
+    if (v && !/^https?:\/\//i.test(v)) w.value = 'https://' + v;
     formSubmitted = true;
   });
 </script>
