@@ -19,6 +19,7 @@
     --green-text:#F3F1E7;
     --red:#9E3A2E;
     --gold:#B8822C;
+    --blue:#3B5B7E;
     --radius:14px;
     --radius-sm:10px;
   }
@@ -88,7 +89,7 @@
   .legend-inner{ display:flex; gap:26px; flex-wrap:wrap; align-items:center; }
   .legend-item{ display:flex; align-items:center; gap:9px; font-size:12.5px; color:var(--ink-dim); }
   .plate{ width:16px;height:16px; border-radius:50%; flex-shrink:0; }
-  .plate.red{background:var(--red);} .plate.green{background:var(--green);}
+  .plate.red{background:var(--red);} .plate.green{background:var(--green);} .plate.blue{background:var(--blue);}
   .legend-item b{ color:var(--ink); font-weight:600; }
 
   /* ---------- CONTROLS ---------- */
@@ -113,7 +114,7 @@
   .event-row.is-past{ opacity:0.5; }
   .ev-date{ font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--ink-dim); }
   .ev-stripe{ align-self:stretch; border-radius:4px; }
-  .ev-stripe.red{ background:var(--red); } .ev-stripe.green{ background:var(--green); } .ev-stripe.gold{ background:var(--gold); }
+  .ev-stripe.red{ background:var(--red); } .ev-stripe.green{ background:var(--green); } .ev-stripe.blue{ background:var(--blue); } .ev-stripe.gold{ background:var(--gold); }
   .ev-body{ min-width:0; }
   .ev-name{ font-family:'Poppins', sans-serif; font-size:16px; font-weight:600; color:var(--ink); }
   .ev-meta{ font-size:12.5px; color:var(--ink-dim); margin-top:3px; }
@@ -196,6 +197,8 @@
     .interest-row{ grid-template-columns:1fr; row-gap:6px; }
   }
 
+  #emptyState{ margin-top:6px; }
+
   /* ---------- MOBILE (phones) ---------- */
   .ev-date{ font-variant-numeric:tabular-nums; }
   @media (max-width:640px){
@@ -220,7 +223,7 @@
     .legend-inner{ flex-direction:column; align-items:flex-start; gap:10px; }
     .legend-item{ font-size:13.5px; }
     /* Filters: three equal buttons in one row */
-    .controls{ display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:8px; padding-top:20px; }
+    .controls{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:8px; padding-top:20px; }
     .filter-btn{ min-height:44px; padding:10px 6px; font-size:11.5px; letter-spacing:0.04em; }
     /* Event cards: full-width, larger text, tag and link on their own lines */
     .timeline{ padding-top:16px; }
@@ -258,6 +261,37 @@
   @media (max-width:640px){
     .interest-card .ev-tags{ justify-content:flex-start; }
     .ev-links{ gap:0 18px; }
+  }
+
+  /* ---------- LARGE SCREENS ----------
+     Wide monitors: the page widens and cards flow into columns (read left to right,
+     then down, in date order). Very large/4K screens also scale everything up a bit. */
+  @media (min-width:1500px){
+    .wrap{ max-width:1480px; }
+    .timeline{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:14px 18px; align-items:stretch; }
+    .timeline .event-row{ margin-bottom:0; }
+    .interest-list{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:14px 18px; }
+    .interest-list .event-row{ margin-bottom:0; }
+    .interest-list .interest-status{ grid-column:1 / -1; }
+    .event-row{ grid-template-columns:118px 5px minmax(0,1fr) auto; }
+    .ev-tags{ flex-wrap:wrap; justify-content:flex-end; max-width:220px; }
+    .section-intro{ max-width:760px; }
+    .hero .sub{ max-width:640px; }
+    /* Host an Event: meet details on the left, location + contact on the right */
+    .host-section .wrap-narrow{ max-width:1180px; }
+    #hostForm{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); grid-template-rows:auto 1fr; column-gap:40px; align-items:start; }
+    #hostForm > fieldset:first-of-type{ grid-column:1; grid-row:1 / span 2; }
+    #hostForm > fieldset:not(:first-of-type){ grid-column:2; }
+    #hostForm > button, #hostForm > .form-note{ grid-column:1 / -1; }
+    #hostForm > button{ justify-self:start; }
+  }
+  @media (min-width:2200px){
+    .wrap{ max-width:2060px; }
+    .timeline, .interest-list{ grid-template-columns:repeat(3, minmax(0,1fr)); }
+  }
+  /* True 4K at 100% scaling: scale the whole page so text stays readable */
+  @media (min-width:2800px){
+    body{ zoom:1.4; }
   }
 </style>
 </head>
@@ -309,6 +343,7 @@
   <div class="wrap legend-inner">
     <div class="legend-item"><span class="plate red"></span><span><b>National</b> — USA Weightlifting</span></div>
     <div class="legend-item"><span class="plate green"></span><span><b>Local</b> — PNW WSO sanctioned</span></div>
+    <div class="legend-item"><span class="plate blue"></span><span><b>Camps &amp; Courses</b> — camps, speaker series &amp; USAW coaching courses in AK, OR &amp; WA</span></div>
   </div>
 </div>
 
@@ -317,9 +352,23 @@
     <button class="filter-btn active" data-filter="all">All events</button>
     <button class="filter-btn" data-filter="national">National</button>
     <button class="filter-btn" data-filter="local">Local (PNW WSO)</button>
+    <button class="filter-btn" data-filter="education">Camps &amp; Courses</button>
   </div>
 
   <div class="timeline" id="timeline">
+
+    <!-- CAMPS & COURSES rows use the education tier and a blue stripe, e.g.
+    <div class="event-row" data-tier="education" data-start="2027-02-20">
+      <div class="ev-date">Feb 20, 2027</div>
+      <div class="ev-stripe blue"></div>
+      <div class="ev-body">
+        <div class="ev-name">Event name</div>
+        <div class="ev-meta">Host club · City, ST · Speaker or coach</div>
+        <a class="ev-link" href="https://…" target="_blank" rel="noopener">Event info →</a>
+      </div>
+      <div class="ev-tags"><span class="tag">Camp</span></div>   (or "Speaker Series" / "Course")
+    </div>
+    Insert in date order among the other rows. -->
 
     <div class="event-row" data-tier="local" data-start="2026-08-29">
       <div class="ev-date">Aug 29–30, 2026</div>
@@ -365,6 +414,17 @@
       <div class="ev-tags"><span class="tag">Local · WSO Champs</span></div>
     </div>
 
+    <div class="event-row" data-tier="education" data-start="2026-10-17">
+      <div class="ev-date">Oct 17–18, 2026</div>
+      <div class="ev-stripe blue"></div>
+      <div class="ev-body">
+        <div class="ev-name">USAW Level 2 Coaching Course</div>
+        <div class="ev-meta">Seattle, WA</div>
+        <a class="ev-link muted" href="https://usaweightlifting.sport80.com/public/widget/2" target="_blank" rel="noopener">Registration via USAW →</a>
+      </div>
+      <div class="ev-tags"><span class="tag">Course</span></div>
+    </div>
+
     <div class="event-row" data-tier="local" data-start="2026-10-31">
       <div class="ev-date">Oct 31, 2026</div>
       <div class="ev-stripe green"></div>
@@ -374,6 +434,50 @@
         <a class="ev-link muted" href="https://usaweightlifting.sport80.com/public/widget/1" target="_blank" rel="noopener">Registration via USAW →</a>
       </div>
       <div class="ev-tags"><span class="tag">Local</span></div>
+    </div>
+
+    <div class="event-row" data-tier="education" data-start="2026-11-06">
+      <div class="ev-date">Nov 6–7, 2026</div>
+      <div class="ev-stripe blue"></div>
+      <div class="ev-body">
+        <div class="ev-name">USAW Level 1 Coaching Course (Women’s Only)</div>
+        <div class="ev-meta">Portland, OR</div>
+        <a class="ev-link muted" href="https://usaweightlifting.sport80.com/public/widget/2" target="_blank" rel="noopener">Registration via USAW →</a>
+      </div>
+      <div class="ev-tags"><span class="tag">Course</span></div>
+    </div>
+
+    <div class="event-row" data-tier="education" data-start="2026-11-07">
+      <div class="ev-date">Nov 7–8, 2026</div>
+      <div class="ev-stripe blue"></div>
+      <div class="ev-body">
+        <div class="ev-name">USAW Level 1 Coaching Course</div>
+        <div class="ev-meta">Richland, WA</div>
+        <a class="ev-link muted" href="https://usaweightlifting.sport80.com/public/widget/2" target="_blank" rel="noopener">Registration via USAW →</a>
+      </div>
+      <div class="ev-tags"><span class="tag">Course</span></div>
+    </div>
+
+    <div class="event-row" data-tier="education" data-start="2026-11-08">
+      <div class="ev-date">Nov 8–9, 2026</div>
+      <div class="ev-stripe blue"></div>
+      <div class="ev-body">
+        <div class="ev-name">USAW Level 2 Coaching Course (Women’s Only)</div>
+        <div class="ev-meta">Portland, OR</div>
+        <a class="ev-link muted" href="https://usaweightlifting.sport80.com/public/widget/2" target="_blank" rel="noopener">Registration via USAW →</a>
+      </div>
+      <div class="ev-tags"><span class="tag">Course</span></div>
+    </div>
+
+    <div class="event-row" data-tier="education" data-start="2026-11-14">
+      <div class="ev-date">Nov 14–15, 2026</div>
+      <div class="ev-stripe blue"></div>
+      <div class="ev-body">
+        <div class="ev-name">USAW Level 1 Coaching Course</div>
+        <div class="ev-meta">Anchorage, AK</div>
+        <a class="ev-link muted" href="https://usaweightlifting.sport80.com/public/widget/2" target="_blank" rel="noopener">Registration via USAW →</a>
+      </div>
+      <div class="ev-tags"><span class="tag">Course</span></div>
     </div>
 
     <div class="event-row" data-tier="local" data-start="2026-11-22">
@@ -396,6 +500,17 @@
         <a class="ev-link" href="https://www.usaweightlifting.org/2026-virus-weightlifting-finals" target="_blank" rel="noopener">Register →</a>
       </div>
       <div class="ev-tags"><span class="tag">National</span></div>
+    </div>
+
+    <div class="event-row" data-tier="education" data-start="2026-12-13">
+      <div class="ev-date">Dec 13, 2026</div>
+      <div class="ev-stripe blue"></div>
+      <div class="ev-body">
+        <div class="ev-name">USAW Level 1 Coaching Course</div>
+        <div class="ev-meta">Federal Way, WA</div>
+        <a class="ev-link muted" href="https://usaweightlifting.sport80.com/public/widget/2" target="_blank" rel="noopener">Registration via USAW →</a>
+      </div>
+      <div class="ev-tags"><span class="tag">Course</span></div>
     </div>
 
     <div class="event-row" data-tier="local" data-start="2027-01-23">
@@ -453,6 +568,17 @@
       <div class="ev-tags"><span class="tag">National</span></div>
     </div>
 
+    <div class="event-row" data-tier="education" data-start="2027-03-19">
+      <div class="ev-date">Mar 19–21, 2027</div>
+      <div class="ev-stripe blue"></div>
+      <div class="ev-body">
+        <div class="ev-name">Jessie &amp; Nate Stemo Weightlifting Camp</div>
+        <div class="ev-meta">Cully Strength · 5230 NE 42nd Ave, Portland, OR · Open camp</div>
+        <a class="ev-link muted" href="https://usaweightlifting.sport80.com/public/widget/3" target="_blank" rel="noopener">Registration via USAW →</a>
+      </div>
+      <div class="ev-tags"><span class="tag">Camp</span></div>
+    </div>
+
     <div class="event-row" data-tier="national" data-start="2027-04-15">
       <div class="ev-date">Apr 15–18, 2027</div>
       <div class="ev-stripe red"></div>
@@ -498,6 +624,8 @@
     </div>
 
   </div>
+
+  <p class="interest-status" id="emptyState" hidden>No upcoming camps, speaker series or coaching courses are posted right now. Know of one in Alaska, Oregon or Washington? Submit it with the Host an Event form below.</p>
 
   <div class="section-head" id="interest">
     <h2>Upcoming Local Events</h2>
@@ -601,11 +729,13 @@
 
 <footer>
   <div class="wrap">
-    <p class="note">Snapshot compiled Oct 16, 2026. Local PNW WSO meets are typically posted only a few months out — check the sources below for additions, especially further into 2027. The calendar timeline above is a static snapshot; the Upcoming Local Events list refreshes live from the WSO's sheet.</p>
+    <p class="note">Snapshot compiled Oct 16, 2026 (camps &amp; courses checked on Sport80 the same day). Local PNW WSO meets are typically posted only a few months out — check the sources below for additions, especially further into 2027. The calendar timeline above is a static snapshot; the Upcoming Local Events list refreshes live from the WSO's sheet.</p>
     <ul>
       <li>→ <a href="https://www.usaweightlifting.org/national-events" target="_blank" rel="noopener">USA Weightlifting — National Events</a></li>
       <li>→ <a href="https://www.pnwwsoweightlifting.com/" target="_blank" rel="noopener">PNW WSO — Official Site</a></li>
       <li>→ <a href="https://docs.google.com/spreadsheets/d/1TKmTIMT-Hm0bQHlxFZ7ZC_g9FJgRmO_wdLdfOiTQyl4/edit#gid=0" target="_blank" rel="noopener">PNW WSO — Sanctioned Meets Sheet (live)</a></li>
+      <li>→ <a href="https://usaweightlifting.sport80.com/public/widget/3" target="_blank" rel="noopener">USAW — Camps &amp; Speaker Series (Sport80)</a></li>
+      <li>→ <a href="https://usaweightlifting.sport80.com/public/widget/2" target="_blank" rel="noopener">USAW — Coaching Courses (Sport80)</a></li>
       <li>→ <a href="https://usaweightlifting.sport80.com/public/widget/7" target="_blank" rel="noopener">USAW — Club Finder (filter by state for full club roster)</a></li>
       <li>→ <a href="https://www.usaweightlifting.org/club-wso/wso-information/pacific-northwest" target="_blank" rel="noopener">USAW — Pacific Northwest WSO Info</a></li>
     </ul>
@@ -625,6 +755,8 @@
         if (filter === 'all' || row.dataset.tier === filter) row.classList.remove('hide');
         else row.classList.add('hide');
       });
+      const anyVisible = Array.prototype.some.call(rows, r => !r.classList.contains('hide') && r.style.display !== 'none');
+      document.getElementById('emptyState').hidden = anyVisible;
     });
   });
 
@@ -641,7 +773,7 @@
       row.style.display = 'none';
     } else if (start < now) {
       row.classList.add('is-past');
-    } else if (start - now < nextDiff) {
+    } else if (row.dataset.tier !== 'education' && start - now < nextDiff) {
       nextDiff = start - now; nextRow = row;
     }
   });
