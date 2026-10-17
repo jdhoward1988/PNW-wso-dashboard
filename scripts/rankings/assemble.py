@@ -16,7 +16,7 @@ import json, sys, datetime, pathlib
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 DATA = ROOT / 'data' / 'rankings.json'
-KEYS = ['season', 'source', 'fields', 'levels', 'clubs', 'classes']
+KEYS = ['season', 'source', 'fields', 'levels', 'clubs', 'classes', 'youth']
 
 
 def djb2(s):
@@ -27,13 +27,18 @@ def djb2(s):
     return h
 
 
+def lists(obj):
+    return list(obj['classes'].values()) + [v for g in obj.get('youth', {}).values() for v in g.values()]
+
+
 def normalize(obj):
     # Same tie order as fetch.js: rank, then USAW member id
     old = obj['clubs']
-    for v in obj['classes'].values():
+    obj.setdefault('youth', {})
+    for v in lists(obj):
         v.sort(key=lambda r: (r[0], r[9]))
     clubs = []
-    for v in obj['classes'].values():
+    for v in lists(obj):
         for r in v:
             name = old[r[4]] if r[4] >= 0 else ''
             if name and name not in clubs:
@@ -44,13 +49,15 @@ def normalize(obj):
 
 
 def canonical(obj):
+    obj = dict(obj); obj.setdefault('youth', {})
     return json.dumps({k: obj[k] for k in KEYS}, separators=(',', ':'), ensure_ascii=False)
 
 
 def key_hash(obj):
     clubs = obj['clubs']
+    items = list(obj['classes'].items()) + [(g + ' ' + k, v) for g, cl in obj.get('youth', {}).items() for k, v in cl.items()]
     rows = [[k, [[r[0], r[2], r[3], clubs[r[4]] if r[4] >= 0 else '', r[5], r[9]] for r in v]]
-            for k, v in obj['classes'].items()]
+            for k, v in items]
     return djb2(json.dumps(rows, separators=(',', ':'), ensure_ascii=False))
 
 
@@ -64,7 +71,7 @@ def today():
 
 def write(obj):
     out = {'season': obj['season'], 'updated': today()}
-    out.update({k: obj[k] for k in KEYS if k != 'season'})
+    out.update({k: obj.get(k, {}) for k in KEYS if k != 'season'})
     DATA.write_text(json.dumps(out, separators=(',', ':'), ensure_ascii=False))
 
 
@@ -86,10 +93,11 @@ def main():
             sys.exit(f'HASH MISMATCH: got {djb2(s)}, expected {want_hash}')
         obj = json.loads(s)
         n = sum(len(v) for v in obj['classes'].values())
+        ny = sum(len(v) for g in obj.get('youth', {}).values() for v in g.values())
         if n == 0:
             sys.exit('REFUSING: no results returned (e.g. early in a new season); keeping the current file')
         write(obj)
-        print(f'OK: {n} results, {len(obj["clubs"])} clubs, season {obj["season"]}')
+        print(f'OK: {n} Open results + {ny} youth results in {len(obj.get("youth", {}))} age groups, {len(obj["clubs"])} clubs, season {obj["season"]}')
     elif cmd == 'touch':
         cur = json.loads(DATA.read_text())
         write(cur)

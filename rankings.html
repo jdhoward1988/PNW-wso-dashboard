@@ -311,10 +311,6 @@
       </div>
     </div>
     <div class="ctrl-row">
-      <span class="ctrl-label">Weight class</span>
-      <div class="seg wcs" id="wcSeg"></div>
-    </div>
-    <div class="ctrl-row">
       <span class="ctrl-label">Age group</span>
       <div class="seg" id="ageSeg">
         <button class="filter-btn active" data-a="all">All ages</button>
@@ -322,6 +318,14 @@
         <button class="filter-btn" data-a="junior">Junior 15–20</button>
         <button class="filter-btn" data-a="masters">Masters 35+</button>
       </div>
+    </div>
+    <div class="ctrl-row" id="ygRow" hidden>
+      <span class="ctrl-label">Youth group</span>
+      <div class="seg" id="ygSeg"></div>
+    </div>
+    <div class="ctrl-row">
+      <span class="ctrl-label">Weight class</span>
+      <div class="seg wcs" id="wcSeg"></div>
     </div>
     <div class="ctrl-row">
       <span class="ctrl-label">Division</span>
@@ -367,7 +371,7 @@
     </table>
   </div>
 
-  <p class="note-box">Rank is among PNW WSO lifters only; picking an age group re-ranks within that group. US rank is the lifter's place in USA Weightlifting's national list for the class. Age groups go by the lifter's age at the meet: Youth up to 17, Junior 15–20, Masters 35 and over. A lifter can appear in more than one class if they competed at different bodyweights. USA Weightlifting's public results don't mark adaptive athletes, so the Adaptive badge comes from athletes who opted in with the PNW WSO (approved opt-ins appear after the next Wednesday update); their adaptive category is shown only if they chose to share it. Picking Adaptive re-ranks among adaptive lifters in the class, and picking a category re-ranks within that category, as USAW does at national events. <span id="optinNote"></span> Spot a problem? Results are managed by USA Weightlifting, so corrections go through them.</p>
+  <p class="note-box">Rank is among PNW WSO lifters only; picking an age group re-ranks within that group. US rank is the lifter's place in USA Weightlifting's national list for the class. Youth rankings use USA Weightlifting's own youth age groups (16–17, 14–15, 13 &amp; Under, 11 &amp; Under), each with its own weight classes. Junior (15–20) and Masters (35 and over) use the Open weight classes and go by the lifter's age at the meet. A lifter can appear in more than one class if they competed at different bodyweights. USA Weightlifting's public results don't mark adaptive athletes, so the Adaptive badge comes from athletes who opted in with the PNW WSO (approved opt-ins appear after the next Wednesday update); their adaptive category is shown only if they chose to share it. Picking Adaptive re-ranks among adaptive lifters in the class, and picking a category re-ranks within that category, as USAW does at national events. <span id="optinNote"></span> Spot a problem? Results are managed by USA Weightlifting, so corrections go through them.</p>
 </div>
 
 <footer>
@@ -387,7 +391,7 @@
   const PROFILE = 'https://usaweightlifting.sport80.com/public/rankings/member/';
   const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const ACRONYMS = new Set(['CFW','RCF','MKG','GSC','WLC','CHFP','PR','USA','WA','OR','AK','PNW','II','III']);
-  const state = { g:'W', wc:null, age:'all', div:'all', q:'', club:'' };
+  const state = { g:'W', wc:null, age:'all', yg:null, div:'all', q:'', club:'' };
   let DATA = null, ROWS = [], ADAPTIVE = { athletes:{} };
   const AD_CATS = { PD:'Physical Disability', VI:'Visual Impairment', DHH:'Deaf / Hard of Hearing', ID:'Intellectual Impairment' };
   const AD_SHORT = { PD:'Physical', VI:'Visual', DHH:'Deaf / HoH', ID:'Intellectual' };
@@ -425,10 +429,20 @@
     : a >= 35;
   const fmtDate = (mmdd, yr) => MONTHS[parseInt(mmdd.slice(0,2),10)-1] + ' ' + parseInt(mmdd.slice(2),10) + ', ' + yr;
   const fmtLong = iso => { const [y,m,d] = iso.split('-').map(Number); return MONTHS[m-1] + ' ' + d + ', ' + y; };
-  const classesFor = g => Object.keys(DATA.classes).filter(k => g === 'W' ? k.startsWith("Women") : k.startsWith("Men"));
+  // Youth age groups have their own weight classes; everything else uses the Open classes.
+  const YG_LABEL = k => k.replace('-', '–').replace(/ Under$/, ' & Under');
+  const youthGroups = () => Object.keys(DATA.youth || {});
+  const curSet = () => state.age === 'youth' && state.yg ? state.yg : 'open';
+  const setClasses = set => set === 'open' ? DATA.classes : (DATA.youth[set] || {});
+  const classesFor = (g, set = curSet()) => Object.keys(setClasses(set)).filter(k => g === 'W' ? k.startsWith("Women") : k.startsWith("Men"));
   const shortWc = k => k.replace(/^(Wo)?men's /i,'');
   // Open on the class with the most ranked lifters, so the first view isn't a near-empty list
-  const busiest = g => classesFor(g).reduce((best, k) => DATA.classes[k].length > DATA.classes[best].length ? k : best);
+  const busiest = (g, set = curSet()) => { const c = setClasses(set); return classesFor(g, set).reduce((best, k) => c[k].length > c[best].length ? k : best); };
+  // When the class list changes (age group or gender), keep the same weight if it exists there
+  const pickClass = () => {
+    const same = classesFor(state.g).find(k => k === state.wc);
+    state.wc = same && setClasses(curSet())[same].length ? same : busiest(state.g);
+  };
 
   // Standard competition ranking on total (ties share a place: 1, 2, 2, 4)
   function rankList(list){
@@ -442,10 +456,11 @@
   function build(){
     const yr = DATA.season;
     ROWS = [];
-    for (const [wc, list] of Object.entries(DATA.classes)){
+    const sets = [['open', DATA.classes], ...youthGroups().map(k => [k, DATA.youth[k]])];
+    for (const [set, cls] of sets) for (const [wc, list] of Object.entries(cls)){
       for (const r of list){
         ROWS.push({
-          wc, g: wc.startsWith('Women') ? 'W' : 'M',
+          set, wc, g: wc.startsWith('Women') ? 'W' : 'M',
           pnw:r[0], us:r[1], total:r[2], name:tidy(r[3]), club: r[4] >= 0 ? tidy(DATA.clubs[r[4]], true) : '',
           age:r[5], bw:r[6], date:fmtDate(r[7], yr), sortDate:r[7], level:DATA.levels[r[8]] || r[8], lvl:r[8], id:r[9], ad:adOf(r[9])
         });
@@ -457,6 +472,7 @@
     document.getElementById('footUpdated').textContent = fmtLong(DATA.updated);
 
     // Stats
+    const OPEN = ROWS.filter(r => r.set === 'open');
     const lifters = new Set(ROWS.map(r => r.id)).size;
     const clubs = new Set(ROWS.filter(r => r.club).map(r => r.club.toLowerCase())).size;
     const adCount = new Set(ROWS.filter(r => r.ad !== null).map(r => r.id)).size;
@@ -469,15 +485,15 @@
       ? `Adaptive lifters (or a parent, guardian or coach with their permission) can <a href="${esc(form)}" target="_blank" rel="noopener">opt in here</a>.` : '';
     document.getElementById('stats').innerHTML =
       `<div class="stat"><b>${lifters}</b><span>Ranked lifters</span></div>` +
-      `<div class="stat"><b>${ROWS.length}</b><span>Class results</span></div>` +
+      `<div class="stat"><b>${OPEN.length}</b><span>Open class results</span></div>` +
       `<div class="stat"><b>${clubs}</b><span>Clubs</span></div>` +
       (adCount ? `<div class="stat"><b>${adCount}</b><span>Adaptive lifters</span></div>` : '');
 
     // Leaders
     for (const g of ['W','M']){
       const el = document.getElementById(g === 'W' ? 'leadersW' : 'leadersM');
-      el.innerHTML = classesFor(g).map(wc => {
-        const top = ROWS.filter(r => r.wc === wc).sort((a,b) => a.pnw - b.pnw);
+      el.innerHTML = classesFor(g, 'open').map(wc => {
+        const top = OPEN.filter(r => r.wc === wc).sort((a,b) => a.pnw - b.pnw);
         if (!top.length) return '';
         const lead = top.filter(r => r.pnw === top[0].pnw);
         const who = lead.map(r => esc(r.name)).join(' &amp; ');
@@ -494,6 +510,7 @@
     document.querySelectorAll('.leader').forEach(b => b.addEventListener('click', () => {
       const wc = b.dataset.wc;
       state.g = wc.startsWith('Women') ? 'W' : 'M'; state.wc = wc; state.q = ''; document.getElementById('q').value = '';
+      if (state.age === 'youth') state.age = 'all';
       syncButtons(); render();
       document.getElementById('rankings').scrollIntoView({ behavior:'smooth', block:'start' });
     }));
@@ -502,11 +519,21 @@
     const clubNames = [...new Map(ROWS.filter(r => r.club).map(r => [r.club.toLowerCase(), r.club])).values()].sort((a,b) => a.localeCompare(b));
     document.getElementById('clubSel').insertAdjacentHTML('beforeend', clubNames.map(c => `<option>${esc(c)}</option>`).join(''));
 
-    // Restore from URL hash (#w-69 / #m-110p), else default to the busiest class
-    const h = location.hash.match(/^#(w|m)-(\d+p?)$/i);
+    const yg = document.getElementById('ygSeg');
+    yg.innerHTML = youthGroups().map(k => `<button class="filter-btn" data-y="${esc(k)}">${esc(YG_LABEL(k))}</button>`).join('');
+    yg.addEventListener('click', e => {
+      const b = e.target.closest('button'); if (!b) return;
+      state.yg = b.dataset.y; pickClass(); syncButtons(); render();
+    });
+    state.yg = youthGroups()[0] || null;
+    // Without youth data (older data file), Youth falls back to re-ranking the Open lists by age
+
+    // Restore from URL hash (#w-69, #m-110p, or youth #y16-17-w-49), else default to the busiest class
+    const h = decodeURIComponent(location.hash).match(/^#(?:y(.+?)-)?(w|m)-(\d+p?)$/i);
     if (h){
-      state.g = h[1].toUpperCase();
-      const want = h[2].replace('p','+') + 'kg';
+      if (h[1] && youthGroups().includes(h[1].replace('_', ' '))){ state.age = 'youth'; state.yg = h[1].replace('_', ' '); }
+      state.g = h[2].toUpperCase();
+      const want = h[3].replace('p','+') + 'kg';
       state.wc = classesFor(state.g).find(k => shortWc(k) === want) || null;
     }
     if (!state.wc) state.wc = busiest(state.g);
@@ -520,6 +547,8 @@
       `<button class="filter-btn wc ${wc === state.wc ? 'active' : ''}" data-wc="${esc(wc)}">${esc(shortWc(wc))}</button>`).join('');
     seg.querySelectorAll('button').forEach(b => b.addEventListener('click', () => { state.wc = b.dataset.wc; syncButtons(); render(); }));
     document.querySelectorAll('#ageSeg .filter-btn').forEach(b => b.classList.toggle('active', b.dataset.a === state.age));
+    document.getElementById('ygRow').hidden = state.age !== 'youth' || !youthGroups().length;
+    document.querySelectorAll('#ygSeg .filter-btn').forEach(b => b.classList.toggle('active', b.dataset.y === state.yg));
     document.querySelectorAll('#divSeg .filter-btn').forEach(b => b.classList.toggle('active', b.dataset.d === state.div));
   }
 
@@ -549,20 +578,26 @@
     const wrap = document.getElementById('tableWrap');
     let html = '', count = 0, title;
 
-    // Search covers every class (both categories) so lifters can find themselves quickly.
-    const scopeClasses = searching ? Object.keys(DATA.classes) : [state.wc];
-    for (const wc of scopeClasses){
-      let list = ROWS.filter(r => r.wc === wc && inAge(r.age, state.age) && inDiv(r)).sort((a,b) => b.total - a.total || a.pnw - b.pnw);
+    // Search covers every class (both categories) so lifters can find themselves quickly;
+    // in Youth it covers every youth age group.
+    const youthMode = state.age === 'youth' && state.yg;
+    const scope = !searching ? [[curSet(), state.wc]]
+      : youthMode ? youthGroups().flatMap(k => Object.keys(DATA.youth[k]).map(wc => [k, wc]))
+      : Object.keys(DATA.classes).map(wc => ['open', wc]);
+    for (const [set, wc] of scope){
+      // Youth lists are already USAW youth age-group rankings; other age filters re-rank the Open list
+      const ageOk = r => set !== 'open' ? true : inAge(r.age, state.age);
+      let list = ROWS.filter(r => r.set === set && r.wc === wc && ageOk(r) && inDiv(r)).sort((a,b) => b.total - a.total || a.pnw - b.pnw);
       list = rankList(list);
       if (state.club) list = list.filter(r => r.club === state.club);
       if (searching) list = list.filter(r => r.name.toLowerCase().includes(q) || r.club.toLowerCase().includes(q));
       if (!list.length) continue;
-      if (searching) html += `<tr class="group-row"><td colspan="10">${esc(wc)}</td></tr>`;
+      if (searching) html += `<tr class="group-row"><td colspan="10">${set === 'open' ? '' : esc('Youth ' + YG_LABEL(set) + ' · ')}${esc(wc)}</td></tr>`;
       html += list.map(r => rowHtml(r, searching)).join('');
       count += list.length;
     }
-    const ageTxt = { all:'', youth:' · Youth', junior:' · Junior', masters:' · Masters' }[state.age];
-    title = searching ? `Search: “${state.q.trim()}”${ageTxt}` : state.wc + ageTxt;
+    const ageTxt = youthMode ? ' · Youth ' + YG_LABEL(state.yg) : { all:'', youth:' · Youth', junior:' · Junior', masters:' · Masters' }[state.age];
+    title = searching ? `Search: “${state.q.trim()}”${youthMode ? ' · Youth (all groups)' : ageTxt}` : state.wc + ageTxt;
     if (state.div !== 'all') title += ' · ' + (state.div === 'adaptive' ? 'Adaptive' : 'Adaptive ' + AD_SHORT[state.div]);
     if (state.club) title += ' · ' + state.club;
     wrap.classList.toggle('show-cls', false);
@@ -574,7 +609,7 @@
       : state.div !== 'all' ? 'No opted-in adaptive lifters in this class yet.' : 'No ranked lifters match these filters yet this season.';
     document.getElementById('tbody').innerHTML = html || `<tr><td class="empty" colspan="10">${emptyMsg}</td></tr>`;
     if (!searching){
-      const tag = (state.g === 'W' ? 'w-' : 'm-') + shortWc(state.wc).replace('kg','').replace('+','p');
+      const tag = (youthMode ? 'y' + state.yg.replace(' ', '_') + '-' : '') + (state.g === 'W' ? 'w-' : 'm-') + shortWc(state.wc).replace('kg','').replace('+','p');
       history.replaceState(null, '', '#' + tag);
     }
   }
@@ -586,7 +621,7 @@
   });
   document.getElementById('ageSeg').addEventListener('click', e => {
     const b = e.target.closest('button'); if (!b) return;
-    state.age = b.dataset.a; syncButtons(); render();
+    state.age = b.dataset.a; pickClass(); syncButtons(); render();
   });
   document.getElementById('divSeg').addEventListener('click', e => {
     const b = e.target.closest('button'); if (!b) return;
