@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PNW WSO Competition Calendar</title>
+<title>PNW WSO Weightlifting Calendar</title>
+<meta name="description" content="USA Weightlifting national events, sanctioned meets, coaching courses and camps in Alaska, Oregon and Washington, plus community lifting events like mock meets.">
 <link rel="icon" type="image/png" sizes="64x64" href="assets/pnw-wso-mark-64.png">
 <link rel="apple-touch-icon" href="assets/pnw-wso-mark-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -341,27 +342,27 @@
 
 <div class="mission">
   <div class="wrap">
-    <p>Serving the weightlifting community across Alaska, Oregon &amp; Washington under USA Weightlifting. This page tracks every national and PNW WSO local meet in one place.</p>
+    <p>The Pacific Northwest WSO supports weightlifting in Alaska, Oregon and Washington under USA Weightlifting. This calendar puts every USAW event in the region, plus community-run lifting events, in one place.</p>
   </div>
 </div>
 
 <div class="hero">
   <div class="wrap">
     <div class="eyebrow">2026–27 Season</div>
-    <h1>Competition<br>Calendar</h1>
-    <p class="sub">USAW national events and PNW WSO&#8209;sanctioned local meets — for WSO reps, coaches, and athletes across AK, OR &amp; WA.</p>
+    <h1>Weightlifting<br>Calendar</h1>
+    <p class="sub">USA Weightlifting national events, sanctioned local meets, coaching courses and camps, plus mock meets and other community events. For athletes, coaches, officials and meet directors across AK, OR and WA.</p>
     <div class="cta-row">
-      <a class="pill-btn on-green" href="#timeline">See the schedule ↓</a>
-      <a class="pill-btn on-green" href="#host">Host an event ↓</a>
+      <a class="pill-btn on-green" href="#timeline">See the calendar ↓</a>
+      <a class="pill-btn on-green" href="#host">Add your event ↓</a>
     </div>
   </div>
 </div>
 
 <div class="legend">
   <div class="wrap legend-inner">
-    <div class="legend-item"><span class="plate red"></span><span><b>National</b> — USA Weightlifting</span></div>
-    <div class="legend-item"><span class="plate green"></span><span><b>Local</b> — PNW WSO sanctioned</span></div>
-    <div class="legend-item"><span class="plate blue"></span><span><b>Camps &amp; Courses</b> — camps, speaker series &amp; USAW coaching courses in AK, OR &amp; WA</span></div>
+    <div class="legend-item"><span class="plate red"></span><span><b>National</b> — USA Weightlifting national championships and series</span></div>
+    <div class="legend-item"><span class="plate green"></span><span><b>Local</b> — USAW-sanctioned meets in AK, OR and WA</span></div>
+    <div class="legend-item"><span class="plate blue"></span><span><b>Camps &amp; Courses</b> — USAW coaching courses, camps and speaker series in AK, OR and WA</span></div>
   </div>
 </div>
 
@@ -369,7 +370,7 @@
   <div class="controls">
     <button class="filter-btn active" data-filter="all">All events</button>
     <button class="filter-btn" data-filter="national">National</button>
-    <button class="filter-btn" data-filter="local">Local (PNW WSO)</button>
+    <button class="filter-btn" data-filter="local">Local meets</button>
     <button class="filter-btn" data-filter="education">Camps &amp; Courses</button>
   </div>
 
@@ -643,38 +644,38 @@
 
   </div>
 
-  <p class="interest-status" id="emptyState" hidden>No upcoming camps, speaker series or coaching courses are posted right now. Know of one in Alaska, Oregon or Washington? Submit it with the Host an Event form below.</p>
+  <p class="interest-status" id="emptyState" hidden>No coaching courses, camps or speaker series are posted for Alaska, Oregon or Washington right now. New ones are added as USA Weightlifting lists them.</p>
 
   <div class="section-head" id="interest">
     <h2>Upcoming Local Events</h2>
     <span class="count" id="interestCount">Loading…</span>
   </div>
-  <p class="section-intro">A running list of proposed meets and event ideas — sanctioned or not — submitted by directors across AK, OR &amp; WA. A good place to spot date/venue overlap or reach out directly if something here interests you. Official USAW sanctioning happens separately through Sport80; once a meet is sanctioned, it'll appear on the calendar above.</p>
+  <p class="section-intro">Mock meets, unsanctioned competitions, lifting challenges and other events run by clubs in AK, OR and WA. These don't follow full IWF/USAW competition rules, so results don't count toward records or qualifying totals. Planned sanctioned meets also appear here until USAW approves them in Sport80; then they move to the calendar above. Organizers add events with the form below, and they show up here automatically.</p>
   <div class="interest-list" id="interestList">
-    <p class="interest-status">Loading interest submissions…</p>
+    <p class="interest-status">Loading community events…</p>
   </div>
 </div>
 
 <div class="host-section" id="host">
   <div class="wrap-narrow">
     <div class="section-head">
-      <h2>Host an Event</h2>
+      <h2>Add Your Event</h2>
     </div>
-    <p class="section-intro">Interested in hosting a meet — sanctioned, unsanctioned, or something else entirely? Submit the basics below and it goes straight into the PNW WSO's event interest list.</p>
+    <p class="section-intro">Running a mock meet or lifting challenge, or planning a sanctioned meet? Share the details below. Your event will appear in Upcoming Local Events, where lifters can find it and other organizers can avoid scheduling on the same date.</p>
 
-    <div class="success-box" id="successBox">✓ Thanks — your interest has been submitted. The PNW WSO board will follow up about next steps.</div>
+    <div class="success-box" id="successBox">✓ Thanks! Your event was submitted. Refresh the page in a minute to see it in Upcoming Local Events.</div>
 
     <form id="hostForm" action="https://docs.google.com/forms/d/e/1FAIpQLSdsojk2POBbX2_fZln2w9SFLrGQHB4wWKnLajcayiyhjRPoPA/formResponse" method="POST" target="hidden_iframe" style="margin-top:20px;">
 
       <fieldset>
-        <legend>Meet details</legend>
+        <legend>Event details</legend>
         <div class="field">
           <label for="meetName">Name of event</label>
-          <input type="text" id="meetName" name="entry.2092238618" placeholder="e.g. Cully Strength Winter Open" required>
+          <input type="text" id="meetName" name="entry.2092238618" placeholder="e.g. Fall Mock Meet" required>
         </div>
         <div class="row2">
           <div class="field">
-            <label for="meetDate">Proposed meet date</label>
+            <label for="meetDate">Event date</label>
             <input type="date" id="meetDate" name="entry.772194971" required>
           </div>
           <div class="field">
@@ -683,7 +684,7 @@
           </div>
         </div>
         <div class="field">
-          <label for="meetType">Meet type</label>
+          <label for="meetType">Event type</label>
           <select id="meetType" name="entry.1892539300" required>
             <option value="">Select…</option>
             <option value="Sanctioned Meet">Sanctioned Meet</option>
@@ -692,8 +693,8 @@
           </select>
         </div>
         <div class="field">
-          <label for="meetInfo">Event information <span class="hint">(optional)</span></label>
-          <textarea id="meetInfo" name="entry.1711660579" placeholder="Quick description of event. If other lifting event give some details, e.g. Unsanctioned Super Total, or Clean Speed Ladder etc."></textarea>
+          <label for="meetInfo">About the event <span class="hint">(optional)</span></label>
+          <textarea id="meetInfo" name="entry.1711660579" placeholder="Format, divisions and anything lifters should know. e.g. mock meet with modified attempts, unsanctioned Super Total, clean &amp; jerk ladder."></textarea>
         </div>
         <div class="field">
           <label for="meetWebsite">Event website <span class="hint">(optional — registration or info page)</span></label>
@@ -733,13 +734,13 @@
           </div>
         </div>
         <div class="field">
-          <label for="orgEmail">Email</label>
+          <label for="orgEmail">Contact email <span class="hint">(shown with your listing)</span></label>
           <input type="email" id="orgEmail" name="entry.754171568" required>
         </div>
       </fieldset>
 
-      <button type="submit" class="pill-btn solid">Submit interest →</button>
-      <p class="form-note">This submits directly into the PNW WSO's event interest list, visible above. Official USAW sanctioning is handled separately through Sport80 — once sanctioned, your meet will appear on the main calendar.</p>
+      <button type="submit" class="pill-btn solid">Submit event →</button>
+      <p class="form-note">Your contact name and email appear publicly with your listing so lifters can reach you. Sanctioned meets still need USAW approval through Sport80; once approved, they're added to the main calendar.</p>
     </form>
     <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
   </div>
@@ -747,7 +748,7 @@
 
 <footer>
   <div class="wrap">
-    <p class="note">Snapshot compiled Oct 16, 2026 (camps &amp; courses checked on Sport80 the same day). Local PNW WSO meets are typically posted only a few months out — check the sources below for additions, especially further into 2027. The calendar timeline above is a static snapshot; the Upcoming Local Events list refreshes live from the WSO's sheet.</p>
+    <p class="note">The calendar is checked daily against USA Weightlifting's national events page, its Sport80 meet, course and camp listings, and the PNW WSO sanctioned meets sheet. Last updated <span id="lastUpdated">Oct 16, 2026</span>. Upcoming Local Events updates live as organizers submit events. Dates can change, so confirm details on each event's registration page.</p>
     <ul>
       <li>→ <a href="https://www.usaweightlifting.org/national-events" target="_blank" rel="noopener">USA Weightlifting — National Events</a></li>
       <li>→ <a href="https://www.pnwwsoweightlifting.com/" target="_blank" rel="noopener">PNW WSO — Official Site</a></li>
@@ -861,7 +862,7 @@
       .sort((a, b) => a.time - b.time);
 
     if (!items.length) {
-      interestListEl.innerHTML = '<p class="interest-status">No upcoming events submitted yet. Be the first using the Host an Event form below.</p>';
+      interestListEl.innerHTML = '<p class="interest-status">No community events are listed yet. Hosting one? Add it with the form below.</p>';
       interestCountEl.textContent = '0 upcoming';
       return;
     }
@@ -898,7 +899,7 @@
     .then(res => res.json())
     .then(data => renderInterestRows(Array.isArray(data) ? data : []))
     .catch(() => {
-      interestListEl.innerHTML = '<p class="interest-status">Couldn\'t load the interest list right now — check the Apps Script deployment is still live.</p>';
+      interestListEl.innerHTML = '<p class="interest-status">This list couldn\'t load right now. Refresh the page or check back later.</p>';
       interestCountEl.textContent = 'Unavailable';
     });
 
