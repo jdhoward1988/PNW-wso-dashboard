@@ -10,21 +10,36 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --cream:#EDEAE1;
-    --cream-2:#E2DDCF;
-    --card:#FBFAF6;
-    --ink:#1D1C19;
-    --ink-dim:#635C4E;
-    --ink-faint:#948C7A;
-    --rule:#D7D1C1;
-    --green:#1E3B2A;
-    --green-text:#F3F1E7;
-    --red:#9E3A2E;
-    --gold:#DEAF25;   /* logo sun */
-    --blue:#3477BC;   /* logo mountains */
+    /* PNW WSO Brand Guidelines palette (Kadrian Hinton / Foreign World Media)
+       Primary:   Navy #08172A · Blue #3C78BD · Red #B22024 · Green #4CAB48 · Gold #E0B025
+       Secondary: Grey #CECECD · Off-white #F8F8F8
+       (Guide prints the blue as "3C788D"; its RGB/CMYK values and the logo are #3C78BD.) */
+    --brand-navy:#08172A;
+    --brand-blue:#3C78BD;
+    --brand-red:#B22024;
+    --brand-green:#4CAB48;
+    --brand-gold:#E0B025;
+    --brand-grey:#CECECD;
+    --brand-white:#F8F8F8;
+
+    /* Roles on the page */
+    --cream:var(--brand-white);      /* page background */
+    --cream-2:#ECECEB;               /* alternate bands: off-white toward brand grey */
+    --card:#FFFFFF;
+    --ink:var(--brand-navy);         /* text */
+    --ink-dim:#465366;               /* navy, softened for secondary text */
+    --ink-faint:#6E7887;
+    --rule:var(--brand-grey);
+    --green:var(--brand-navy);       /* feature bands, solid buttons, links */
+    --green-text:var(--brand-white);
+    --local:var(--brand-green);      /* Local tier */
+    --red:var(--brand-red);          /* National tier */
+    --gold:var(--brand-gold);        /* Next up */
+    --blue:var(--brand-blue);        /* Camps & Courses tier */
     --radius:14px;
     --radius-sm:10px;
   }
+
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
@@ -72,7 +87,7 @@
   .pill-btn.dark:hover{ background:var(--ink); color:var(--cream); }
   .pill-btn.on-green{ color:var(--green-text); }
   .pill-btn.on-green:hover{ background:var(--green-text); color:var(--green); }
-  .pill-btn.solid{ background:var(--green); border-color:var(--green); color:#fff; }
+  .pill-btn.solid{ background:var(--green); border-color:var(--green); color:var(--brand-white); }
   .pill-btn.solid:hover{ background:var(--green-text); color:var(--green); }
   .pill-btn:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
   .pill-btn:disabled{ opacity:0.6; cursor:default; }
@@ -82,7 +97,7 @@
   .mission p{ margin:0; max-width:760px; font-size:14px; font-weight:500; opacity:0.92; }
   .hero{ background:var(--green); color:var(--green-text); padding:56px 0 60px; }
   .hero .eyebrow{ font-size:11.5px; letter-spacing:0.18em; text-transform:uppercase; opacity:0.75; margin-bottom:14px; }
-  .hero h1{ font-size:clamp(38px, 6vw, 64px); line-height:0.98; color:#fff; }
+  .hero h1{ font-size:clamp(38px, 6vw, 64px); line-height:0.98; color:var(--brand-white); }
   .hero .sub{ margin-top:16px; max-width:540px; font-size:15px; font-weight:500; opacity:0.85; }
   .hero .cta-row{ margin-top:26px; display:flex; gap:12px; flex-wrap:wrap; }
 
@@ -91,7 +106,7 @@
   .legend-inner{ display:flex; gap:26px; flex-wrap:wrap; align-items:center; }
   .legend-item{ display:flex; align-items:center; gap:9px; font-size:12.5px; color:var(--ink-dim); }
   .plate{ width:16px;height:16px; border-radius:50%; flex-shrink:0; }
-  .plate.red{background:var(--red);} .plate.green{background:var(--green);} .plate.blue{background:var(--blue);}
+  .plate.red{background:var(--red);} .plate.green{background:var(--local);} .plate.blue{background:var(--blue);}
   .legend-item b{ color:var(--ink); font-weight:600; }
 
   /* ---------- CONTROLS ---------- */
@@ -116,13 +131,13 @@
   .event-row.is-past{ opacity:0.5; }
   .ev-date{ font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--ink-dim); }
   .ev-stripe{ align-self:stretch; border-radius:4px; }
-  .ev-stripe.red{ background:var(--red); } .ev-stripe.green{ background:var(--green); } .ev-stripe.blue{ background:var(--blue); } .ev-stripe.gold{ background:var(--gold); }
+  .ev-stripe.red{ background:var(--red); } .ev-stripe.green{ background:var(--local); } .ev-stripe.blue{ background:var(--blue); } .ev-stripe.gold{ background:var(--gold); }
   .ev-body{ min-width:0; }
   .ev-name{ font-family:'Poppins', sans-serif; font-size:16px; font-weight:600; color:var(--ink); }
   .ev-meta{ font-size:12.5px; color:var(--ink-dim); margin-top:3px; }
   .ev-link{
     display:inline-block; font-size:11.5px; font-weight:600; margin-top:8px;
-    color:var(--green); text-decoration:none; border-bottom:1.5px solid var(--green);
+    color:var(--ink); text-decoration:none; border-bottom:1.5px solid var(--brand-blue);
   }
   .ev-link:hover{ opacity:0.75; }
   .ev-link.muted{ color:var(--ink-faint); border-bottom-color:var(--rule); }
@@ -168,7 +183,7 @@
     width:100%; font-family:'Inter', sans-serif; font-size:14px; color:var(--ink); background:var(--card);
     border:1.5px solid var(--rule); border-radius:var(--radius-sm); padding:11px 14px;
   }
-  .field input:focus, .field select:focus, .field textarea:focus{ outline:none; border-color:var(--green); }
+  .field input:focus, .field select:focus, .field textarea:focus{ outline:none; border-color:var(--brand-blue); }
   .field textarea{ min-height:90px; resize:vertical; }
   .row2{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
   .row3{ display:grid; grid-template-columns:2fr 1fr 1fr; gap:16px; }
@@ -189,7 +204,7 @@
   footer ul{ list-style:none; margin:0; padding:0; }
   footer li{ margin-bottom:7px; font-size:12px; }
   footer a{ color:var(--ink-dim); text-decoration:none; }
-  footer a:hover{ color:var(--green); text-decoration:underline; }
+  footer a:hover{ color:var(--brand-blue); text-decoration:underline; }
 
   @media (max-width:640px){
     .event-row{ grid-template-columns:5px 1fr; grid-template-areas:"stripe body" "stripe tags"; row-gap:10px; }
@@ -257,7 +272,7 @@
     .topbar-right .pill-btn{ white-space:normal; text-align:center; padding:10px 8px; letter-spacing:0.05em; }
     .filter-btn{ font-size:10.5px; letter-spacing:0.02em; }
   }
-  .ev-stripe.proposed{ background:repeating-linear-gradient(180deg, var(--green) 0 6px, transparent 6px 10px); }
+  .ev-stripe.proposed{ background:repeating-linear-gradient(180deg, var(--local) 0 6px, transparent 6px 10px); }
   .ev-links{ display:flex; flex-wrap:wrap; gap:4px 18px; }
   .interest-card .ev-tags{ flex-wrap:wrap; justify-content:flex-end; }
   @media (max-width:640px){
@@ -300,7 +315,7 @@
   .brand{ display:flex; align-items:center; text-decoration:none; }
   .brand-logo{ display:block; height:88px; width:auto; max-width:100%; }
   .topbar{ padding:14px 0; }
-  .tag.next{ color:#1D1C19; }
+  .tag.next{ color:var(--brand-navy); }
   @media (max-width:640px){ .brand-logo{ height:64px; } }
 </style>
 </head>
