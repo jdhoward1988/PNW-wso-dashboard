@@ -400,7 +400,7 @@
   const fmtDate = (mmdd, yr) => MONTHS[parseInt(mmdd.slice(0,2),10)-1] + ' ' + parseInt(mmdd.slice(2),10) + ', ' + yr;
   const fmtLong = iso => { const [y,m,d] = iso.split('-').map(Number); return MONTHS[m-1] + ' ' + d + ', ' + y; };
   const classesFor = g => Object.keys(DATA.classes).filter(k => g === 'W' ? k.startsWith("Women") : k.startsWith("Men"));
-  const shortWc = k => k.replace(/^(Wo)?men's /,'');
+  const shortWc = k => k.replace(/^(Wo)?men's /i,'');
   // Open on the class with the most ranked lifters, so the first view isn't a near-empty list
   const busiest = g => classesFor(g).reduce((best, k) => DATA.classes[k].length > DATA.classes[best].length ? k : best);
 
