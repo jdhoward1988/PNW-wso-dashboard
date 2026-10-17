@@ -10,9 +10,9 @@
  *            never leave the sheet.
  *
  * Review: in the response sheet put Y in "Approved" for each entry you accept. Clear it
- * (or delete the row) to remove someone; the site drops them at the next Monday update.
+ * (or delete the row) to remove someone; the site drops them at the next Wednesday update.
  * Fill "USAW profile ID" if the athlete didn't give a profile link and the name is
- * ambiguous; otherwise the Monday update matches the name against the rankings.
+ * ambiguous; otherwise the Wednesday update matches the name against the rankings.
  */
 
 const CONTACT = 'jdhoward1988@gmail.com';
@@ -44,7 +44,7 @@ function setup() {
   form.setDescription(
     'USA Weightlifting\'s public results don\'t mark adaptive athletes, so the PNW WSO Rankings page shows the ' +
     'Adaptive badge only for athletes who opt in here. Your entry is reviewed by the PNW WSO before it appears, ' +
-    'and the page updates on Mondays.\n\n' +
+    'and the page updates on Wednesdays.\n\n' +
     'What appears publicly: the Adaptive badge next to the name already shown in the rankings, plus your adaptive ' +
     'category only if you choose to show it. Your email and the other answers stay private with the PNW WSO.\n\n' +
     'If the athlete is under 18, a parent or guardian must submit this form or give permission. ' +
@@ -52,7 +52,7 @@ function setup() {
   );
   form.setCollectEmail(false);
   form.setLimitOneResponsePerUser(false);
-  form.setConfirmationMessage('Thanks! The PNW WSO will review this and the badge will appear on the rankings page after the next Monday update. Questions or changes: ' + CONTACT);
+  form.setConfirmationMessage('Thanks! The PNW WSO will review this and the badge will appear on the rankings page after the next Wednesday update. Questions or changes: ' + CONTACT);
 
   form.addTextItem().setTitle(Q.name).setRequired(true);
   form.addTextItem().setTitle(Q.club).setHelpText('As listed in USAW results, if any.');
