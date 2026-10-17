@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PNW WSO Rankings</title>
+<meta name="description" content="2026 USA Weightlifting rankings for Pacific Northwest WSO athletes in Alaska, Oregon and Washington, by weight class and age group.">
+<link rel="icon" type="image/png" sizes="64x64" href="assets/pnw-wso-mark-64.png">
+<link rel="apple-touch-icon" href="assets/pnw-wso-mark-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* PNW WSO Brand Guidelines palette (same tokens as the calendar page) */
+    --brand-navy:#08172A;
+    --brand-blue:#3C78BD;
+    --brand-red:#B22024;
+    --brand-green:#4CAB48;
+    --brand-gold:#E0B025;
+    --brand-grey:#CECECD;
+    --brand-white:#F8F8F8;
+
+    --cream:var(--brand-white);
+    --cream-2:#ECECEB;
+    --card:#FFFFFF;
+    --ink:var(--brand-navy);
+    --ink-dim:#465366;
+    --ink-faint:#6E7887;
+    --rule:var(--brand-grey);
+    --green:var(--brand-navy);
+    --green-text:var(--brand-white);
+    --gold:var(--brand-gold);
+    --radius:14px;
+    --radius-sm:10px;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--cream); color:var(--ink);
+    font-family:'Inter', sans-serif; -webkit-font-smoothing:antialiased; line-height:1.5;
+  }
+  h1,h2,h3{ font-family:'Poppins', sans-serif; font-weight:700; margin:0; }
+  a{color:inherit;}
+  .wrap{ max-width:1080px; margin:0 auto; padding-left:24px; padding-right:24px; }
+
+  /* ---------- TOP BAR ---------- */
+  .topbar{ background:var(--cream); border-bottom:1px solid var(--rule); padding:14px 0; }
+  .topbar-inner{ display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap; }
+  .brand{ display:flex; align-items:center; text-decoration:none; }
+  .brand-logo{ display:block; height:88px; width:auto; max-width:100%; }
+  .topbar-right{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+  .icon-link{
+    width:34px;height:34px; border:1.5px solid var(--ink); border-radius:50%;
+    display:flex;align-items:center;justify-content:center; text-decoration:none; flex-shrink:0;
+  }
+  .icon-link svg{ width:16px;height:16px; }
+  .pill-btn{
+    display:inline-flex; align-items:center; gap:6px;
+    border:1.5px solid currentColor; border-radius:999px; padding:9px 20px;
+    font-family:'Inter', sans-serif; font-weight:600; font-size:11.5px;
+    letter-spacing:0.1em; text-transform:uppercase; text-decoration:none;
+    background:transparent; cursor:pointer; transition:background 0.15s ease, color 0.15s ease; white-space:nowrap;
+  }
+  .pill-btn.dark{ color:var(--ink); }
+  .pill-btn.dark:hover{ background:var(--ink); color:var(--cream); }
+  .pill-btn.current{ background:var(--ink); color:var(--cream); border-color:var(--ink); }
+  .pill-btn.on-green{ color:var(--green-text); }
+  .pill-btn.on-green:hover{ background:var(--green-text); color:var(--green); }
+  .pill-btn:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
+
+  /* ---------- HERO ---------- */
+  .hero{ background:var(--green); color:var(--green-text); padding:56px 0 60px; }
+  .hero .eyebrow{ font-size:11.5px; letter-spacing:0.18em; text-transform:uppercase; opacity:0.75; margin-bottom:14px; }
+  .hero h1{ font-size:clamp(38px, 6vw, 64px); line-height:0.98; color:var(--brand-white); }
+  .hero .sub{ margin-top:16px; max-width:600px; font-size:15px; font-weight:500; opacity:0.85; }
+  .hero .cta-row{ margin-top:26px; display:flex; gap:12px; flex-wrap:wrap; }
+  .stats{ display:flex; gap:36px; flex-wrap:wrap; margin-top:30px; }
+  .stat b{ display:block; font-family:'Poppins', sans-serif; font-size:30px; line-height:1; color:var(--brand-white); }
+  .stat span{ font-size:11px; letter-spacing:0.14em; text-transform:uppercase; opacity:0.7; }
+
+  /* ---------- SECTION HEADERS ---------- */
+  .section-head{ margin:48px auto 0; padding:0 0 12px; display:flex; align-items:baseline; justify-content:space-between; gap:12px; border-bottom:1px solid var(--rule); flex-wrap:wrap; }
+  .section-head h2{ font-size:20px; }
+  .section-head .count{ font-size:11.5px; color:var(--ink-faint); }
+  .section-intro{ font-size:13px; color:var(--ink-dim); max-width:680px; margin:16px 0 0; }
+
+  /* ---------- CLASS LEADERS ---------- */
+  .leaders-label{ font-family:'Poppins', sans-serif; font-weight:600; font-size:13px; margin:22px 0 10px; color:var(--ink-dim); letter-spacing:0.04em; text-transform:uppercase; }
+  .leaders{ display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:12px; }
+  .leader{
+    text-align:left; font:inherit; color:inherit; cursor:pointer;
+    background:var(--card); border:1px solid var(--rule); border-radius:var(--radius-sm);
+    padding:14px 16px 14px 18px; position:relative; overflow:hidden; transition:border-color 0.15s ease, transform 0.15s ease;
+  }
+  .leader::before{ content:""; position:absolute; left:0; top:0; bottom:0; width:5px; background:var(--brand-blue); }
+  .leader.m::before{ background:var(--brand-red); }
+  .leader:hover{ border-color:var(--ink); transform:translateY(-1px); }
+  .leader:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
+  .leader .cls{ font-family:'IBM Plex Mono', monospace; font-size:11.5px; color:var(--ink-faint); }
+  .leader .who{ font-family:'Poppins', sans-serif; font-weight:600; font-size:15px; margin-top:4px; line-height:1.25; }
+  .leader .club{ font-size:12px; color:var(--ink-dim); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .leader .tot{ position:absolute; right:14px; top:12px; font-family:'Poppins', sans-serif; font-weight:700; font-size:18px; }
+  .leader .tot small{ font-size:11px; font-weight:500; color:var(--ink-faint); margin-left:2px; }
+  .leader .who{ padding-right:56px; }
+
+  /* ---------- CONTROLS ---------- */
+  .panel{ background:var(--cream-2); border:1px solid var(--rule); border-radius:var(--radius); padding:18px 20px; margin-top:22px; }
+  .ctrl-row{ display:flex; gap:10px 18px; flex-wrap:wrap; align-items:center; }
+  .ctrl-row + .ctrl-row{ margin-top:14px; }
+  .ctrl-label{ font-size:10.5px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-faint); min-width:86px; }
+  .seg{ display:flex; gap:6px; flex-wrap:wrap; }
+  .filter-btn{
+    border:1.5px solid var(--ink); background:transparent; color:var(--ink); border-radius:999px;
+    padding:8px 15px; font-family:'Inter', sans-serif; font-weight:600; font-size:11.5px;
+    letter-spacing:0.06em; text-transform:uppercase; cursor:pointer; transition:all 0.15s ease;
+  }
+  .filter-btn:hover{ background:var(--card); }
+  .filter-btn.active{ background:var(--ink); color:var(--cream); }
+  .filter-btn:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
+  .filter-btn.wc{ font-family:'IBM Plex Mono', monospace; letter-spacing:0; text-transform:none; font-size:12.5px; padding:8px 13px; }
+  .inputs{ display:grid; grid-template-columns:1.4fr 1fr; gap:12px; width:100%; }
+  .inputs input, .inputs select{
+    width:100%; font-family:'Inter', sans-serif; font-size:14px; color:var(--ink); background:var(--card);
+    border:1.5px solid var(--rule); border-radius:var(--radius-sm); padding:10px 14px;
+  }
+  .inputs input:focus, .inputs select:focus{ outline:none; border-color:var(--brand-blue); }
+
+  /* ---------- TABLE ---------- */
+  .result-head{ display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap; margin:24px 0 10px; }
+  .result-head h3{ font-size:18px; }
+  .result-head .count{ font-size:12px; color:var(--ink-faint); }
+  .table-wrap{ background:var(--card); border:1px solid var(--rule); border-radius:var(--radius); overflow:hidden; }
+  table{ width:100%; border-collapse:collapse; font-size:13.5px; }
+  thead th{
+    text-align:left; font-size:10.5px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--ink-faint); padding:12px 14px; border-bottom:1px solid var(--rule); background:#FBFBFA; white-space:nowrap;
+  }
+  tbody td{ padding:11px 14px; border-bottom:1px solid #EEEEED; vertical-align:middle; }
+  tbody tr:last-child td{ border-bottom:none; }
+  tbody tr:hover{ background:#FAFAF8; }
+  td.num, th.num{ text-align:right; font-variant-numeric:tabular-nums; }
+  .rank{ font-family:'Poppins', sans-serif; font-weight:700; font-size:15px; width:56px; }
+  .rank .medal{ display:inline-flex; width:28px; height:28px; border-radius:50%; align-items:center; justify-content:center; font-size:13px; }
+  .medal.g1{ background:var(--brand-gold); color:var(--brand-navy); }
+  .medal.g2{ background:#C9CDD3; color:var(--brand-navy); }
+  .medal.g3{ background:#C98B5B; color:#fff; }
+  .lifter-name{ font-family:'Poppins', sans-serif; font-weight:600; font-size:14.5px; }
+  .lifter-club{ font-size:12px; color:var(--ink-dim); }
+  .total{ font-family:'Poppins', sans-serif; font-weight:700; font-size:16px; }
+  .total small{ font-family:'Inter', sans-serif; font-weight:500; font-size:11px; color:var(--ink-faint); margin-left:2px; }
+  .mono{ font-family:'IBM Plex Mono', monospace; font-size:12.5px; color:var(--ink-dim); white-space:nowrap; }
+  .chip{
+    display:inline-block; font-size:10px; font-weight:600; letter-spacing:0.07em; text-transform:uppercase;
+    padding:4px 9px; border-radius:999px; border:1.5px solid var(--rule); color:var(--ink-dim); white-space:nowrap;
+  }
+  .chip.youth{ border-color:var(--brand-green); color:#2F7A2C; }
+  .chip.junior{ border-color:var(--brand-blue); color:#2C5E98; }
+  .chip.masters{ border-color:var(--brand-gold); color:#8A6A0E; }
+  .lvl-I, .lvl-N{ color:var(--ink); font-weight:600; }
+  .prof{ font-size:11.5px; font-weight:600; text-decoration:none; border-bottom:1.5px solid var(--brand-blue); white-space:nowrap; }
+  .prof:hover{ opacity:0.75; }
+  .cls-col{ display:none; }
+  .show-cls .cls-col{ display:table-cell; }
+  .group-row td{ background:var(--cream-2); font-family:'Poppins', sans-serif; font-weight:600; font-size:13px; padding:9px 14px; }
+  .empty{ padding:28px 18px; text-align:center; color:var(--ink-faint); font-size:13.5px; }
+
+  .note-box{ font-size:12px; color:var(--ink-faint); margin:16px 0 0; padding:12px 16px; background:var(--cream-2); border-radius:var(--radius-sm); border:1px dashed var(--rule); }
+
+  /* ---------- FOOTER ---------- */
+  footer{ background:var(--cream); border-top:1px solid var(--rule); padding:26px 0 48px; margin-top:56px; }
+  footer .note{ color:var(--ink-dim); font-size:12px; margin-bottom:16px; max-width:720px; }
+  footer ul{ list-style:none; margin:0; padding:0; }
+  footer li{ margin-bottom:7px; font-size:12px; }
+  footer a{ color:var(--ink-dim); text-decoration:none; }
+  footer a:hover{ color:var(--brand-blue); text-decoration:underline; }
+
+  /* ---------- TABLET ---------- */
+  @media (max-width:900px){
+    .leaders{ grid-template-columns:repeat(2, minmax(0,1fr)); }
+    .hide-md{ display:none; }
+  }
+
+  /* ---------- PHONES ---------- */
+  @media (max-width:640px){
+    .wrap{ padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px)); }
+    .brand-logo{ height:64px; }
+    .topbar-inner{ flex-direction:row; flex-wrap:wrap; align-items:center; gap:12px 10px; }
+    .brand{ flex:1 1 auto; min-width:0; }
+    .topbar-right{ display:contents; }
+    .topbar-right .pill-btn{ flex:1 1 40%; min-width:0; }
+    .icon-link{ width:44px; height:44px; }
+    .pill-btn{ min-height:44px; justify-content:center; padding:10px 14px; font-size:12px; }
+    .hero{ padding:36px 0 40px; }
+    .hero h1{ font-size:42px; }
+    .hero .cta-row{ display:grid; grid-template-columns:1fr; gap:10px; }
+    .stats{ gap:24px; }
+    .section-head{ margin-top:36px; }
+    .section-head h2{ font-size:21px; }
+    .section-intro{ font-size:14px; }
+    .leaders{ grid-template-columns:minmax(0,1fr); gap:8px; }
+    .panel{ padding:16px; }
+    .ctrl-row{ flex-direction:column; align-items:stretch; gap:8px; }
+    .ctrl-label{ min-width:0; }
+    .seg{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:8px; }
+    .seg.wcs{ grid-template-columns:repeat(4, minmax(0,1fr)); }
+    .filter-btn{ min-height:44px; padding:10px 6px; }
+    .inputs{ grid-template-columns:1fr; }
+    .inputs input, .inputs select{ font-size:16px; min-height:46px; }
+
+    /* Table becomes stacked cards */
+    .table-wrap{ background:transparent; border:none; border-radius:0; }
+    table, tbody, tr, td{ display:block; width:100%; }
+    thead{ display:none; }
+    tbody tr{
+      display:grid; grid-template-columns:44px minmax(0,1fr) auto; grid-template-areas:"rank lifter total" "rank meta meta";
+      gap:4px 12px; background:var(--card); border:1px solid var(--rule); border-radius:12px; padding:14px; margin-bottom:10px;
+    }
+    tbody tr.group-row{ display:block; background:none; border:none; padding:14px 2px 4px; margin:0; }
+    .group-row td{ background:none; padding:0; font-size:15px; }
+    tbody td{ padding:0; border:none; }
+    td.rank{ grid-area:rank; width:auto; align-self:start; }
+    td.lifter{ grid-area:lifter; min-width:0; }
+    td.total-cell{ grid-area:total; text-align:right; }
+    td.meta-cell{ grid-area:meta; display:flex; flex-wrap:wrap; gap:6px 12px; align-items:center; margin-top:4px; }
+    td.d-md{ display:none; }
+    .show-cls td.cls-col{ display:none; }
+    .lifter-name{ font-size:16px; }
+    .lifter-club{ font-size:13px; }
+    .mono{ font-size:12.5px; }
+    .prof{ font-size:13px; padding:6px 0 2px; }
+    footer li{ font-size:13.5px; margin-bottom:10px; }
+  }
+  @media (min-width:641px){
+    td.meta-cell{ display:none; }
+  }
+
+  /* ---------- LARGE SCREENS (matches the calendar) ---------- */
+  @media (min-width:1500px){
+    .wrap{ max-width:1480px; }
+    .leaders{ grid-template-columns:repeat(8, minmax(0,1fr)); }
+  }
+  @media (min-width:2200px){ .wrap{ max-width:2060px; } }
+  @media (min-width:2800px){ body{ zoom:1.4; } }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="https://www.pnwwsoweightlifting.com/" aria-label="Pacific Northwest Weightlifting State Organization — main site">
+      <img class="brand-logo" src="assets/pnw-wso-logo.png" width="413" height="232" alt="Pacific Northwest Weightlifting State Organization">
+    </a>
+    <div class="topbar-right">
+      <a class="icon-link" href="https://www.instagram.com/pnw_wso_weightlifting/" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+      </a>
+      <a class="icon-link" href="https://www.facebook.com/pnwwsoweightlifting" target="_blank" rel="noopener" aria-label="Facebook">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1V8c0-.9.25-1.5 1.55-1.5H17V3.7C16.6 3.65 15.4 3.5 14 3.5c-2.8 0-4.5 1.7-4.5 4.8V10H6.8v3.1h2.7v8z"/></svg>
+      </a>
+      <a class="pill-btn dark" href="index.html">Calendar</a>
+      <a class="pill-btn current" href="rankings.html" aria-current="page">Rankings</a>
+      <a class="pill-btn dark" href="https://www.pnwwsoweightlifting.com/">← PNW WSO site</a>
+    </div>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow"><span id="seasonLabel">2026</span> Season · Updated <span id="updatedLabel">Oct 16, 2026</span></div>
+    <h1>PNW<br>Rankings</h1>
+    <p class="sub">Best totals by Pacific Northwest WSO lifters in Alaska, Oregon and Washington this year, by weight class and age group. Results come from USA Weightlifting's official rankings.</p>
+    <div class="stats" id="stats" aria-live="polite"></div>
+    <div class="cta-row">
+      <a class="pill-btn on-green" href="#leaders">Class leaders ↓</a>
+      <a class="pill-btn on-green" href="#rankings">Full rankings ↓</a>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="section-head" id="leaders">
+    <h2>Class Leaders</h2>
+    <span class="count">#1 PNW total in each weight class · tap a card for the full list</span>
+  </div>
+  <div class="leaders-label">Women</div>
+  <div class="leaders" id="leadersW"></div>
+  <div class="leaders-label">Men</div>
+  <div class="leaders" id="leadersM"></div>
+
+  <div class="section-head" id="rankings">
+    <h2>Full Rankings</h2>
+    <span class="count">Each lifter's best total in the class this season</span>
+  </div>
+
+  <div class="panel" role="group" aria-label="Ranking filters">
+    <div class="ctrl-row">
+      <span class="ctrl-label">Category</span>
+      <div class="seg" id="genderSeg">
+        <button class="filter-btn active" data-g="W">Women</button>
+        <button class="filter-btn" data-g="M">Men</button>
+      </div>
+    </div>
+    <div class="ctrl-row">
+      <span class="ctrl-label">Weight class</span>
+      <div class="seg wcs" id="wcSeg"></div>
+    </div>
+    <div class="ctrl-row">
+      <span class="ctrl-label">Age group</span>
+      <div class="seg" id="ageSeg">
+        <button class="filter-btn active" data-a="all">All ages</button>
+        <button class="filter-btn" data-a="youth">Youth ≤17</button>
+        <button class="filter-btn" data-a="junior">Junior 15–20</button>
+        <button class="filter-btn" data-a="masters">Masters 35+</button>
+      </div>
+    </div>
+    <div class="ctrl-row">
+      <span class="ctrl-label">Find</span>
+      <div class="inputs">
+        <input type="search" id="q" placeholder="Search a lifter (searches every class)" aria-label="Search lifter name">
+        <select id="clubSel" aria-label="Filter by club"><option value="">All clubs</option></select>
+      </div>
+    </div>
+  </div>
+
+  <div class="result-head">
+    <h3 id="resultTitle">Women's 49kg</h3>
+    <span class="count" id="resultCount"></span>
+  </div>
+  <div class="table-wrap" id="tableWrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Lifter</th>
+          <th class="cls-col">Class</th>
+          <th>Age group</th>
+          <th class="num">Total</th>
+          <th class="num hide-md">Bodyweight</th>
+          <th class="hide-md">Date</th>
+          <th class="hide-md">Level</th>
+          <th class="num hide-md" title="Rank among all USA Weightlifting lifters in this class">US rank</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="tbody"><tr><td class="empty" colspan="10">Loading rankings…</td></tr></tbody>
+    </table>
+  </div>
+
+  <p class="note-box">Rank is among PNW WSO lifters only; picking an age group re-ranks within that group. US rank is the lifter's place in USA Weightlifting's national list for the class. Age groups go by the lifter's age at the meet: Youth up to 17, Junior 15–20, Masters 35 and over. A lifter can appear in more than one class if they competed at different bodyweights. Spot a problem? Results are managed by USA Weightlifting, so corrections go through them.</p>
+</div>
+
+<footer>
+  <div class="wrap">
+    <p class="note">Rankings are a snapshot of USA Weightlifting's public rankings (Sport80), filtered to the Pacific Northwest WSO for <span id="footSeason">2026</span>, last pulled <span id="footUpdated">Oct 16, 2026</span>. Each lifter's "Profile" link opens their full results on USAW's site.</p>
+    <ul>
+      <li>→ <a href="index.html">PNW WSO — Competition Calendar</a></li>
+      <li>→ <a href="https://usaweightlifting.sport80.com/public/rankings/all" target="_blank" rel="noopener">USA Weightlifting — Rankings (Sport80)</a></li>
+      <li>→ <a href="https://www.usaweightlifting.org/club-wso/wso-information/pacific-northwest" target="_blank" rel="noopener">USAW — Pacific Northwest WSO Info</a></li>
+      <li>→ <a href="https://www.pnwwsoweightlifting.com/" target="_blank" rel="noopener">PNW WSO — Official Site</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const PROFILE = 'https://usaweightlifting.sport80.com/public/rankings/member/';
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const ACRONYMS = new Set(['CFW','RCF','MKG','GSC','WLC','CHFP','PR','USA','WA','OR','AK','PNW','II','III']);
+  const state = { g:'W', wc:null, age:'all', q:'', club:'' };
+  let DATA = null, ROWS = [];
+
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const titleWord = w => w.replace(/^([("']?)(\w)(.*)$/u, (m,p,a,b) => p + a.toUpperCase() + b.toLowerCase());
+  // Fix names/clubs entered in all caps or all lowercase; leave mixed case alone.
+  function tidy(s, isClub){
+    s = (s || '').trim().replace(/\s+/g,' ');
+    if (!s) return s;
+    const allUp = s === s.toUpperCase() && /[A-Z]/.test(s);
+    const allLow = s === s.toLowerCase();
+    if (!allUp && !allLow) return s;
+    return s.split(' ').map(w => {
+      const bare = w.replace(/[^A-Za-z]/g,'').toUpperCase();
+      if (isClub && ACRONYMS.has(bare)) return w.toUpperCase();
+      return w.split('-').map(titleWord).join('-').replace(/\bO'(\w)/g, (m,c) => "O'" + c.toUpperCase());
+    }).join(' ').replace(/\.$/,'');
+  }
+  function ageGroup(a){
+    if (a == null) return '';
+    if (a <= 17) return 'youth';
+    if (a <= 20) return 'junior';
+    if (a >= 35) return 'masters';
+    return 'senior';
+  }
+  const AGE_LABEL = { youth:'Youth', junior:'Junior', senior:'Senior', masters:'Masters' };
+  const inAge = (a, f) => f === 'all' ? true
+    : f === 'youth' ? a <= 17
+    : f === 'junior' ? (a >= 15 && a <= 20)
+    : a >= 35;
+  const fmtDate = (mmdd, yr) => MONTHS[parseInt(mmdd.slice(0,2),10)-1] + ' ' + parseInt(mmdd.slice(2),10) + ', ' + yr;
+  const fmtLong = iso => { const [y,m,d] = iso.split('-').map(Number); return MONTHS[m-1] + ' ' + d + ', ' + y; };
+  const classesFor = g => Object.keys(DATA.classes).filter(k => g === 'W' ? k.startsWith("Women") : k.startsWith("Men"));
+  const shortWc = k => k.replace(/^(Wo)?men's /,'');
+  // Open on the class with the most ranked lifters, so the first view isn't a near-empty list
+  const busiest = g => classesFor(g).reduce((best, k) => DATA.classes[k].length > DATA.classes[best].length ? k : best);
+
+  // Standard competition ranking on total (ties share a place: 1, 2, 2, 4)
+  function rankList(list){
+    let lastTotal = null, lastRank = 0;
+    return list.map((r, i) => {
+      if (r.total !== lastTotal){ lastRank = i + 1; lastTotal = r.total; }
+      return Object.assign({}, r, { shown: lastRank });
+    });
+  }
+
+  function build(){
+    const yr = DATA.season;
+    ROWS = [];
+    for (const [wc, list] of Object.entries(DATA.classes)){
+      for (const r of list){
+        ROWS.push({
+          wc, g: wc.startsWith('Women') ? 'W' : 'M',
+          pnw:r[0], us:r[1], total:r[2], name:tidy(r[3]), club: r[4] >= 0 ? tidy(DATA.clubs[r[4]], true) : '',
+          age:r[5], bw:r[6], date:fmtDate(r[7], yr), sortDate:r[7], level:DATA.levels[r[8]] || r[8], lvl:r[8], id:r[9]
+        });
+      }
+    }
+    document.getElementById('seasonLabel').textContent = yr;
+    document.getElementById('footSeason').textContent = yr;
+    document.getElementById('updatedLabel').textContent = fmtLong(DATA.updated);
+    document.getElementById('footUpdated').textContent = fmtLong(DATA.updated);
+
+    // Stats
+    const lifters = new Set(ROWS.map(r => r.id)).size;
+    const clubs = new Set(ROWS.filter(r => r.club).map(r => r.club.toLowerCase())).size;
+    document.getElementById('stats').innerHTML =
+      `<div class="stat"><b>${lifters}</b><span>Ranked lifters</span></div>` +
+      `<div class="stat"><b>${ROWS.length}</b><span>Class results</span></div>` +
+      `<div class="stat"><b>${clubs}</b><span>Clubs</span></div>`;
+
+    // Leaders
+    for (const g of ['W','M']){
+      const el = document.getElementById(g === 'W' ? 'leadersW' : 'leadersM');
+      el.innerHTML = classesFor(g).map(wc => {
+        const top = ROWS.filter(r => r.wc === wc).sort((a,b) => a.pnw - b.pnw);
+        if (!top.length) return '';
+        const lead = top.filter(r => r.pnw === top[0].pnw);
+        const who = lead.map(r => esc(r.name)).join(' &amp; ');
+        const club = lead.map(r => esc(r.club || '—')).join(' · ');
+        return `<button class="leader ${g === 'M' ? 'm' : ''}" data-wc="${esc(wc)}" aria-label="${esc(wc)} rankings">
+          <div class="cls">${esc(shortWc(wc))}</div>
+          <div class="tot">${top[0].total}<small>kg</small></div>
+          <div class="who">${who}</div>
+          <div class="club">${club}</div>
+        </button>`;
+      }).join('');
+    }
+    document.querySelectorAll('.leader').forEach(b => b.addEventListener('click', () => {
+      const wc = b.dataset.wc;
+      state.g = wc.startsWith('Women') ? 'W' : 'M'; state.wc = wc; state.q = ''; document.getElementById('q').value = '';
+      syncButtons(); render();
+      document.getElementById('rankings').scrollIntoView({ behavior:'smooth', block:'start' });
+    }));
+
+    // Club dropdown
+    const clubNames = [...new Map(ROWS.filter(r => r.club).map(r => [r.club.toLowerCase(), r.club])).values()].sort((a,b) => a.localeCompare(b));
+    document.getElementById('clubSel').insertAdjacentHTML('beforeend', clubNames.map(c => `<option>${esc(c)}</option>`).join(''));
+
+    // Restore from URL hash (#w-69 / #m-110p), else default to the busiest class
+    const h = location.hash.match(/^#(w|m)-(\d+p?)$/i);
+    if (h){
+      state.g = h[1].toUpperCase();
+      const want = h[2].replace('p','+') + 'kg';
+      state.wc = classesFor(state.g).find(k => shortWc(k) === want) || null;
+    }
+    if (!state.wc) state.wc = busiest(state.g);
+    syncButtons(); render();
+  }
+
+  function syncButtons(){
+    document.querySelectorAll('#genderSeg .filter-btn').forEach(b => b.classList.toggle('active', b.dataset.g === state.g));
+    const seg = document.getElementById('wcSeg');
+    seg.innerHTML = classesFor(state.g).map(wc =>
+      `<button class="filter-btn wc ${wc === state.wc ? 'active' : ''}" data-wc="${esc(wc)}">${esc(shortWc(wc))}</button>`).join('');
+    seg.querySelectorAll('button').forEach(b => b.addEventListener('click', () => { state.wc = b.dataset.wc; syncButtons(); render(); }));
+    document.querySelectorAll('#ageSeg .filter-btn').forEach(b => b.classList.toggle('active', b.dataset.a === state.age));
+  }
+
+  function rowHtml(r, showCls){
+    const grp = ageGroup(r.age);
+    const chip = grp ? `<span class="chip ${grp}">${AGE_LABEL[grp]}</span>` : '';
+    const medal = r.shown <= 3 ? `<span class="medal g${r.shown}">${r.shown}</span>` : r.shown;
+    const prof = `<a class="prof" href="${PROFILE}${encodeURIComponent(r.id)}" target="_blank" rel="noopener">Profile →</a>`;
+    return `<tr>
+      <td class="rank">${medal}</td>
+      <td class="lifter"><div class="lifter-name">${esc(r.name)}</div><div class="lifter-club">${esc(r.club || 'No club listed')}</div></td>
+      <td class="cls-col mono d-md">${esc(shortWc(r.wc))}</td>
+      <td class="d-md">${chip}</td>
+      <td class="num total-cell"><span class="total">${r.total}<small>kg</small></span></td>
+      <td class="num mono hide-md d-md">${r.bw.toFixed(2)} kg</td>
+      <td class="mono hide-md d-md">${esc(r.date)}</td>
+      <td class="hide-md d-md lvl-${r.lvl}">${esc(r.level)}</td>
+      <td class="num mono hide-md d-md">#${r.us}</td>
+      <td class="d-md">${prof}</td>
+      <td class="meta-cell">${showCls ? `<span class="mono">${esc(shortWc(r.wc))}</span>` : ''}${chip}<span class="mono">${r.bw.toFixed(2)} kg · ${esc(r.date)}</span><span class="mono">US #${r.us}</span>${prof}</td>
+    </tr>`;
+  }
+
+  function render(){
+    const q = state.q.trim().toLowerCase();
+    const searching = q.length > 0;
+    const wrap = document.getElementById('tableWrap');
+    let html = '', count = 0, title;
+
+    // Search covers every class (both categories) so lifters can find themselves quickly.
+    const scopeClasses = searching ? Object.keys(DATA.classes) : [state.wc];
+    for (const wc of scopeClasses){
+      let list = ROWS.filter(r => r.wc === wc && inAge(r.age, state.age)).sort((a,b) => b.total - a.total || a.pnw - b.pnw);
+      list = rankList(list);
+      if (state.club) list = list.filter(r => r.club === state.club);
+      if (searching) list = list.filter(r => r.name.toLowerCase().includes(q) || r.club.toLowerCase().includes(q));
+      if (!list.length) continue;
+      if (searching) html += `<tr class="group-row"><td colspan="10">${esc(wc)}</td></tr>`;
+      html += list.map(r => rowHtml(r, searching)).join('');
+      count += list.length;
+    }
+    const ageTxt = { all:'', youth:' · Youth', junior:' · Junior', masters:' · Masters' }[state.age];
+    title = searching ? `Search: “${state.q.trim()}”${ageTxt}` : state.wc + ageTxt;
+    if (state.club) title += ' · ' + state.club;
+    wrap.classList.toggle('show-cls', false);
+    document.getElementById('resultTitle').textContent = title;
+    document.getElementById('resultCount').textContent = count + (count === 1 ? ' result' : ' results');
+    document.getElementById('tbody').innerHTML = html ||
+      `<tr><td class="empty" colspan="10">No ranked lifters match these filters yet this season.</td></tr>`;
+    if (!searching){
+      const tag = (state.g === 'W' ? 'w-' : 'm-') + shortWc(state.wc).replace('kg','').replace('+','p');
+      history.replaceState(null, '', '#' + tag);
+    }
+  }
+
+  document.getElementById('genderSeg').addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (state.g !== b.dataset.g){ state.g = b.dataset.g; state.wc = busiest(state.g); }
+    syncButtons(); render();
+  });
+  document.getElementById('ageSeg').addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    state.age = b.dataset.a; syncButtons(); render();
+  });
+  let t; document.getElementById('q').addEventListener('input', e => { clearTimeout(t); t = setTimeout(() => { state.q = e.target.value; render(); }, 120); });
+  document.getElementById('clubSel').addEventListener('change', e => { state.club = e.target.value; render(); });
+
+  fetch('data/rankings-2026.json', { cache:'no-cache' })
+    .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(d => { DATA = d; build(); })
+    .catch(() => {
+      document.getElementById('tbody').innerHTML =
+        '<tr><td class="empty" colspan="10">Rankings couldn’t load right now. Try refreshing, or see the <a href="https://usaweightlifting.sport80.com/public/rankings/all">USAW rankings</a>.</td></tr>';
+    });
+})();
+</script>
+</body>
+</html>
