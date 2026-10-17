@@ -1,0 +1,1 @@
+{"updated":"2026-10-17","optInForm":"","about":"Adaptive athletes who opted in with the PNW WSO. Keys are USAW rankings profile ids (the number in /public/rankings/member/<id>). Value: category code PD, VI, DHH or ID if the athlete chose to show it, or empty string to show only 'Adaptive'. Names and contact details stay in the WSO's private sheet.","athletes":{}}
