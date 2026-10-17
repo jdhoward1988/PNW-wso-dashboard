@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PNW WSO Competition Calendar</title>
+<link rel="icon" type="image/png" sizes="64x64" href="assets/pnw-wso-mark-64.png">
+<link rel="apple-touch-icon" href="assets/pnw-wso-mark-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -18,8 +20,8 @@
     --green:#1E3B2A;
     --green-text:#F3F1E7;
     --red:#9E3A2E;
-    --gold:#B8822C;
-    --blue:#3B5B7E;
+    --gold:#DEAF25;   /* logo sun */
+    --blue:#3477BC;   /* logo mountains */
     --radius:14px;
     --radius-sm:10px;
   }
@@ -293,20 +295,21 @@
   @media (min-width:2800px){
     body{ zoom:1.4; }
   }
+
+  /* ---------- OFFICIAL LOGO ---------- */
+  .brand{ display:flex; align-items:center; text-decoration:none; }
+  .brand-logo{ display:block; height:88px; width:auto; max-width:100%; }
+  .topbar{ padding:14px 0; }
+  .tag.next{ color:#1D1C19; }
+  @media (max-width:640px){ .brand-logo{ height:64px; } }
 </style>
 </head>
 <body>
 
 <div class="topbar">
   <div class="wrap topbar-inner">
-    <a class="brand" href="https://www.pnwwsoweightlifting.com/" style="text-decoration:none;">
-      <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
-        <rect x="4" y="27" width="52" height="6" rx="2" fill="var(--ink)"/>
-        <rect x="2" y="20" width="6" height="20" rx="1.5" fill="var(--ink)"/>
-        <rect x="52" y="20" width="6" height="20" rx="1.5" fill="var(--ink)"/>
-        <path d="M14 33 L22 19 L28 28 L33 22 L44 33 Z" fill="var(--green)"/>
-      </svg>
-      <div class="brand-name">PNW WSO<span>Alaska · Oregon · Washington</span></div>
+    <a class="brand" href="https://www.pnwwsoweightlifting.com/" aria-label="Pacific Northwest Weightlifting State Organization — main site">
+      <img class="brand-logo" src="assets/pnw-wso-logo.png" width="413" height="232" alt="Pacific Northwest Weightlifting State Organization">
     </a>
     <div class="topbar-right">
       <a class="icon-link" href="https://www.instagram.com/pnw_wso_weightlifting/" target="_blank" rel="noopener" aria-label="Instagram">
