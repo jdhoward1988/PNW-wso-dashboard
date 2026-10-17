@@ -15,7 +15,7 @@
  * ambiguous; otherwise the Monday update matches the name against the rankings.
  */
 
-const CONTACT = 'pnw.wso.mira@gmail.com';
+const CONTACT = 'jdhoward1988@gmail.com';
 const Q = {
   name: 'Athlete name (as it appears in USA Weightlifting results)',
   club: 'Club',
