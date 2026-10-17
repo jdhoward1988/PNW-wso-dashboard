@@ -550,7 +550,7 @@
   let t; document.getElementById('q').addEventListener('input', e => { clearTimeout(t); t = setTimeout(() => { state.q = e.target.value; render(); }, 120); });
   document.getElementById('clubSel').addEventListener('change', e => { state.club = e.target.value; render(); });
 
-  fetch('data/rankings-2026.json', { cache:'no-cache' })
+  fetch('data/rankings.json', { cache:'no-cache' })
     .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
     .then(d => { DATA = d; build(); })
     .catch(() => {
