@@ -86,8 +86,8 @@ def main():
             sys.exit(f'HASH MISMATCH: got {djb2(s)}, expected {want_hash}')
         obj = json.loads(s)
         n = sum(len(v) for v in obj['classes'].values())
-        if n == 0 and DATA.exists() and json.loads(DATA.read_text()).get('season') == obj['season']:
-            sys.exit('REFUSING: new data is empty but the current file has results for this season')
+        if n == 0:
+            sys.exit('REFUSING: no results returned (e.g. early in a new season); keeping the current file')
         write(obj)
         print(f'OK: {n} results, {len(obj["clubs"])} clubs, season {obj["season"]}')
     elif cmd == 'touch':
