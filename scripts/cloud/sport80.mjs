@@ -51,9 +51,12 @@ try {
       return all;
     }, { w, today });
     lists[key] = items.map(e => {
-      const parts = String(e.address || '').split(',').map(s => s.trim());
-      const si = parts.findIndex(p => STATES[p]);
-      if (si < 0) return null; // not in AK/OR/WA (or online / no address)
+      // Address looks like "street, City, State, United States of America, zip". The state is the
+      // part right before the country, so "…, Washington, District of Columbia, …" is NOT Washington state.
+      const parts = String(e.address || '').split(',').map(s => s.trim()).filter(Boolean);
+      const ci = parts.findIndex(p => /^(United States( of America)?|USA)$/i.test(p));
+      const si = ci > 0 ? ci - 1 : parts.length - 1 - [...parts].reverse().findIndex(p => /^\d{5}(-\d{4})?$/.test(p)) - 1;
+      if (si < 0 || !STATES[parts[si]]) return null; // not in AK/OR/WA (or online / no address)
       const [start, end] = String(e.subtitle || '').split(' - ').map(iso);
       return {
         id: +e.id, name: String(e.name || '').trim(), start, end: end || start,
