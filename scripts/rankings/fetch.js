@@ -9,7 +9,9 @@
 //             differ from Open, so the page switches weight classes when Youth is picked.
 //
 // Result: { season, rows, youthGroups, youthClasses, clubs, keyHash, length, chunks, hash, checksum }
-// and the canonical JSON string is kept in window._pnwRankS. Read it back with:
+// and the canonical JSON string is kept in window._pnwRankS. await window._pnwMemberIds([...hashes])
+// takes SHA-256 hashes of USAW member numbers (as the opt-in web app returns them) and gives
+// {hash: profileId|null} for adaptive matching. Member numbers are never saved. Read the JSON back with:
 //   window._pnwRankS.slice(i*CHUNK, (i+1)*CHUNK)   for i = 0 .. chunks-1   (CHUNK = 18000)
 // scripts/rankings/assemble.py rebuilds data/rankings.json from those chunks and checks
 // the length + hash, so a copying mistake can't reach the live site.
@@ -54,6 +56,9 @@
     return [r.rank, r.national_ranking, r.total, String(r.name || '').trim().replace(/\s+/g, ' '), (typeof r.club === 'string' ? r.club.trim() : ''),
       r.lifter_age, r.bodyweight, String(r.lift_date || '').slice(5).replace('-', ''), LV[r.level] || String(r.level || ''), mid];
   };
+  // USAW member number -> rankings profile id, for matching adaptive opt-ins. Kept only in
+  // the page (window._pnwMemberIds); never written to data/rankings.json.
+  const memberIds = {};
   const pull = async id => {
     let list = [];
     for (let p = 0; p < 30; p++) {
@@ -63,6 +68,11 @@
       }).then(r => r.json());
       list = list.concat(r.data || []);
       if (!r.next_page_url) break;
+    }
+    for (const r of list) {
+      const num = String(r.membership || '').replace(/\D/g, '');
+      const mid = +String((r.action && r.action[0] && r.action[0].route) || '').split('/').pop() || 0;
+      if (num && mid) memberIds[num] = mid;
     }
     // USAW returns tied lifters in varying order; sort ties by member id so unchanged data hashes the same
     return list.map(toRow).sort((a, b) => a[0] - b[0] || a[9] - b[9]);
@@ -103,6 +113,14 @@
   let keyHash = 5381;
   for (let i = 0; i < keyStr.length; i++) keyHash = ((keyHash << 5) + keyHash + keyStr.charCodeAt(i)) >>> 0;
   window._pnwRankS = s;
+  // Profile ids for hashed USAW member numbers: await window._pnwMemberIds(["<sha256 hex>", ...])
+  window._pnwMemberIds = async hashes => {
+    const hex = async t => [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t)))]
+      .map(b => b.toString(16).padStart(2, '0')).join('');
+    const byHash = {};
+    for (const [num, mid] of Object.entries(memberIds)) byHash[await hex(num)] = mid;
+    return Object.fromEntries((hashes || []).map(x => [String(x).toLowerCase(), byHash[String(x).toLowerCase()] || null]));
+  };
   return {
     season, rows, youthGroups: Object.keys(youth), youthClasses: youthItems.length, clubs: clubs.length,
     keyHash, length: s.length, chunks: Math.ceil(s.length / CHUNK), hash, checksum: { totals, ids }

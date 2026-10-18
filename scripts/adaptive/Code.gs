@@ -3,23 +3,26 @@
  *
  * setup()  — run once: creates the opt-in Google Form and its private response sheet,
  *            adds the reviewer columns, and remembers both IDs.
+ * updateForm() — run once on an existing form: replaces the optional profile-link question
+ *            with a required "USAW membership number" question and sets the Wednesday text.
  * doGet()  — web app (Execute as: Me, Who has access: Anyone). Returns ONLY rows the
- *            WSO has approved, and ONLY fields that appear publicly on the rankings page:
- *            name, club, USAW profile id (if known) and the adaptive category if the
- *            athlete chose to show it. Emails, submitter, consent records and notes
- *            never leave the sheet.
+ *            WSO has approved, and ONLY: name, club, USAW profile id (if a reviewer entered
+ *            one), a SHA-256 hash of the membership number (never the number itself) and the
+ *            adaptive category if the athlete chose to show it. Emails, submitter, consent
+ *            records and notes never leave the sheet.
  *
  * Review: in the response sheet put Y in "Approved" for each entry you accept. Clear it
  * (or delete the row) to remove someone; the site drops them at the next Wednesday update.
- * Fill "USAW profile ID" if the athlete didn't give a profile link and the name is
- * ambiguous; otherwise the Wednesday update matches the name against the rankings.
+ * The Wednesday update matches the membership number against USAW's rankings. Fill
+ * "USAW profile ID" only if the update lists someone as unmatched.
  */
 
 const CONTACT = 'jdhoward1988@gmail.com';
 const Q = {
   name: 'Athlete name (as it appears in USA Weightlifting results)',
   club: 'Club',
-  link: 'USAW rankings profile link (optional)',
+  member: 'USAW membership number',
+  link: 'USAW rankings profile link (optional)', // older responses only
   cat: 'USA Weightlifting adaptive category',
   show: 'Show the adaptive category on the rankings page?',
   who: 'Who is submitting this form?',
@@ -41,23 +44,14 @@ function setup() {
   if (props.getProperty('FORM_ID')) throw new Error('Already set up. Form: ' + FormApp.openById(props.getProperty('FORM_ID')).getPublishedUrl());
 
   const form = FormApp.create('PNW WSO Rankings: Adaptive Athlete Opt-In');
-  form.setDescription(
-    'USA Weightlifting\'s public results don\'t mark adaptive athletes, so the PNW WSO Rankings page shows the ' +
-    'Adaptive badge only for athletes who opt in here. Your entry is reviewed by the PNW WSO before it appears, ' +
-    'and the page updates on Wednesdays.\n\n' +
-    'What appears publicly: the Adaptive badge next to the name already shown in the rankings, plus your adaptive ' +
-    'category only if you choose to show it. Your email and the other answers stay private with the PNW WSO.\n\n' +
-    'If the athlete is under 18, a parent or guardian must submit this form or give permission. ' +
-    'To be removed at any time, email ' + CONTACT + '.'
-  );
+  form.setDescription(DESCRIPTION);
   form.setCollectEmail(false);
   form.setLimitOneResponsePerUser(false);
-  form.setConfirmationMessage('Thanks! The PNW WSO will review this and the badge will appear on the rankings page after the next Wednesday update. Questions or changes: ' + CONTACT);
+  form.setConfirmationMessage(CONFIRMATION);
 
   form.addTextItem().setTitle(Q.name).setRequired(true);
   form.addTextItem().setTitle(Q.club).setHelpText('As listed in USAW results, if any.');
-  form.addTextItem().setTitle(Q.link)
-    .setHelpText('On the PNW WSO Rankings page, find the athlete and copy the "Profile →" link. This makes sure we match the right person.');
+  memberItem_(form.addTextItem());
   form.addMultipleChoiceItem().setTitle(Q.cat).setChoiceValues(Object.keys(CATS)).setRequired(true)
     .setHelpText('The categories USAW uses for adaptive entries at national events.');
   form.addMultipleChoiceItem().setTitle(Q.show).setChoiceValues([SHOW_NO, SHOW_YES]).setRequired(true);
@@ -90,6 +84,45 @@ function setup() {
   Logger.log('SHEET_URL ' + ss.getUrl());
 }
 
+const MEMBER_HELP = 'Digits only, from the athlete\'s USA Weightlifting membership card or account. ' +
+  'Used only to match the right athlete in USAW results; it is never published.';
+const DESCRIPTION =
+  'USA Weightlifting\'s public results don\'t mark adaptive athletes, so the PNW WSO Rankings page shows the ' +
+  'Adaptive badge only for athletes who opt in here. Your entry is reviewed by the PNW WSO before it appears, ' +
+  'and the page updates on Wednesdays.\n\n' +
+  'What appears publicly: the Adaptive badge next to the name already shown in the rankings, plus your adaptive ' +
+  'category only if you choose to show it. Your email, membership number and the other answers stay private with the PNW WSO.\n\n' +
+  'If the athlete is under 18, a parent or guardian must submit this form or give permission. ' +
+  'To be removed at any time, email ' + CONTACT + '.';
+const CONFIRMATION = 'Thanks! The PNW WSO will review this and the badge will appear on the rankings page after the next Wednesday update. Questions or changes: ' + CONTACT;
+
+function memberItem_(item) {
+  return item.setTitle(Q.member).setRequired(true).setHelpText(MEMBER_HELP)
+    .setValidation(FormApp.createTextValidation().setHelpText('Enter the membership number using digits only.')
+      .requireTextMatchesPattern('^\\s*\\d{4,10}\\s*$').build());
+}
+
+// Run once in the Apps Script editor to update the live form (keeps all existing responses).
+function updateForm() {
+  const form = FormApp.openById(PropertiesService.getScriptProperties().getProperty('FORM_ID'));
+  const items = form.getItems();
+  let item = items.find(i => i.getTitle() === Q.member) || items.find(i => i.getTitle() === Q.link);
+  if (item) memberItem_(item.asTextItem());
+  else {
+    item = memberItem_(form.addTextItem());
+    const club = items.find(i => i.getTitle() === Q.club);
+    if (club) form.moveItem(item.getIndex(), club.getIndex() + 1);
+  }
+  form.setDescription(DESCRIPTION);
+  form.setConfirmationMessage(CONFIRMATION);
+  Logger.log('Form updated: ' + form.getPublishedUrl());
+}
+
+function sha256_(text) {
+  return Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, text, Utilities.Charset.UTF_8)
+    .map(b => ((b + 256) % 256).toString(16).padStart(2, '0')).join('');
+}
+
 function responseSheet_(ss) {
   return ss.getSheets().find(s => s.getFormUrl()) || ss.getSheets()[0];
 }
@@ -106,15 +139,20 @@ function doGet() {
     const consent = String(r[col(Q.consent)] || '');
     if (!consent) continue;
     let id = String(r[col('USAW profile ID')] || '').trim();
-    if (!id) {
-      const m = String(r[col(Q.link)] || '').match(/member\/(\d+)/);
-      if (m) id = m[1];
+    // The member question may sit in a renamed column (old title) on older sheets
+    let member = '';
+    for (const t of [Q.member, Q.link]) {
+      const v = col(t) >= 0 ? String(r[col(t)] || '').trim() : '';
+      const m = v.match(/member\/(\d+)/);
+      if (!id && m) id = m[1];
+      else if (!member && /^\d{4,10}$/.test(v)) member = v;
     }
     const showCat = String(r[col(Q.show)]) === SHOW_YES;
     out.push({
       name: String(r[col(Q.name)] || '').trim(),
       club: String(r[col(Q.club)] || '').trim(),
       id: /^\d+$/.test(id) ? Number(id) : null,
+      member: member ? sha256_(member) : null,
       category: showCat ? (CATS[String(r[col(Q.cat)])] || '') : ''
     });
   }

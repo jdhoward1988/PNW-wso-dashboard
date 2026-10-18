@@ -1,14 +1,18 @@
 #!/usr/bin/env python3
 """Update data/adaptive.json from the approved opt-ins (Apps Script web app output).
 
-  python3 scripts/adaptive/sync.py approved.json
+  python3 scripts/adaptive/sync.py approved.json [members.json]
 
-approved.json is the web app's response ({"athletes":[{name, club, id, category}]}),
-saved from a browser (fetch tools are blocked by Google's bot checks).
+approved.json is the web app's response ({"athletes":[{name, club, member, id, category}]}),
+saved from a browser (fetch tools are blocked by Google's bot checks). "member" is a SHA-256
+hash of the athlete's USAW membership number (the raw number never leaves the private sheet).
+members.json is {hash: profileId|null} from `await window._pnwMemberIds([...hashes])` on the
+USAW rankings page after running scripts/rankings/fetch.js.
 
 Each approved athlete is matched to a USAW rankings profile id:
-  1. the id they (or the reviewer) supplied, else
-  2. an exact name match in data/rankings.json (case/spacing-insensitive),
+  1. the profile id the reviewer entered in the sheet, else
+  2. their USAW member number (looked up in members.json), else
+  3. an exact name match in data/rankings.json (case/spacing-insensitive),
      narrowed by club if the name belongs to more than one lifter.
 Athletes that can't be matched with certainty are NOT added; they are listed so the
 reviewer can fill "USAW profile ID" in the sheet. Nothing is guessed.
@@ -46,6 +50,7 @@ def main():
             ids.add(r[9])
             people.setdefault(norm(r[3]), {}).setdefault(r[9], set()).add(norm(clubs[r[4]]) if r[4] >= 0 else '')
 
+    members = json.loads(pathlib.Path(sys.argv[2]).read_text()) if len(sys.argv) > 2 else {}
     cur = json.loads(OUT.read_text())
     athletes, unmatched = {}, []
     for a in approved:
@@ -53,6 +58,9 @@ def main():
         if cat not in CODES:
             cat = ''
         aid = a.get('id')
+        num = str(a.get('member') or '').strip().lower()
+        if not aid and num and members.get(num):
+            aid = members[num]
         if not aid:
             cands = people.get(norm(a.get('name')), {})
             if len(cands) > 1 and a.get('club'):
@@ -72,6 +80,8 @@ def main():
             athletes[str(int(aid))] = cat
             if int(aid) not in ids:
                 print(f'note: {a.get("name")} (id {aid}) has no PNW ranked result this season yet; kept for when they do')
+        elif num and num in members and members[num] is None:
+            print(f'note: {a.get("name")} has no PNW ranked result this season yet; will match by member number once they do')
         else:
             unmatched.append(a.get('name') or '(no name)')
 
