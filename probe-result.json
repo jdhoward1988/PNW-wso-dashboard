@@ -1,0 +1,122 @@
+{
+ "widget1": {
+  "reqs": [
+   {
+    "url": "https://usaweightlifting.sport80.com/api/public/widget/data/new/1?p=0&i=20&s=&l=&d=10&f=",
+    "method": "POST",
+    "headers": [
+     "sec-ch-ua-platform",
+     "referer",
+     "sec-ch-ua",
+     "sec-ch-ua-mobile",
+     "x-requested-with",
+     "user-agent",
+     "accept",
+     "x-keep-session",
+     "content-type"
+    ],
+    "hasToken": [],
+    "body": "------WebKitFormBoundaryY92IeUO4Gng5dmVF\r\nContent-Disposition: form-data; name=\"event_from_date\"\r\n\r\n2026-10-18\r\n------WebKitFormBoundaryY92IeUO4Gng5dmVF--\r\n"
+   }
+  ],
+  "resps": [
+   {
+    "keys": [
+     "total",
+     "page",
+     "items_per_page",
+     "next_page_url",
+     "previous_page_url",
+     "no_data_message",
+     "data",
+     "breadcrumbs"
+    ],
+    "sample": "{\"total\":\"92\",\"page\":0,\"items_per_page\":20,\"next_page_url\":\"https://usaweightlifting.sport80.com/api/public/widget/data/new/1?p=1&i=20&s=&l=&d=\",\"previous_page_url\":null,\"no_data_message\":\"No records found please try a different search/filter.\",\"data\":[{\"id\":\"14994\",\"is_event\":true,\"name\":\"2026 October Online Qualifier (NUQ)\",\"subtitle\":\"10/01/2026 - 11/01/2026\",\"subtitle_icon\":null,\"address\":\"United States of America\",\"geolocation\":{\"lng\":null,\"lat\":null},\"telephone\":null,\"email\":\"usaw@usaweightlifting.org\",\"info\":[{\"title\":\"Meet Type\",\"value\":\"Local (WSO) Meet\"},{\"title\":\"Additional Info\",\"value\":\"<p style=\\\"font-style:normal;font-weight:400;font-size:16px;\\\"><span style=\\\"font-style:normal;font-size:16px;\\\"><span style=\\\"font-weight:bolder;font-family:inherit;\\\">October ONLINE QUALIFIER - Results will be posted on November 2nd at 10:00 am MT.</span></span></p><p style=\\\"font-style:normal;font-weight:400;font-size:16px;\\\"><span style=\\\"font-style:normal;font-size:16px;\\\"><span style=\\\"font-weight:bolder;font-family:inherit;\\\"><span style=\\\"text-decoration:underline;\\\">Starting October 1</span> ,  upload videos <a href=\\\"https://usaweightlifting.us.launchpad6.com/contest12\\\" style=\\\"color:rgb(21, 94, 239);\\\">HERE</a>. Pay the entry fee through Sport80.</span></span></p><span style=\\\"font-style:normal;font-size:16px;\\\"><span style=\\\"font-weight:bolder;font-family:inherit;\\\"><br /></span></span><p style=\\\"font-style:normal;font-weight:400;font-size:16px;\\\"><span style=\\\"font-style:normal;font-weight:400;font-size:16px;\\\">This online event will provide athletes with qualifications for the following events:</span><br /></p><ul style=\\\"font-style:normal;font-weight:400;font-size:16px;\\\"><li>ANY NATIONAL EVENT THAT OCCURS WITHIN ONE YEAR OF THE ONLINE EVENT RESULTS UPLOAD. </li></ul><br /><p style=\\\"font-style:normal;font-weight:400;font-size:16px;\\\"><span style=\\\"font-weight:bolder;font-family:inherit;\\\">Submission Site:<br /></span></p><p style=\\\"font-style:normal;font-weight:400;font-size:16px;\\\"><a href=\\\"https://usaweightlifting.us.launchpad6.com/contest12\\\" style=\\\"color:rgb(21, 94, 239);\\\">www.usaweightlifting.events</a></p><p style=\\\"margin-bottom:10px;font-style:normal;font-weight:400;font-size:16px;font-family:sans-serif;color:rgb(0, 0, 0);\\\"><span style=\\\"font-weight:bolder;font-family:inherit;\\\">Requirements: </span><br /></p><p style=\\\"margin-bottom:10px;font-style:normal;font-weight:400;font-size:16px;font-family:sans-serif;color:rgb(0, 0, 0);\\\">- Athletes must be current USA Weightlifting members</p><p style=\\\"margin-bottom:10px;font-style:normal;font-weight:400;font-size:16px;font-family:sans-serif;color:rgb(0, 0, 0);\\\">- Athletes must register for the event on <a href=\\\"https://usaweightlifting.sport80.com/login\\\" target=\\\"_blank\\\" style=\\\"color:rgb(66, 139, 202);\\\" rel=\\\"noreferrer noopener\\\">BARS</a></p><p style=\\\"margin-bottom:10px;font-style:normal;font-weight:400;font-size:16px;font-family:sans-serif;color:rgb(0, 0, 0);\\\"><span s"
+   }
+  ]
+ },
+ "widget2": {
+  "reqs": [
+   {
+    "url": "https://usaweightlifting.sport80.com/api/public/widget/data/new/2?p=0&i=20&s=&l=&d=10&f=",
+    "method": "POST",
+    "headers": [
+     "sec-ch-ua-platform",
+     "referer",
+     "sec-ch-ua",
+     "sec-ch-ua-mobile",
+     "x-requested-with",
+     "user-agent",
+     "accept",
+     "x-keep-session",
+     "content-type"
+    ],
+    "hasToken": [],
+    "body": "------WebKitFormBoundary8gsIsf3dU4oRfriD\r\nContent-Disposition: form-data; name=\"event_from_date\"\r\n\r\n2026-10-18\r\n------WebKitFormBoundary8gsIsf3dU4oRfriD--\r\n"
+   }
+  ],
+  "resps": [
+   {
+    "keys": [
+     "total",
+     "page",
+     "items_per_page",
+     "next_page_url",
+     "previous_page_url",
+     "no_data_message",
+     "data",
+     "breadcrumbs"
+    ],
+    "sample": "{\"total\":\"45\",\"page\":0,\"items_per_page\":20,\"next_page_url\":\"https://usaweightlifting.sport80.com/api/public/widget/data/new/2?p=1&i=20&s=&l=&d=\",\"previous_page_url\":null,\"no_data_message\":\"No records found please try a different search/filter.\",\"data\":[{\"id\":\"14919\",\"is_event\":true,\"name\":\"LEVEL 1 - FORT WORTH, TX\",\"subtitle\":\"10/17/2026 - 10/18/2026\",\"subtitle_icon\":null,\"address\":\"7523 Chapel Ave, Fort Worth, Texas, United States of America, 76116\",\"geolocation\":{\"lng\":\"-97.4460822\",\"lat\":\"32.7215176\"},\"telephone\":null,\"email\":\"chris@bluewavefitness.com\",\"info\":[{\"title\":\"Course Type\",\"value\":\"Level 1 Coach\"}],\"actions\":[{\"type\":\"internal\",\"url\":\"https://usaweightlifting.sport80.com/public/wizard/e/14919\",\"text\":\"Enter Now\",\"icon\":\"fa fa-trophy\",\"style\":null,\"disabled\":false,\"confirmation_message\":null,\"default_table_row_action\":false}],\"img_url\":\"https://d7skausf3l8pb.cloudfront.net/branding/2bedfd4d-9f8d-4504-ba94-f4085b848b6e/397c2015d1476aafb0b506ac3045b2ac-5f96e2fb74873381096448.png\"},{\"id\":\"14965\",\"is_event\":true,\"name\":\"LEVEL 1 - MILTON, FL\",\"subtitle\":\"10/17/2026 - 10/18/2026\",\"subtitle_icon\":null,\"address\":\"5832 Commerce Road, Unit 5832, Milton, Florida, United States of America, 32583\",\"geolocation\":{\"lng\":\"-87.0807564\",\"lat\":\"30.5871182\"},\"telephone\":null,\"email\":\"crossfitpacepatriotpride@gmail.com\",\"info\":[{\"title\":\"Course Type\",\"value\":\"Level 1 Coach\"}],\"actions\":[{\"type\":\"internal\",\"url\":\"https://usaweightlifting.sport80.com/public/wizard/e/14965\",\"text\":\"Enter Now\",\"icon\":\"fa fa-trophy\",\"style\":null,\"disabled\":false,\"confirmation_message\":null,\"default_table_row_action\":false}],\"img_url\":\"https://d7skausf3l8pb.cloudfront.net/branding/2bedfd4d-9f8d-4504-ba94-f4085b848b6e/397c2015d1476aafb0b506ac3045b2ac-5f96e2fb74873381096448.png\"},{\"id\":\"14930\",\"is_event\":true,\"name\":\"LEVEL 1 - SPARTANBURG, SC\",\"subtitle\":\"10/17/2026 - 10/18/2026\",\"subtitle_icon\":null,\"address\":\"2250 East Main Street, Spartanburg, South Carolina, United States of America, 29307\",\"geolocation\":{\"lng\":\"-81.8790238\",\"lat\":\"34.9793473\"},\"telephone\":null,\"email\":\"butcherbarbell@gmail.com\",\"info\":[{\"title\":\"Course Type\",\"value\":\"Level 1 Coach\"}],\"actions\":[{\"type\":\"internal\",\"url\":\"https://usaweightlifting.sport80.com/public/wizard/e/14930\",\"text\":\"Enter Now\",\"icon\":\"fa fa-trophy\",\"style\":null,\"disabled\":false,\"confirmation_message\":null,\"default_table_row_action\":false}],\"img_url\":\"https://d7skausf3l8pb.cloudfront.net/branding/2bedfd4d-9f8d-4504-ba94-f4085b848b6e/397c2015d1476aafb0b506ac3045b2ac-5f96e2fb74873381096448.png\"},{\"id\":\"14923\",\"is_event\":true,\"name\":\"LEVEL 2 - BOW, NH\",\"subtitle\":\"10/17/2026 - 10/18/2026\",\"subtitle_icon\":null,\"address\":\"3 Robinson Rd, A5, Bow, New Hampshire, United States of America, 03304\",\"geolocation\":{\"lng\":\"-71.4946848\",\"lat\":\"43.1451502\"},\"telephone\":null,\"email\":\"wilmingtonweightliftingclub@gmail.com\",\"info\":[{\"title\":\"Course Type\",\"value\":\"Level 2 Coach\"}],\"actions\":[{\"type\":\"internal\",\"url\":\"https://usaweightlifting.sport80.com/pub"
+   }
+  ]
+ },
+ "widget3": {
+  "reqs": [
+   {
+    "url": "https://usaweightlifting.sport80.com/api/public/widget/data/new/3?p=0&i=20&s=&l=&d=10&f=",
+    "method": "POST",
+    "headers": [
+     "sec-ch-ua-platform",
+     "referer",
+     "sec-ch-ua",
+     "sec-ch-ua-mobile",
+     "x-requested-with",
+     "user-agent",
+     "accept",
+     "x-keep-session",
+     "content-type"
+    ],
+    "hasToken": [],
+    "body": "------WebKitFormBoundary9lbBQOLK6xOK66iI\r\nContent-Disposition: form-data; name=\"event_from_date\"\r\n\r\n2026-10-18\r\n------WebKitFormBoundary9lbBQOLK6xOK66iI--\r\n"
+   }
+  ],
+  "resps": [
+   {
+    "keys": [
+     "total",
+     "page",
+     "items_per_page",
+     "next_page_url",
+     "previous_page_url",
+     "no_data_message",
+     "data",
+     "breadcrumbs"
+    ],
+    "sample": "{\"total\":\"1\",\"page\":0,\"items_per_page\":20,\"next_page_url\":null,\"previous_page_url\":null,\"no_data_message\":\"No records found please try a different search/filter.\",\"data\":[{\"id\":\"15107\",\"is_event\":true,\"name\":\"Jessie & Nate Stemo Weightlifting Camp at Cully Strength\",\"subtitle\":\"03/19/2027 - 03/21/2027\",\"subtitle_icon\":null,\"address\":\"5230 NE 42nd Ave, Portland, Oregon, United States of America, 97218\",\"geolocation\":{\"lng\":\"-122.6199964\",\"lat\":\"45.5608811\"},\"telephone\":\"2539513637\",\"email\":\"joey@cullystrength.com\",\"info\":[{\"title\":\"Camps/Speaker Series Type\",\"value\":\"Open Camp\"}],\"actions\":[{\"type\":\"internal\",\"url\":\"https://usaweightlifting.sport80.com/public/wizard/e/15107\",\"text\":\"Enter Now\",\"icon\":\"fa fa-trophy\",\"style\":null,\"disabled\":false,\"confirmation_message\":null,\"default_table_row_action\":false}],\"img_url\":\"https://d7skausf3l8pb.cloudfront.net/branding/2bedfd4d-9f8d-4504-ba94-f4085b848b6e/397c2015d1476aafb0b506ac3045b2ac-5f96e2fb74873381096448.png\"}],\"breadcrumbs\":null}"
+   }
+  ]
+ },
+ "envKeys": [
+  "IS_AUTHENTICATED",
+  "SUBDOMAIN_UUID",
+  "SERVICE_PROVIDER_UUID",
+  "US_DATE_FORMAT",
+  "CORE_SERVICE_API_URL",
+  "RANKINGS_DOMAIN_URL",
+  "SERVICES_API_PUBLIC_KEY",
+  "TIMEZONE",
+  "FULL_WIDTH_PUBLIC_EVENTS_ENTRIES_DATATABLE",
+  "DISABLE_LEGACY_SELECT_STYLING"
+ ]
+}
