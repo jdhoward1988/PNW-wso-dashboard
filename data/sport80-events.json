@@ -1,0 +1,192 @@
+{
+ "source": "Sport80 public widgets (1 = Meets, 2 = Courses, 3 = Camps/Speaker Series), upcoming events located in Alaska, Oregon or Washington",
+ "updated": "2026-10-18",
+ "lists": {
+  "meets": [
+   {
+    "id": 15032,
+    "name": "Nightmare on the Platform",
+    "start": "2026-10-31",
+    "end": "2026-10-31",
+    "city": "Bellingham",
+    "state": "WA",
+    "address": "1524 Birchwood Ave, Bellingham, Washington",
+    "type": "Local (WSO) Meet",
+    "url": "https://usaweightlifting.sport80.com/public/widget/1",
+    "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/15032"
+   },
+   {
+    "id": 14961,
+    "name": "2026 Just Strong Open for Women",
+    "start": "2026-11-08",
+    "end": "2026-11-08",
+    "city": "1240 Upshur St NW",
+    "state": "WA",
+    "address": "1240 Upshur St NW, Washington",
+    "type": "Local (WSO) Meet",
+    "url": "https://usaweightlifting.sport80.com/public/widget/1",
+    "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/14961"
+   },
+   {
+    "id": 14815,
+    "name": "Valley Strength Harvest Strength Classic",
+    "start": "2026-11-22",
+    "end": "2026-11-22",
+    "city": "Dallas",
+    "state": "OR",
+    "address": "745 Main St, Dallas, Oregon",
+    "type": "Local (WSO) Meet",
+    "url": "https://usaweightlifting.sport80.com/public/widget/1",
+    "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/14815"
+   },
+   {
+    "id": 15061,
+    "name": "Winter Lifting-Land 2027",
+    "start": "2027-01-23",
+    "end": "2027-01-24",
+    "city": "Arlington",
+    "state": "WA",
+    "address": "6205 192nd ST NE, Arlington, Washington",
+    "type": "Local (WSO) Meet",
+    "url": "https://usaweightlifting.sport80.com/public/widget/1",
+    "entryUrl": null
+   },
+   {
+    "id": 15075,
+    "name": "2027 Third Pul",
+    "start": "2027-01-23",
+    "end": "2027-01-23",
+    "city": "Wilsonville",
+    "state": "OR",
+    "address": "25589 SW Canyon Creek Rd, Ste 100, Wilsonville, Oregon",
+    "type": "Local (WSO) Meet",
+    "url": "https://usaweightlifting.sport80.com/public/widget/1",
+    "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/15075"
+   },
+   {
+    "id": 14958,
+    "name": "Cully Strength Winter Open",
+    "start": "2027-02-06",
+    "end": "2027-02-06",
+    "city": "Portland",
+    "state": "OR",
+    "address": "5230 NE 42nd Ave, Portland, Oregon",
+    "type": "Local (WSO) Meet",
+    "url": "https://usaweightlifting.sport80.com/public/widget/1",
+    "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/14958"
+   },
+   {
+    "id": 15092,
+    "name": "Seattle Barbell Classic",
+    "start": "2027-02-13",
+    "end": "2027-02-13",
+    "city": "Seattle",
+    "state": "WA",
+    "address": "1415 12th Ave, Seattle, Washington",
+    "type": "Local (WSO) Meet",
+    "url": "https://usaweightlifting.sport80.com/public/widget/1",
+    "entryUrl": null
+   },
+   {
+    "id": 15088,
+    "name": "2027 Cap City Open",
+    "start": "2027-04-25",
+    "end": "2027-04-25",
+    "city": "NW",
+    "state": "WA",
+    "address": "1240 Upshur St., NW, Washington",
+    "type": "Local (WSO) Meet",
+    "url": "https://usaweightlifting.sport80.com/public/widget/1",
+    "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/15088"
+   }
+  ],
+  "courses": [
+   {
+    "id": 14625,
+    "name": "LEVEL 2 - SEATTLE, WA",
+    "start": "2026-10-17",
+    "end": "2026-10-18",
+    "city": "Mountlake Terrace",
+    "state": "WA",
+    "address": "22402 44th Ave W A, Mountlake Terrace, Washington",
+    "type": "Level 2 Coach",
+    "url": "https://usaweightlifting.sport80.com/public/widget/2",
+    "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/14625"
+   },
+   {
+    "id": 14619,
+    "name": "LEVEL 1 - PORTLAND, OR (Women's Only Course)",
+    "start": "2026-11-06",
+    "end": "2026-11-07",
+    "city": "Portland",
+    "state": "OR",
+    "address": "2555 NW Upshur Street, Portland, Oregon",
+    "type": "Level 1 Coach",
+    "url": "https://usaweightlifting.sport80.com/public/widget/2",
+    "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/14619"
+   },
+   {
+    "id": 14938,
+    "name": "LEVEL 1 - RICHLAND, WA",
+    "start": "2026-11-07",
+    "end": "2026-11-08",
+    "city": "Richland",
+    "state": "WA",
+    "address": "1113 Lee Blvd, Richland, Washington",
+    "type": "Level 1 Coach",
+    "url": "https://usaweightlifting.sport80.com/public/widget/2",
+    "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/14938"
+   },
+   {
+    "id": 14618,
+    "name": "LEVEL  2 - PORTLAND, OR ( Women's Only Weekend)",
+    "start": "2026-11-08",
+    "end": "2026-11-09",
+    "city": "Portland",
+    "state": "OR",
+    "address": "2555 NW Upshur Street, Portland, Oregon",
+    "type": "Level 2 Coach",
+    "url": "https://usaweightlifting.sport80.com/public/widget/2",
+    "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/14618"
+   },
+   {
+    "id": 15044,
+    "name": "LEVEL 1 - ANCHORAGE, AK",
+    "start": "2026-11-14",
+    "end": "2026-11-15",
+    "city": "Anchorage",
+    "state": "AK",
+    "address": "1530 E 59th Ave, Anchorage, Alaska",
+    "type": "Level 1 Coach",
+    "url": "https://usaweightlifting.sport80.com/public/widget/2",
+    "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/15044"
+   },
+   {
+    "id": 15067,
+    "name": "LEVEL 1 - FEDERAL WAY, WA",
+    "start": "2026-12-13",
+    "end": "2026-12-13",
+    "city": "Federal Way",
+    "state": "WA",
+    "address": "Crossfit Federal Way, 33753 9th Ave S., Federal Way, Washington",
+    "type": "Level 1 Coach",
+    "url": "https://usaweightlifting.sport80.com/public/widget/2",
+    "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/15067"
+   }
+  ],
+  "camps": [
+   {
+    "id": 15107,
+    "name": "Jessie & Nate Stemo Weightlifting Camp at Cully Strength",
+    "start": "2027-03-19",
+    "end": "2027-03-21",
+    "city": "Portland",
+    "state": "OR",
+    "address": "5230 NE 42nd Ave, Portland, Oregon",
+    "type": "Open Camp",
+    "url": "https://usaweightlifting.sport80.com/public/widget/3",
+    "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/15107"
+   }
+  ]
+ }
+}
