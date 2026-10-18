@@ -17,8 +17,8 @@
  * "USAW profile ID" only if the update lists someone as unmatched.
  */
 
-const CONTACT = 'jdhoward1988@gmail.com';
-const Q = {
+var CONTACT = 'jdhoward1988@gmail.com';
+var Q = {
   name: 'Athlete name (as it appears in USA Weightlifting results)',
   club: 'Club',
   member: 'USAW membership number',
@@ -29,15 +29,15 @@ const Q = {
   email: 'Contact email',
   consent: 'Consent'
 };
-const CATS = {
+var CATS = {
   'Physical Disability': 'PD',
   'Visual Impairment': 'VI',
   'Deaf, Deafened, or Hard of Hearing': 'DHH',
   'Intellectual Impairment': 'ID'
 };
-const SHOW_YES = 'Yes, show the category';
-const SHOW_NO = 'No, show "Adaptive" only';
-const REVIEW_COLS = ['Approved', 'USAW profile ID', 'Reviewer notes'];
+var SHOW_YES = 'Yes, show the category';
+var SHOW_NO = 'No, show "Adaptive" only';
+var REVIEW_COLS = ['Approved', 'USAW profile ID', 'Reviewer notes'];
 
 function setup() {
   const props = PropertiesService.getScriptProperties();
@@ -84,9 +84,9 @@ function setup() {
   Logger.log('SHEET_URL ' + ss.getUrl());
 }
 
-const MEMBER_HELP = 'Digits only, from the athlete\'s USA Weightlifting membership card or account. ' +
+var MEMBER_HELP = 'Digits only, from the athlete\'s USA Weightlifting membership card or account. ' +
   'Used only to match the right athlete in USAW results; it is never published.';
-const DESCRIPTION =
+var DESCRIPTION =
   'USA Weightlifting\'s public results don\'t mark adaptive athletes, so the PNW WSO Rankings page shows the ' +
   'Adaptive badge only for athletes who opt in here. Your entry is reviewed by the PNW WSO before it appears, ' +
   'and the page updates on Wednesdays.\n\n' +
@@ -94,7 +94,7 @@ const DESCRIPTION =
   'category only if you choose to show it. Your email, membership number and the other answers stay private with the PNW WSO.\n\n' +
   'If the athlete is under 18, a parent or guardian must submit this form or give permission. ' +
   'To be removed at any time, email ' + CONTACT + '.';
-const CONFIRMATION = 'Thanks! The PNW WSO will review this and the badge will appear on the rankings page after the next Wednesday update. Questions or changes: ' + CONTACT;
+var CONFIRMATION = 'Thanks! The PNW WSO will review this and the badge will appear on the rankings page after the next Wednesday update. Questions or changes: ' + CONTACT;
 
 function memberItem_(item) {
   return item.setTitle(Q.member).setRequired(true).setHelpText(MEMBER_HELP)
