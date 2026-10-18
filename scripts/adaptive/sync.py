@@ -40,7 +40,7 @@ def main():
     clubs = rk['clubs']
     people = {}  # normalized name -> {id: set(clubs)}
     ids = set()
-    groups = list(rk['classes'].values()) + list(rk.get('adaptive', {}).values())
+    groups = list(rk['classes'].values()) + [v for g in rk.get('youth', {}).values() for v in g.values()]
     for rows in groups:
         for r in rows:
             ids.add(r[9])
@@ -59,6 +59,15 @@ def main():
                 cands = {k: v for k, v in cands.items() if norm(a['club']) in v}
             if len(cands) == 1:
                 aid = next(iter(cands))
+        if not aid and a.get('club'):
+            # Name with an extra part in parentheses, e.g. "Jane Doe (Smith)": only accepted
+            # when the club matches too and exactly one lifter fits both.
+            short = norm(re.sub(r'\([^)]*\)', ' ', a.get('name') or ''))
+            if short and short != norm(a.get('name')):
+                cands = {k: v for k, v in people.get(short, {}).items() if norm(a['club']) in v}
+                if len(cands) == 1:
+                    aid = next(iter(cands))
+                    print(f'note: matched "{a.get("name")}" to ranked lifter "{short}" by name + club')
         if aid:
             athletes[str(int(aid))] = cat
             if int(aid) not in ids:
