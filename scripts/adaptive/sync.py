@@ -18,12 +18,18 @@ Athletes that can't be matched with certainty are NOT added; they are listed so 
 reviewer can fill "USAW profile ID" in the sheet. Nothing is guessed.
 Only id -> category code ("" = show "Adaptive" only) is written to the public file.
 """
-import json, sys, re, pathlib, datetime
+import json, sys, re, os, pathlib, datetime
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 RANK = ROOT / 'data' / 'rankings.json'
 OUT = ROOT / 'data' / 'adaptive.json'
 CODES = {'PD', 'VI', 'DHH', 'ID', ''}
+# Set by the GitHub Actions job: its logs are public, so print counts instead of names there.
+NO_NAMES = os.environ.get('PNW_NO_NAMES') == '1'
+
+
+def who(a):
+    return 'an approved athlete' if NO_NAMES else (a.get('name') or '(no name)')
 
 
 def norm(s):
@@ -75,15 +81,15 @@ def main():
                 cands = {k: v for k, v in people.get(short, {}).items() if norm(a['club']) in v}
                 if len(cands) == 1:
                     aid = next(iter(cands))
-                    print(f'note: matched "{a.get("name")}" to ranked lifter "{short}" by name + club')
+                    print(f'note: matched {who(a)} to a ranked lifter by name + club (name had a part in parentheses)')
         if aid:
             athletes[str(int(aid))] = cat
             if int(aid) not in ids:
-                print(f'note: {a.get("name")} (id {aid}) has no PNW ranked result this season yet; kept for when they do')
+                print(f'note: {who(a)} has no PNW ranked result this season yet; kept for when they do')
         elif num and num in members and members[num] is None:
-            print(f'note: {a.get("name")} has no PNW ranked result this season yet; will match by member number once they do')
+            print(f'note: {who(a)} has no PNW ranked result this season yet; will match by member number once they do')
         else:
-            unmatched.append(a.get('name') or '(no name)')
+            unmatched.append(who(a))
 
     changed = athletes != cur.get('athletes', {})
     cur['athletes'] = dict(sorted(athletes.items(), key=lambda kv: int(kv[0])))

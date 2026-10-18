@@ -1,0 +1,59 @@
+name: Sport80 check (events daily, rankings Wednesdays)
+
+# Runs on GitHub's servers so the daily Claude update doesn't need a laptop to be awake.
+# 11:23 UTC = 4:23 AM PDT / 3:23 AM PST, well before the Claude update at 5:59 AM Pacific
+# (GitHub may start scheduled runs a little late).
+on:
+  schedule:
+    - cron: '23 11 * * *'
+  workflow_dispatch:
+    inputs:
+      rankings:
+        description: 'Also refresh rankings + adaptive list (normally Wednesdays only)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sport80
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install headless browser
+        run: |
+          npm i --no-save --no-package-lock playwright@1.48.2
+          npx playwright install --with-deps chromium
+      - name: Read Sport80
+        id: run
+        continue-on-error: true
+        run: |
+          if [ "$(TZ=America/Los_Angeles date +%u)" = "3" ] || [ "${{ inputs.rankings }}" = "true" ]; then
+            node scripts/cloud/sport80.mjs --rankings
+          else
+            node scripts/cloud/sport80.mjs
+          fi
+      - name: Publish changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/sport80-events.json data/cloud-status.json data/rankings.json data/adaptive.json
+          if git diff --cached --quiet; then echo "nothing changed"; exit 0; fi
+          git commit -m "Sport80 check $(TZ=America/Los_Angeles date +%F)"
+          for i in 1 2 3; do git pull --rebase -q origin main && git push -q origin HEAD:main && exit 0; sleep 10; done
+          exit 1
+      - name: Report a failed check
+        if: steps.run.outcome == 'failure'
+        run: |
+          cat data/cloud-status.json
+          echo "::error::Part of the Sport80 check failed; see data/cloud-status.json"
+          exit 1
