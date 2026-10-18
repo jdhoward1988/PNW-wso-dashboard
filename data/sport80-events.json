@@ -16,18 +16,6 @@
     "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/15032"
    },
    {
-    "id": 14961,
-    "name": "2026 Just Strong Open for Women",
-    "start": "2026-11-08",
-    "end": "2026-11-08",
-    "city": "1240 Upshur St NW",
-    "state": "WA",
-    "address": "1240 Upshur St NW, Washington",
-    "type": "Local (WSO) Meet",
-    "url": "https://usaweightlifting.sport80.com/public/widget/1",
-    "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/14961"
-   },
-   {
     "id": 14815,
     "name": "Valley Strength Harvest Strength Classic",
     "start": "2026-11-22",
@@ -86,18 +74,6 @@
     "type": "Local (WSO) Meet",
     "url": "https://usaweightlifting.sport80.com/public/widget/1",
     "entryUrl": null
-   },
-   {
-    "id": 15088,
-    "name": "2027 Cap City Open",
-    "start": "2027-04-25",
-    "end": "2027-04-25",
-    "city": "NW",
-    "state": "WA",
-    "address": "1240 Upshur St., NW, Washington",
-    "type": "Local (WSO) Meet",
-    "url": "https://usaweightlifting.sport80.com/public/widget/1",
-    "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/15088"
    }
   ],
   "courses": [

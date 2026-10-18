@@ -4,21 +4,11 @@
   "ok": true,
   "changed": true,
   "counts": {
-   "meets": 8,
+   "meets": 6,
    "courses": 6,
    "camps": 1
   }
  },
- "rankings": {
-  "ok": true,
-  "pnwChanged": false,
-  "result": "OK: 584 Open results + 59 youth results in 4 age groups, 82 clubs, season 2026"
- },
- "adaptive": {
-  "ok": true,
-  "approved": 1,
-  "listed": 1,
-  "unmatched": 0,
-  "notRankedYet": 0
- }
+ "rankings": "not scheduled today",
+ "adaptive": "not scheduled today"
 }
