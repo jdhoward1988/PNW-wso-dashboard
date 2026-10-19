@@ -1,6 +1,6 @@
 {
  "source": "Sport80 public widgets (1 = Meets, 2 = Courses, 3 = Camps/Speaker Series), upcoming events located in Alaska, Oregon or Washington",
- "updated": "2026-10-18",
+ "updated": "2026-10-19",
  "lists": {
   "meets": [
    {
@@ -77,18 +77,6 @@
    }
   ],
   "courses": [
-   {
-    "id": 14625,
-    "name": "LEVEL 2 - SEATTLE, WA",
-    "start": "2026-10-17",
-    "end": "2026-10-18",
-    "city": "Mountlake Terrace",
-    "state": "WA",
-    "address": "22402 44th Ave W A, Mountlake Terrace, Washington",
-    "type": "Level 2 Coach",
-    "url": "https://usaweightlifting.sport80.com/public/widget/2",
-    "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/14625"
-   },
    {
     "id": 14619,
     "name": "LEVEL 1 - PORTLAND, OR (Women's Only Course)",

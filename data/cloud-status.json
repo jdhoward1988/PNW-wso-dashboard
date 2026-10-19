@@ -1,11 +1,11 @@
 {
- "checked": "2026-10-18",
+ "checked": "2026-10-19",
  "events": {
   "ok": true,
   "changed": true,
   "counts": {
    "meets": 6,
-   "courses": 6,
+   "courses": 5,
    "camps": 1
   }
  },
