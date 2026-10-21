@@ -1,11 +1,12 @@
 name: Sport80 check (events daily, rankings Wednesdays)
 
 # Runs on GitHub's servers so the daily Claude update doesn't need a laptop to be awake.
-# 11:23 UTC = 4:23 AM PDT / 3:23 AM PST, well before the Claude update at 5:59 AM Pacific
-# (GitHub may start scheduled runs a little late).
+# 09:07 UTC = 2:07 AM PDT / 1:07 AM PST. GitHub has been starting scheduled runs
+# 4-6 hours late, so this leaves room before the Claude update at 10:51 AM Pacific.
+# (Must stay after midnight Pacific: the Wednesday rankings check uses the Pacific date.)
 on:
   schedule:
-    - cron: '23 11 * * *'
+    - cron: '7 9 * * *'
   workflow_dispatch:
     inputs:
       rankings:
