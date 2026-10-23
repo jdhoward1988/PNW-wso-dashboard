@@ -8,21 +8,23 @@
  *
  * Organizers get a branded HTML email (plain-text version included for mail apps that need it).
  *
- * Install (once), from the "Add Your Event" form itself:
- *   Form editor → ⋮ (More) → Apps Script → replace the code with this file → Save
- *   → choose setup in the function menu → Run → allow the permissions it asks for.
- * setup() turns on response editing and adds the on-submit email. Running it again is safe.
+ * Install (once): open the "Meet Director Interest Form" editor → ⋮ (More) → Apps Script.
+ *   Add this as a NEW file (＋ next to Files → Script → name it EditLinks) and paste it there.
+ *   Don't replace existing code: the same project may also run the Upcoming Local Events list.
+ *   Save → choose setupEditLinks in the function menu → Run → allow the permissions.
+ * setupEditLinks() turns on response editing and adds the on-submit email. Safe to run again.
+ * All names here start with "el"/"EL_" or are unique, so they won't clash with other files.
  *
  * listEditLinks() — logs the edit link for every existing submission (View → Logs), so you can
  *   send one to an organizer who submitted before this was installed. It emails no one.
  */
 
-var SENDER_NAME = 'PNW WSO';
-var REPLY_TO = 'jdhoward1988@gmail.com';
-var CALENDAR_URL = 'https://jdhoward1988.github.io/PNW-wso-dashboard/#interest';
+var EL_SENDER_NAME = 'PNW WSO';
+var EL_REPLY_TO = 'jdhoward1988@gmail.com';
+var EL_CALENDAR_URL = 'https://jdhoward1988.github.io/PNW-wso-dashboard/#interest';
 
-function setup() {
-  var form = FormApp.getActiveForm();
+function setupEditLinks() {
+  var form = elForm_();
   form.setAllowResponseEdits(true);
   ScriptApp.getProjectTriggers()
     .filter(function (t) { return t.getHandlerFunction() === 'onEventSubmit'; })
@@ -31,11 +33,27 @@ function setup() {
   Logger.log('Ready: response editing is on and organizers will be emailed their edit link.');
 }
 
+// Works whether this file sits in the form's own Apps Script project or in the response
+// sheet's project (where the Upcoming Local Events web app may live).
+function elForm_() {
+  var form = null;
+  try { form = FormApp.getActiveForm(); } catch (err) { }
+  if (!form) {
+    var url = SpreadsheetApp.getActiveSpreadsheet() && SpreadsheetApp.getActiveSpreadsheet().getFormUrl();
+    if (!url) throw new Error('Open this from the "Meet Director Interest Form" (or its response sheet) → Apps Script.');
+    form = FormApp.openByUrl(url);
+  }
+  if (!/Meet Director Interest/i.test(form.getTitle()) && !form.getItems().some(function (i) { return /name \(of event\)/i.test(i.getTitle()); })) {
+    throw new Error('This project belongs to "' + form.getTitle() + '", not the Add Your Event form. Nothing was changed.');
+  }
+  return form;
+}
+
 function onEventSubmit(e) {
   var r = e.response;
-  var info = details_(r);
+  var info = elDetails_(r);
   if (!info.email) return; // no contact email given; nothing to send
-  var isEdit = r.getTimestamp().getTime() - firstTimestamp_(r) > 60000;
+  var isEdit = r.getTimestamp().getTime() - elFirstTimestamp_(r) > 60000;
   var subject = (isEdit ? 'Updated: ' : 'Submitted: ') + (info.name || 'your event') + ' (PNW WSO Upcoming Local Events)';
   var editUrl = r.getEditResponseUrl();
   var body =
@@ -44,11 +62,11 @@ function onEventSubmit(e) {
     (info.date ? 'Date: ' + info.date + '\n' : '') +
     '\nNeed to change the date, details or contact info later? Use your personal edit link:\n' + editUrl + '\n\n' +
     'Keep this link private: anyone with it can change your listing. Changes show up in Upcoming Local Events ' +
-    'within a minute: ' + CALENDAR_URL + '\n\n' +
+    'within a minute: ' + EL_CALENDAR_URL + '\n\n' +
     'To remove a listing, reply to this email.\n\n— PNW WSO';
   MailApp.sendEmail({
-    to: info.email, subject: subject, body: body, htmlBody: emailHtml_(info, editUrl, isEdit),
-    name: SENDER_NAME, replyTo: REPLY_TO
+    to: info.email, subject: subject, body: body, htmlBody: elEmailHtml_(info, editUrl, isEdit),
+    name: EL_SENDER_NAME, replyTo: EL_REPLY_TO
   });
 }
 
@@ -56,27 +74,27 @@ function onEventSubmit(e) {
 // PNW WSO brand palette: navy #08172A, blue #3C78BD, green #4CAB48, gold #E0B025, grey #CECECD,
 // off-white #F8F8F8. Poppins headings / Inter body / IBM Plex Mono dates, with safe fallbacks
 // (most mail apps don't load web fonts). Inline styles + tables so Gmail and Outlook keep the layout.
-var LOGO_URL = 'https://jdhoward1988.github.io/PNW-wso-dashboard/assets/pnw-wso-mark-180.png';
+var EL_LOGO_URL = 'https://jdhoward1988.github.io/PNW-wso-dashboard/assets/pnw-wso-mark-180.png';
 
-function emailHtml_(info, editUrl, isEdit) {
+function elEmailHtml_(info, editUrl, isEdit) {
   var H = "'Poppins','Segoe UI',Helvetica,Arial,sans-serif";
   var B = "'Inter','Segoe UI',Helvetica,Arial,sans-serif";
   var M = "'IBM Plex Mono',Menlo,Consolas,monospace";
   var where = [info.venue, [info.city, info.state].filter(String).join(', ')].filter(String).join(' · ');
   var tag = function (t) {
     return '<span style="display:inline-block;font:600 10px ' + B + ';letter-spacing:.07em;text-transform:uppercase;' +
-      'padding:4px 10px;border-radius:999px;border:1.5px solid #CECECD;color:#465366;margin:8px 6px 0 0;white-space:nowrap;">' + esc_(t) + '</span>';
+      'padding:4px 10px;border-radius:999px;border:1.5px solid #CECECD;color:#465366;margin:8px 6px 0 0;white-space:nowrap;">' + elEsc_(t) + '</span>';
   };
   return '' +
   '<!doctype html><html><body style="margin:0;padding:0;background:#F8F8F8;">' +
-  '<div style="display:none;max-height:0;overflow:hidden;">Your private link to edit ' + esc_(info.name || 'your event') + '.</div>' +
+  '<div style="display:none;max-height:0;overflow:hidden;">Your private link to edit ' + elEsc_(info.name || 'your event') + '.</div>' +
   '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F8F8F8;"><tr><td align="center" style="padding:24px 12px;">' +
   '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#FFFFFF;border:1px solid #CECECD;border-radius:14px;overflow:hidden;">' +
 
   // header band
   '<tr><td style="background:#08172A;padding:18px 24px;">' +
     '<table role="presentation" cellpadding="0" cellspacing="0"><tr>' +
-    '<td style="padding-right:12px;"><img src="' + LOGO_URL + '" width="44" height="44" alt="" style="display:block;border:0;"></td>' +
+    '<td style="padding-right:12px;"><img src="' + EL_LOGO_URL + '" width="44" height="44" alt="" style="display:block;border:0;"></td>' +
     '<td style="font:700 15px/1.15 ' + H + ';color:#F8F8F8;letter-spacing:.02em;">PNW WSO' +
       '<div style="font:500 10.5px ' + B + ';color:#CECECD;letter-spacing:.06em;text-transform:uppercase;margin-top:3px;">Upcoming Local Events</div></td>' +
     '</tr></table></td></tr>' +
@@ -94,9 +112,9 @@ function emailHtml_(info, editUrl, isEdit) {
   '<tr><td style="padding:16px 28px 4px;">' +
     '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #CECECD;border-radius:14px;">' +
     '<tr><td style="border-left:5px dashed #4CAB48;border-radius:14px 0 0 14px;padding:16px 18px;">' +
-      (info.date ? '<div style="font:500 12px ' + M + ';color:#465366;">' + esc_(info.date) + '</div>' : '') +
-      '<div style="font:600 16px/1.3 ' + H + ';color:#08172A;margin-top:4px;">' + esc_(info.name || 'Your event') + '</div>' +
-      (where ? '<div style="font:400 12.5px ' + B + ';color:#465366;margin-top:3px;">' + esc_(where) + '</div>' : '') +
+      (info.date ? '<div style="font:500 12px ' + M + ';color:#465366;">' + elEsc_(info.date) + '</div>' : '') +
+      '<div style="font:600 16px/1.3 ' + H + ';color:#08172A;margin-top:4px;">' + elEsc_(info.name || 'Your event') + '</div>' +
+      (where ? '<div style="font:400 12.5px ' + B + ';color:#465366;margin-top:3px;">' + elEsc_(where) + '</div>' : '') +
       '<div>' + tag('Proposed') + (info.type ? tag(info.type) : '') + '</div>' +
     '</td></tr></table></td></tr>' +
 
@@ -111,7 +129,7 @@ function emailHtml_(info, editUrl, isEdit) {
 
   // secondary link
   '<tr><td style="padding:14px 28px 26px;">' +
-    '<a href="' + CALENDAR_URL + '" style="font:600 12.5px ' + B + ';color:#08172A;text-decoration:none;border-bottom:1.5px solid #3C78BD;">See Upcoming Local Events &rarr;</a>' +
+    '<a href="' + EL_CALENDAR_URL + '" style="font:600 12.5px ' + B + ';color:#08172A;text-decoration:none;border-bottom:1.5px solid #3C78BD;">See Upcoming Local Events &rarr;</a>' +
   '</td></tr>' +
 
   // footer
@@ -122,27 +140,27 @@ function emailHtml_(info, editUrl, isEdit) {
   '</table></td></tr></table></body></html>';
 }
 
-function esc_(t) {
+function elEsc_(t) {
   return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
 function listEditLinks() {
-  FormApp.getActiveForm().getResponses().forEach(function (r) {
-    var info = details_(r);
+  elForm_().getResponses().forEach(function (r) {
+    var info = elDetails_(r);
     Logger.log((info.date || '?') + ' | ' + (info.name || '(no name)') + ' | ' + (info.email || '(no email)') + '\n  ' + r.getEditResponseUrl());
   });
 }
 
 // Pull the event name ("Name (Of Event)"), date ("Planned Date") and "Contact Email" out of a
 // response by question title/type, so it keeps working if the wording changes slightly.
-function details_(r) {
+function elDetails_(r) {
   var out = { name: '', date: '', email: '', venue: '', city: '', state: '', type: '' };
   r.getItemResponses().forEach(function (ir) {
     var item = ir.getItem(), title = item.getTitle().toLowerCase().trim(), v = ir.getResponse();
     if (typeof v !== 'string') return;
     v = v.trim();
     if (!out.email && /email/.test(title) && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)) out.email = v;
-    else if (!out.date && item.getType() === FormApp.ItemType.DATE) out.date = niceDate_(v);
+    else if (!out.date && item.getType() === FormApp.ItemType.DATE) out.date = elNiceDate_(v);
     else if (!out.name && /name \(of event\)|name of (the )?event|event name|meet name/.test(title)) out.name = v;
     else if (title === 'venue') out.venue = v;
     else if (title === 'city') out.city = v;
@@ -153,7 +171,7 @@ function details_(r) {
 }
 
 // "2026-11-21" -> "Sat, Nov 21, 2026"
-function niceDate_(v) {
+function elNiceDate_(v) {
   var m = String(v).match(/^(\d{4})-(\d{2})-(\d{2})$/);
   if (!m) return v;
   return Utilities.formatDate(new Date(+m[1], +m[2] - 1, +m[3], 12), 'America/Los_Angeles', 'EEE, MMM d, yyyy');
@@ -161,7 +179,7 @@ function niceDate_(v) {
 
 // An edit keeps the same response id but gets a new timestamp, so remember when each
 // response was first submitted to tell a new submission from an edit.
-function firstTimestamp_(r) {
+function elFirstTimestamp_(r) {
   var props = PropertiesService.getScriptProperties(), key = 'first_' + r.getId();
   var seen = props.getProperty(key);
   if (seen) return Number(seen);
