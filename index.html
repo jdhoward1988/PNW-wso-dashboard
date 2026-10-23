@@ -816,9 +816,15 @@
 
   // Pull the first matching column, trying a few plausible header spellings —
   // keeps this working even if the exact Form question wording shifts slightly.
+  // Match sheet columns ignoring case, spaces and punctuation, so renaming a form question
+  // ("Name (Of Event)" -> "Name of Event") doesn't break the list.
+  const normKey = k => String(k).toLowerCase().replace(/[^a-z0-9]+/g, '');
   function pick(row, keys) {
+    const byNorm = {};
+    for (const [k, v] of Object.entries(row)) if (!(normKey(k) in byNorm)) byNorm[normKey(k)] = v;
     for (const k of keys) {
-      if (row[k] !== undefined && row[k] !== null && String(row[k]).trim() !== '') return String(row[k]).trim();
+      const v = byNorm[normKey(k)];
+      if (v !== undefined && v !== null && String(v).trim() !== '') return String(v).trim();
     }
     return '';
   }
@@ -871,7 +877,7 @@
     interestCountEl.textContent = items.length + ' upcoming';
     interestListEl.innerHTML = items.map(({ r, rawDate, time }) => {
       const dateLabel = formatWhen(rawDate) || 'Date TBD';
-      const name = pick(r, ['Name (Of Event)', 'Name of event', 'Event Name']) || 'Untitled event';
+      const name = pick(r, ['Name of Event', 'Name (Of Event)', 'Event Name', 'Meet Name', 'Name']) || 'Untitled event';
       const loc = [pick(r, ['Venue']), pick(r, ['City']), pick(r, ['State'])].filter(Boolean).join(', ');
       const hostClub = pick(r, ['Host Club']);
       const meetType = pick(r, ['Event Type', 'Meet Type', 'Meet type']);
