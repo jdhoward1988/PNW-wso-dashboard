@@ -54,18 +54,25 @@ function listEditLinks() {
   });
 }
 
-// Pull the event name, date and contact email out of a response by question type/title,
-// so it keeps working if question wording changes slightly.
+// Pull the event name ("Name (Of Event)"), date ("Planned Date") and "Contact Email" out of a
+// response by question title/type, so it keeps working if the wording changes slightly.
 function details_(r) {
   var out = { name: '', date: '', email: '' };
   r.getItemResponses().forEach(function (ir) {
     var item = ir.getItem(), title = item.getTitle().toLowerCase(), v = ir.getResponse();
     if (typeof v !== 'string') return;
     if (!out.email && /email/.test(title) && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v.trim())) out.email = v.trim();
-    else if (!out.date && item.getType() === FormApp.ItemType.DATE) out.date = v;
-    else if (!out.name && /name of (the )?event|event name|meet name/.test(title)) out.name = v.trim();
+    else if (!out.date && item.getType() === FormApp.ItemType.DATE) out.date = niceDate_(v);
+    else if (!out.name && /name \(of event\)|name of (the )?event|event name|meet name/.test(title)) out.name = v.trim();
   });
   return out;
+}
+
+// "2026-11-21" -> "Sat, Nov 21, 2026"
+function niceDate_(v) {
+  var m = String(v).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!m) return v;
+  return Utilities.formatDate(new Date(+m[1], +m[2] - 1, +m[3], 12), 'America/Los_Angeles', 'EEE, MMM d, yyyy');
 }
 
 // An edit keeps the same response id but gets a new timestamp, so remember when each
