@@ -1,6 +1,6 @@
 {
  "source": "Sport80 public widgets (1 = Meets, 2 = Courses, 3 = Camps/Speaker Series), upcoming events located in Alaska, Oregon or Washington",
- "updated": "2026-10-19",
+ "updated": "2026-10-26",
  "lists": {
   "meets": [
    {
@@ -71,6 +71,30 @@
     "city": "Seattle",
     "state": "WA",
     "address": "1415 12th Ave, Seattle, Washington",
+    "type": "Local (WSO) Meet",
+    "url": "https://usaweightlifting.sport80.com/public/widget/1",
+    "entryUrl": null
+   },
+   {
+    "id": 15129,
+    "name": "PARAMOUNT GRAND PRIX",
+    "start": "2027-05-15",
+    "end": "2027-05-16",
+    "city": "Mountlake Terrace",
+    "state": "WA",
+    "address": "22402 44th Ave W, Suite A, Mountlake Terrace, Washington",
+    "type": "Local (WSO) Meet",
+    "url": "https://usaweightlifting.sport80.com/public/widget/1",
+    "entryUrl": null
+   },
+   {
+    "id": 15130,
+    "name": "PARAMOUNT PLAYOFFS",
+    "start": "2027-08-14",
+    "end": "2027-08-14",
+    "city": "Mountlake Terrace",
+    "state": "WA",
+    "address": "22402 44th Ave W, Suite A, Mountlake Terrace, Washington",
     "type": "Local (WSO) Meet",
     "url": "https://usaweightlifting.sport80.com/public/widget/1",
     "entryUrl": null
