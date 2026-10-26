@@ -882,17 +882,51 @@
   // Cards use the same structure and classes as the calendar's event rows, so they
   // share its desktop grid and phone layout. Sorted by planned date; past entries
   // fade, then drop off after ~2 weeks, matching the calendar.
+  // Once a proposed meet is sanctioned and added to the calendar above, drop it from this list
+  // so it isn't shown twice. A match needs the same event name (ignoring case, punctuation, years
+  // and generic words like "meet") and a calendar date within ~2 months of the planned date,
+  // since the sanctioned date often moves a little (e.g. May 8 proposed -> May 15 sanctioned).
+  // Organizers' sheet can also hide a row: put Sanctioned / Hide / Remove / Cancelled in a
+  // "Status" column.
+  const GENERIC = new Set(['the','a','an','and','of','at','meet','event','annual','wso','usaw','pnw']);
+  const nameTokens = n => String(n).toLowerCase().replace(/&/g, ' and ').split(/[^a-z0-9]+/)
+    .filter(t => t && !GENERIC.has(t) && !/^(19|20)\d\d$/.test(t));
+  const sameName = (a, b) => {
+    const A = nameTokens(a), B = nameTokens(b);
+    if (!A.length || !B.length) return false;
+    const [small, big] = A.length <= B.length ? [A, B] : [B, A];
+    return small.every(t => big.includes(t)) && (small.length >= 2 || A.join(' ') === B.join(' '));
+  };
+  const calendarEvents = [...document.querySelectorAll('.timeline .event-row[data-tier="local"], .timeline .event-row[data-tier="national"]')]
+    .map(row => ({ name: (row.querySelector('.ev-name') || {}).textContent || '', time: new Date(row.dataset.start + 'T12:00:00').getTime() }))
+    .filter(e => e.name && !isNaN(e.time));
+  const MATCH_WINDOW_MS = 62 * 24 * 3600 * 1000;
+  function officialMatch(name, time) {
+    return calendarEvents.find(e => sameName(name, e.name) && (time === Infinity || Math.abs(e.time - time) <= MATCH_WINDOW_MS));
+  }
+
   function renderInterestRows(rowsData) {
     const now = new Date();
+    const moved = [];
     const items = rowsData.map(r => {
       const rawDate = pick(r, ['Planned Date', 'Date', 'Proposed meet date', 'Meet Date']);
       const d = new Date(rawDate);
       return { r, rawDate, time: isNaN(d) ? Infinity : d.getTime() };
     }).filter(it => it.time === Infinity || now - it.time <= TWO_WEEKS_MS)
+      .filter(it => {
+        if (/sanction|hide|remove|cancel/i.test(pick(it.r, ['Status']))) return false;
+        const name = pick(it.r, ['Name of Event', 'Name (Of Event)', 'Event Name', 'Meet Name', 'Name']);
+        const hit = name && officialMatch(name, it.time);
+        if (hit) { moved.push(hit.name); return false; }
+        return true;
+      })
       .sort((a, b) => a.time - b.time);
+    const movedNote = moved.length
+      ? `<p class="interest-status interest-moved">${esc([...new Set(moved)].join(' and '))} ${moved.length > 1 ? 'are' : 'is'} now USAW-sanctioned and listed in the calendar above.</p>`
+      : '';
 
     if (!items.length) {
-      interestListEl.innerHTML = '<p class="interest-status">No community events are listed yet. Hosting one? Add it with the form below.</p>';
+      interestListEl.innerHTML = '<p class="interest-status">No community events are listed yet. Hosting one? Add it with the form below.</p>' + movedNote;
       interestCountEl.textContent = '0 upcoming';
       return;
     }
@@ -922,7 +956,7 @@
         </div>
         <div class="ev-tags"><span class="tag">Proposed</span>${meetType ? `<span class="tag">${esc(meetType)}</span>` : ''}</div>
       </div>`;
-    }).join('');
+    }).join('') + movedNote;
   }
 
   fetch(INTEREST_API_URL)
