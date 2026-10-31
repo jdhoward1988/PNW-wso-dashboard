@@ -1,6 +1,6 @@
 {
  "source": "Sport80 public widgets (1 = Meets, 2 = Courses, 3 = Camps/Speaker Series), upcoming events located in Alaska, Oregon or Washington",
- "updated": "2026-10-26",
+ "updated": "2026-10-31",
  "lists": {
   "meets": [
    {
@@ -136,18 +136,6 @@
     "type": "Level 2 Coach",
     "url": "https://usaweightlifting.sport80.com/public/widget/2",
     "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/14618"
-   },
-   {
-    "id": 15044,
-    "name": "LEVEL 1 - ANCHORAGE, AK",
-    "start": "2026-11-14",
-    "end": "2026-11-15",
-    "city": "Anchorage",
-    "state": "AK",
-    "address": "1530 E 59th Ave, Anchorage, Alaska",
-    "type": "Level 1 Coach",
-    "url": "https://usaweightlifting.sport80.com/public/widget/2",
-    "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/15044"
    },
    {
     "id": 15067,
