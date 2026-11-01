@@ -1,20 +1,8 @@
 {
  "source": "Sport80 public widgets (1 = Meets, 2 = Courses, 3 = Camps/Speaker Series), upcoming events located in Alaska, Oregon or Washington",
- "updated": "2026-10-31",
+ "updated": "2026-11-01",
  "lists": {
   "meets": [
-   {
-    "id": 15032,
-    "name": "Nightmare on the Platform",
-    "start": "2026-10-31",
-    "end": "2026-10-31",
-    "city": "Bellingham",
-    "state": "WA",
-    "address": "1524 Birchwood Ave, Bellingham, Washington",
-    "type": "Local (WSO) Meet",
-    "url": "https://usaweightlifting.sport80.com/public/widget/1",
-    "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/15032"
-   },
    {
     "id": 14815,
     "name": "Valley Strength Harvest Strength Classic",
