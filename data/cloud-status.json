@@ -11,7 +11,7 @@
  },
  "rankings": {
   "ok": true,
-  "pnwChanged": true,
+  "pnwChanged": false,
   "result": "OK: 586 Open results + 59 youth results in 4 age groups, 82 clubs, season 2026"
  },
  "adaptive": {
@@ -20,5 +20,27 @@
   "listed": 1,
   "unmatched": 0,
   "notRankedYet": 0
+ },
+ "referees": {
+  "ok": true,
+  "changed": false,
+  "nationwide": 749,
+  "pnw": 0,
+  "fields": [
+   "id",
+   "is_event",
+   "name",
+   "subtitle",
+   "subtitle_icon",
+   "address",
+   "geolocation",
+   "telephone",
+   "email",
+   "info",
+   "actions",
+   "img_url",
+   "what3words"
+  ],
+  "infoTitles": []
  }
 }
