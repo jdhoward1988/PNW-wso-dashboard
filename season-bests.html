@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PNW WSO Season bests (draft)</title>
+<meta name="description" content="Best 2026 totals by PNW WSO members in each weight class, by age group.">
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" sizes="64x64" href="assets/pnw-wso-mark-64.png">
+<link rel="apple-touch-icon" href="assets/pnw-wso-mark-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/new-pages.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="https://www.pnwwsoweightlifting.com/" aria-label="Pacific Northwest Weightlifting State Organization — main site">
+      <img class="brand-logo" src="assets/pnw-wso-logo.png" width="413" height="232" alt="Pacific Northwest Weightlifting State Organization">
+    </a>
+    <div class="topbar-right">
+      <a class="icon-link" href="https://www.instagram.com/pnw_wso_weightlifting/" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+      </a>
+      <a class="icon-link" href="https://www.facebook.com/pnwwsoweightlifting" target="_blank" rel="noopener" aria-label="Facebook">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1V8c0-.9.25-1.5 1.55-1.5H17V3.7C16.6 3.65 15.4 3.5 14 3.5c-2.8 0-4.5 1.7-4.5 4.8V10H6.8v3.1h2.7v8z"/></svg>
+      </a>
+      <a class="pill-btn dark" href="index.html">Calendar</a>
+      <a class="pill-btn dark" href="rankings.html">Rankings</a>
+      <a class="pill-btn dark" href="https://www.pnwwsoweightlifting.com/">← PNW WSO site</a>
+    </div>
+  </div>
+</div>
+
+<div class="hero"><div class="wrap">
+  <div class="eyebrow"><span class="tag">Draft</span><span>PNW WSO · <span class="sbSeason">2026</span> season</span><span id="pgUpdated"></span></div>
+  <h1>Season bests</h1>
+  <p class="sub">The best <span class="sbSeason"></span> total by a PNW WSO member in each weight class. Filters work the same way as on the rankings page: Junior and Masters use the Open classes by age at the meet, and Youth uses USAW's youth age groups and their own classes.</p>
+</div></div>
+
+<main>
+<section class="feat" id="records" data-needs="new-pages"><div class="wrap">
+  <div class="grid">
+    <div class="panel">
+      <div class="filters">
+        <div class="tabs" role="group" aria-label="Gender" id="sbSex">
+          <button type="button" data-k="W" aria-pressed="true">Women</button>
+          <button type="button" data-k="M" aria-pressed="false">Men</button>
+        </div>
+        <div class="tabs" role="group" aria-label="Age group" id="sbAge">
+          <button type="button" data-k="all" aria-pressed="true">All ages</button>
+          <button type="button" data-k="youth" aria-pressed="false">Youth ≤17</button>
+          <button type="button" data-k="junior" aria-pressed="false">Junior 15–20</button>
+          <button type="button" data-k="masters" aria-pressed="false">Masters 35+</button>
+        </div>
+        <div class="tabs sub" role="group" aria-label="Youth age group" id="sbYouth" hidden></div>
+      </div>
+      <h3 class="sbHead" id="sbHead"></h3>
+      <div class="tscroll"><table><thead><tr><th>Class</th><th class="num">Total</th><th>Lifter</th><th class="num">Age</th><th>Date</th></tr></thead><tbody id="recBody"></tbody></table></div>
+      <p class="note">Totals only; the rankings feed doesn't include each lift. All-time WSO records stay where the WSO already keeps them.</p>
+    </div>
+    <aside class="review"><h3>Draft notes</h3><dl>
+      <dt>Data</dt><dd>Already in <code>rankings.json</code>, which only includes PNW WSO members, so no extra eligibility check is needed.</dd>
+      <dt>Status</dt><dd>No open decisions.</dd>
+    </dl></aside>
+  </div>
+</div></section>
+</main>
+
+<footer><div class="wrap">This is a draft page under review by the PNW WSO and may change. Rankings data comes from USA Weightlifting's public rankings and updates daily.</div></footer>
+<script src="assets/draft-bar.js"></script>
+<script src="assets/new-pages.js"></script>
+</body>
+</html>

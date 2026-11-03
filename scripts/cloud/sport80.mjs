@@ -80,6 +80,56 @@ try {
   console.error('EVENTS FAILED:', e);
 }
 
+// ---- 1b. Referees (every day): Sport80's public Referees listing (widget 5), PNW only ----
+// The listing is public on Sport80, so names are published on referees.html; only counts go to the log.
+try {
+  await page.goto(`${BASE}/public/widget/5`, { waitUntil: 'networkidle', timeout: 90000 });
+  const raw = await page.evaluate(async () => {
+    let all = [];
+    for (let p = 0; p < 100; p++) {
+      const r = await fetch(`/api/public/widget/data/new/5?p=${p}&i=50&s=&l=&d=&f=`, {
+        method: 'POST', body: new FormData(), headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
+      });
+      if (!r.ok) throw new Error(`widget 5 page ${p}: HTTP ${r.status}`);
+      const j = await r.json();
+      all = all.concat(j.data || []);
+      if (!j.next_page_url) break;
+    }
+    return all;
+  });
+  const infoOf = e => Object.fromEntries((e.info || []).map(i => [String(i.title || '').trim(), String(i.value || '').trim()]));
+  const pick = (info, re) => { const k = Object.keys(info).find(t => re.test(t)); return k ? info[k] : ''; };
+  const referees = raw.map(e => {
+    const info = infoOf(e);
+    const parts = String(e.address || '').split(',').map(s => s.trim()).filter(Boolean);
+    const ci = parts.findIndex(p => /^(United States( of America)?|USA)$/i.test(p));
+    const si = ci > 0 ? ci - 1 : parts.findIndex(p => STATES[p]);
+    const wso = pick(info, /wso/i);
+    const stateName = si >= 0 && STATES[parts[si]] ? parts[si] : (Object.keys(STATES).find(s => pick(info, /state/i) === s) || '');
+    if (!stateName && !/pacific northwest/i.test(wso)) return null;
+    return {
+      name: String(e.name || e.title || '').trim().replace(/\s+/g, ' '),
+      level: pick(info, /level|cert|grade|category|type/i) || String(e.subtitle || '').trim(),
+      city: si > 0 && STATES[parts[si]] ? parts[si - 1] : '',
+      state: STATES[stateName] || ''
+    };
+  }).filter(r => r && r.name).sort((a, b) => a.name.localeCompare(b.name));
+  const file = 'data/referees.json';
+  let old = null; try { old = JSON.parse(readFileSync(file, 'utf8')); } catch { }
+  const changed = !old || JSON.stringify(old.referees) !== JSON.stringify(referees);
+  writeFileSync(file, JSON.stringify({
+    source: "USA Weightlifting's public Referees listing on Sport80 (widget 5), filtered to Alaska, Oregon and Washington / Pacific Northwest WSO",
+    updated: changed ? today : old.updated, referees
+  }, null, 1) + '\n');
+  // Field names only (no personal data), so the listing's format can be checked from the public status file.
+  const infoTitles = [...new Set(raw.flatMap(e => (e.info || []).map(i => String(i.title || '').trim())))].slice(0, 20);
+  status.referees = { ok: true, changed, nationwide: raw.length, pnw: referees.length, fields: raw[0] ? Object.keys(raw[0]) : [], infoTitles };
+  console.log(`widget 5 (referees): ${raw.length} nationwide, ${referees.length} in the PNW`);
+} catch (e) {
+  failed = true; status.referees = { ok: false, error: String(e.message || e).slice(0, 300) };
+  console.error('REFEREES FAILED:', e.message || e);
+}
+
 // ---- 2. Rankings + adaptive (with --rankings; the workflow passes it daily) ----
 if (doRankings) {
   const dir = mkdtempSync(join(tmpdir(), 'pnw-'));

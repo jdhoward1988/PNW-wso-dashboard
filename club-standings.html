@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PNW WSO Club standings (draft)</title>
+<meta name="description" content="PNW WSO club standings scored like a USA Weightlifting national meet, with a separate youth table.">
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" sizes="64x64" href="assets/pnw-wso-mark-64.png">
+<link rel="apple-touch-icon" href="assets/pnw-wso-mark-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/new-pages.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="https://www.pnwwsoweightlifting.com/" aria-label="Pacific Northwest Weightlifting State Organization — main site">
+      <img class="brand-logo" src="assets/pnw-wso-logo.png" width="413" height="232" alt="Pacific Northwest Weightlifting State Organization">
+    </a>
+    <div class="topbar-right">
+      <a class="icon-link" href="https://www.instagram.com/pnw_wso_weightlifting/" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+      </a>
+      <a class="icon-link" href="https://www.facebook.com/pnwwsoweightlifting" target="_blank" rel="noopener" aria-label="Facebook">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1V8c0-.9.25-1.5 1.55-1.5H17V3.7C16.6 3.65 15.4 3.5 14 3.5c-2.8 0-4.5 1.7-4.5 4.8V10H6.8v3.1h2.7v8z"/></svg>
+      </a>
+      <a class="pill-btn dark" href="index.html">Calendar</a>
+      <a class="pill-btn dark" href="rankings.html">Rankings</a>
+      <a class="pill-btn dark" href="https://www.pnwwsoweightlifting.com/">← PNW WSO site</a>
+    </div>
+  </div>
+</div>
+
+<div class="hero"><div class="wrap">
+  <div class="eyebrow"><span class="tag">Draft</span><span>PNW WSO · <span class="sbSeason">2026</span> season</span><span id="pgUpdated"></span></div>
+  <h1>Club standings</h1>
+  <p class="sub">Scored like a USAW national meet. In each Open weight class the top 25 PNW lifters by total earn 28, 25, 23, 22, 21, 20 and then one point less per place down to 1. As in the USAW Club League, a club's best 5 women and best 5 men count. Ties go to the club with more higher places. Youth clubs have their own table.</p>
+</div></div>
+
+<main>
+<section class="feat" id="clubs" data-needs="new-pages"><div class="wrap">
+  <div class="grid">
+    <div class="panel">
+      <div class="filters">
+        <div class="tabs" role="group" aria-label="Standings" id="tmSet"><button type="button" data-k="open" aria-pressed="true">Open classes</button><button type="button" data-k="youth" aria-pressed="false">Youth</button></div>
+        <div class="row" style="gap:8px">
+          <div class="tabs" role="group" aria-label="Period" id="tmScope" style="margin:0"><button type="button" data-k="season" aria-pressed="true"><span class="sbSeason"></span> season</button><button type="button" data-k="since" aria-pressed="false">Since Aug 1</button></div>
+          <div class="tabs" role="group" aria-label="Division" id="tmDiv" style="margin:0"><button type="button" data-k="A" aria-pressed="true">Combined</button><button type="button" data-k="W" aria-pressed="false">Women</button><button type="button" data-k="M" aria-pressed="false">Men</button></div>
+        </div>
+      </div>
+      <p class="note" id="tmHow" style="margin:0 0 10px"></p>
+      <div class="tscroll"><table><thead><tr><th class="num">#</th><th>Club</th><th class="num">Points</th><th class="barcell"></th><th class="num">Scorers</th><th class="num" id="tmFirstCol">Class wins</th></tr></thead><tbody id="clubBody"></tbody></table></div>
+      <p class="note">Select a club to see who scored. Points come from each lifter's best <span class="sbSeason"></span> result, not their place at a particular meet, and each lifter counts once.</p>
+    </div>
+    <aside class="review"><h3>Draft notes</h3><dl>
+      <dt>Data</dt><dd>Same rankings feed; club names come from Sport80 as entered.</dd>
+      <dt>Decided</dt><dd><ul><li>Scored on the total only. Records for each lift are kept separately.</li><li>Youth has its own table, ranked by Q-Youth because most youth classes have only a lifter or two. Youth scoring doesn't change the Open standings.</li><li>Clubs with similar names stay separate.</li><li>Youth lifters who rank in an Open class keep scoring in the Open table by total, as at a national meet.</li></ul></dd>
+      <dt>Status</dt><dd>No open decisions.</dd>
+    </dl></aside>
+  </div>
+</div></section>
+</main>
+
+<footer><div class="wrap">This is a draft page under review by the PNW WSO and may change. Rankings data comes from USA Weightlifting's public rankings and updates daily.</div></footer>
+<script src="assets/draft-bar.js"></script>
+<script src="assets/new-pages.js"></script>
+</body>
+</html>

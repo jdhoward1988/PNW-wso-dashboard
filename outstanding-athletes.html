@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PNW WSO Outstanding athletes (draft)</title>
+<meta name="description" content="PNW WSO outstanding athletes by USAW Best Lifter scoring: Q-Youth, Q-points and Q-Masters.">
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" sizes="64x64" href="assets/pnw-wso-mark-64.png">
+<link rel="apple-touch-icon" href="assets/pnw-wso-mark-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/new-pages.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="https://www.pnwwsoweightlifting.com/" aria-label="Pacific Northwest Weightlifting State Organization — main site">
+      <img class="brand-logo" src="assets/pnw-wso-logo.png" width="413" height="232" alt="Pacific Northwest Weightlifting State Organization">
+    </a>
+    <div class="topbar-right">
+      <a class="icon-link" href="https://www.instagram.com/pnw_wso_weightlifting/" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+      </a>
+      <a class="icon-link" href="https://www.facebook.com/pnwwsoweightlifting" target="_blank" rel="noopener" aria-label="Facebook">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1V8c0-.9.25-1.5 1.55-1.5H17V3.7C16.6 3.65 15.4 3.5 14 3.5c-2.8 0-4.5 1.7-4.5 4.8V10H6.8v3.1h2.7v8z"/></svg>
+      </a>
+      <a class="pill-btn dark" href="index.html">Calendar</a>
+      <a class="pill-btn dark" href="rankings.html">Rankings</a>
+      <a class="pill-btn dark" href="https://www.pnwwsoweightlifting.com/">← PNW WSO site</a>
+    </div>
+  </div>
+</div>
+
+<div class="hero"><div class="wrap">
+  <div class="eyebrow"><span class="tag">Draft</span><span>PNW WSO · <span class="sbSeason">2026</span> season</span><span id="pgUpdated"></span></div>
+  <h1>Outstanding athletes</h1>
+  <p class="sub">Each category uses the scoring USAW uses for Best Lifter at its national events. Youth (17 and under) is ranked by Q-Youth, which adjusts for age as well as bodyweight. Junior (15–20) and Senior (21–34) are ranked by Q-points, and Masters (35 and up) by Q-Masters, which multiplies Q-points by an age factor.</p>
+</div></div>
+
+<main>
+<section class="feat" id="awards" data-needs="new-pages"><div class="wrap">
+  <div class="grid">
+    <div class="panel" style="display:grid;gap:18px">
+      <div class="awards" id="awCards"></div>
+      <div>
+        <div class="row" style="justify-content:space-between;margin-bottom:10px"><h3 style="font-size:16px" id="ovHead">Best lifter, all ages · Q-points</h3>
+          <div class="row" style="gap:8px">
+            <div class="tabs" role="group" aria-label="Scoring" id="ovSet" style="margin:0"><button type="button" data-k="open" aria-pressed="true">All ages</button><button type="button" data-k="youth" aria-pressed="false">Youth</button></div>
+            <div class="tabs" role="group" aria-label="Gender" id="ovTabs" style="margin:0"><button type="button" data-k="W" aria-pressed="true">Women</button><button type="button" data-k="M" aria-pressed="false">Men</button></div>
+          </div></div>
+        <div class="tscroll"><table><thead><tr><th class="num">#</th><th>Lifter</th><th>Class</th><th class="num">Age</th><th class="num">Total</th><th class="num">BW</th><th class="num" id="ovScoreCol">Q-points</th></tr></thead><tbody id="ovBody"></tbody></table></div>
+      </div>
+      <div class="improved">
+        <h3 style="font-size:16px">Most Improved · starts with the <span id="miNext"></span> season</h3>
+        <p>Each Wednesday the update saves every PNW lifter's best <span id="miSeason"></span> score to a season archive. The archive currently holds <b id="miCount"></b> lifters, <b id="miQy"></b> of them with a Q-Youth score. Next season, Most Improved goes to the lifter with the most points gained over their score in this archive. Points are already adjusted for bodyweight and age, so raw points gained compares fairly across weight classes and age groups. Youth lifters are compared on Q-Youth, Masters on Q-Masters and everyone else on Q-points. A lifter who changes category between seasons, such as a youth lifter turning 18, is compared on Q-points, which the archive keeps for everyone.</p>
+      </div>
+      <p class="note" style="margin:0">Q-points = total × 463.26 ÷ (416.7 − 47.87·B⁻² + 18.93·B²) for men and total × 306.54 ÷ (266.5 − 19.44·B⁻² + 18.61·B²) for women, where B is bodyweight ÷ 100. Q-Masters age factors and Q-Youth factors come from Marianne Huebner's official calculators. Q-Youth factors were read for every age from 10 to 20 and every kilogram of bodyweight, and the page interpolates between them. The Q-Youth calculator starts at age 10. Lifters under 10 are scored with the age-10 factors and marked with an asterisk.</p>
+    </div>
+    <aside class="review"><h3>Draft notes</h3><dl>
+      <dt>Data</dt><dd>Computed from <code>rankings.json</code> each Wednesday. Sport80 doesn't show Q-points or Q-Youth, so the page calculates them. Youth scores use the youth age-group results.</dd>
+      <dt>Stored</dt><dd>A new file, <code>data/history/2026.json</code>, saved with each daily update. The last update of December becomes the final 2026 baseline.</dd>
+      <dt>Decided</dt><dd><ul><li>Any PNW WSO member with a ranked result is eligible, however many meets they lift in.</li><li>Most Improved = raw points gained. A lifter who changes category between seasons is compared on Q-points.</li></ul></dd>
+    </dl></aside>
+  </div>
+</div></section>
+</main>
+
+<footer><div class="wrap">This is a draft page under review by the PNW WSO and may change. Rankings data comes from USA Weightlifting's public rankings and updates daily.</div></footer>
+<script src="assets/draft-bar.js"></script>
+<script src="assets/new-pages.js"></script>
+</body>
+</html>

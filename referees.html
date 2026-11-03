@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PNW WSO Referees &amp; officials (draft)</title>
+<meta name="description" content="PNW WSO referees and technical officials, and coach shadowing requests for national events.">
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" sizes="64x64" href="assets/pnw-wso-mark-64.png">
+<link rel="apple-touch-icon" href="assets/pnw-wso-mark-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/new-pages.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="https://www.pnwwsoweightlifting.com/" aria-label="Pacific Northwest Weightlifting State Organization — main site">
+      <img class="brand-logo" src="assets/pnw-wso-logo.png" width="413" height="232" alt="Pacific Northwest Weightlifting State Organization">
+    </a>
+    <div class="topbar-right">
+      <a class="icon-link" href="https://www.instagram.com/pnw_wso_weightlifting/" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+      </a>
+      <a class="icon-link" href="https://www.facebook.com/pnwwsoweightlifting" target="_blank" rel="noopener" aria-label="Facebook">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1V8c0-.9.25-1.5 1.55-1.5H17V3.7C16.6 3.65 15.4 3.5 14 3.5c-2.8 0-4.5 1.7-4.5 4.8V10H6.8v3.1h2.7v8z"/></svg>
+      </a>
+      <a class="pill-btn dark" href="index.html">Calendar</a>
+      <a class="pill-btn dark" href="rankings.html">Rankings</a>
+      <a class="pill-btn dark" href="https://www.pnwwsoweightlifting.com/">← PNW WSO site</a>
+    </div>
+  </div>
+</div>
+
+<div class="hero"><div class="wrap">
+  <div class="eyebrow"><span class="tag">Draft</span><span>PNW WSO · <span class="sbSeason">2026</span> season</span><span id="pgUpdated"></span></div>
+  <h1>Referees &amp; officials</h1>
+  <p class="sub">Certified PNW referees and technical officials, kept current from USA Weightlifting's records, plus a way to ask to shadow an experienced coach at a national event.</p>
+</div></div>
+
+<main>
+<section class="feat" id="referees"><div class="wrap">
+  <div class="grid">
+    <div class="panel" style="display:grid;gap:20px">
+      <div><div class="row" style="justify-content:space-between;margin-bottom:8px"><h3 style="font-size:16px">PNW officials</h3><span class="note" style="margin:0" id="refCount"></span></div>
+        <div class="tscroll"><table><thead><tr><th>Name</th><th>Level</th><th>City</th><th>State</th></tr></thead><tbody id="refBody"><tr><td colspan="4" class="empty">Loading USAW's referee listing…</td></tr></tbody></table></div>
+        <p class="note">Want to become a referee? <a href="https://usaweightlifting.org/referees/referee-and-competition-secretary-information" target="_blank" rel="noopener">USAW referee and advancement requirements →</a></p></div>
+      <form class="mock" id="shForm" novalidate>
+        <h3 style="font-size:16px">Request to shadow a coach at a national event</h3>
+        <p style="margin:0;color:var(--dim);font-size:14px">Coaches who want to learn warm-up room and attempt management can ask to shadow an experienced PNW coach at a national event. The WSO matches requests with coaches who volunteer.</p>
+        <div class="two">
+          <label for="sh-name">Your name<input id="sh-name" value="Example Coach"></label>
+          <label for="sh-email">Email<input id="sh-email" type="email" value="coach@example.com"></label>
+          <label for="sh-club">Club<input id="sh-club" value="Example Barbell Club"></label>
+          <label for="sh-cert">USAW coaching certification<select id="sh-cert"><option>None yet</option><option selected>Level 1</option><option>Level 2</option><option>Level 3 or higher</option></select></label>
+          <label for="sh-event">National event<select id="sh-event"><option>National Championships &amp; Virus Series 1 · Columbus, OH · Mar 4–7, 2027</option><option>Masters &amp; University Nationals · Richmond, VA · Apr 15–18, 2027</option><option>Youth, Junior &amp; U25 Nationals · Colorado Springs, CO · June 22–27, 2027</option><option>Virus Series 2 · Fort Worth, TX · Sept 9–12, 2027</option><option>Virus Finals · San Juan, PR · Dec 2–5, 2027</option></select></label>
+          <label for="sh-coach">Coach you'd like to shadow (optional)<input id="sh-coach" placeholder="Leave blank and the WSO will match you"></label>
+        </div>
+        <label for="sh-why">What you want to learn<textarea id="sh-why" rows="3">Example: running a warm-up room and making attempt changes for two athletes in the same session.</textarea></label>
+        <div class="row"><button class="btn" type="submit">Send request</button><span class="toast" id="shMsg" aria-live="polite"></span></div>
+      </form>
+    </div>
+    <aside class="review"><h3>Draft notes</h3><dl>
+      <dt>Data</dt><dd>USA Weightlifting's public Referees listing on Sport80, filtered to Alaska, Oregon and Washington and refreshed with the daily update.</dd>
+      <dt>Decided</dt><dd><ul><li>The list is public and kept current from USA Weightlifting's listing.</li><li>Each official's certification level is shown publicly.</li><li>No referee clinic is advertised until one is scheduled.</li><li>Shadow requests go to a Google Form like the adaptive opt-in; contact details stay private.</li></ul></dd>
+      <dt>Shadowing form</dt><dd>Not connected yet. It will go to a WSO Google Form like the adaptive opt-in.</dd>
+    </dl></aside>
+  </div>
+</div></section>
+</main>
+
+<footer><div class="wrap">This is a draft page under review by the PNW WSO and may change. Rankings data comes from USA Weightlifting's public rankings and updates daily.</div></footer>
+<script src="assets/draft-bar.js"></script>
+<script src="assets/new-pages.js"></script>
+</body>
+</html>
