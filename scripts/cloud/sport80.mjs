@@ -123,7 +123,14 @@ try {
   }, null, 1) + '\n');
   // Field names only (no personal data), so the listing's format can be checked from the public status file.
   const infoTitles = [...new Set(raw.flatMap(e => (e.info || []).map(i => String(i.title || '').trim())))].slice(0, 20);
-  status.referees = { ok: true, changed, nationwide: raw.length, pnw: referees.length, fields: raw[0] ? Object.keys(raw[0]) : [], infoTitles };
+  // Format check: subtitle values and the last two address parts (state/country level only), counted.
+  const top = arr => Object.entries(arr.reduce((m, v) => (m[v] = (m[v] || 0) + 1, m), {})).sort((a, b) => b[1] - a[1]).slice(0, 12);
+  const fmt = {
+    subtitles: top(raw.map(e => String(e.subtitle || '').trim())),
+    addressTails: top(raw.map(e => String(e.address || '').split(',').map(x => x.trim()).filter(Boolean).slice(-2).join(', ').replace(/\d/g, '#'))),
+    addressParts: top(raw.map(e => String(String(e.address || '').split(',').filter(x => x.trim()).length)))
+  };
+  status.referees = { ok: true, changed, nationwide: raw.length, pnw: referees.length, fields: raw[0] ? Object.keys(raw[0]) : [], infoTitles, fmt };
   console.log(`widget 5 (referees): ${raw.length} nationwide, ${referees.length} in the PNW`);
 } catch (e) {
   failed = true; status.referees = { ok: false, error: String(e.message || e).slice(0, 300) };
