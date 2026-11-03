@@ -80,87 +80,62 @@ try {
   console.error('EVENTS FAILED:', e);
 }
 
-// ---- 1a. One-off probe of the Referees widget's filters (labels and request formats only, no personal data) ----
-if (process.argv.includes('--probe-referees')) {
-  const reqs = [];
-  page.on('request', r => { const u = r.url(); if (u.includes('/api/')) reqs.push(r.method() + ' ' + u.replace(/\d{3,}/g, '#') + ' ' + (r.postData() || '').replace(/\d{3,}/g, '#').slice(0, 200)); });
-  await page.goto(`${BASE}/public/widget/5`, { waitUntil: 'networkidle', timeout: 90000 });
-  await page.waitForTimeout(3000);
-  const ui = await page.evaluate(() => ({
-    labels: [...document.querySelectorAll('label, .v-label, legend, th, button, [role=button], .v-select__selection, .v-chip')].map(e => e.innerText.trim()).filter(t => t && t.length < 40).slice(0, 60),
-    selects: [...document.querySelectorAll('select')].map(s => [...s.options].map(o => o.text).slice(0, 80)),
-    inputs: [...document.querySelectorAll('input')].map(i => [i.type, i.name, i.placeholder, i.getAttribute('aria-label')].join('|')).slice(0, 20)
-  }));
-  const actionUrls = await page.evaluate(async () => {
-    const r = await fetch('/api/public/widget/data/new/5?p=0&i=3&s=&l=&d=&f=', { method: 'POST', body: new FormData(), headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' } });
-    const j = await r.json();
-    return { topKeys: Object.keys(j), filters: j.filters ? JSON.stringify(j.filters).replace(/\d{4,}/g, '#').slice(0, 1500) : null,
-      actions: (j.data || []).map(e => JSON.stringify(e.actions).replace(/\d{3,}/g, '#').slice(0, 300)) };
-  });
-  // Try the filter endpoints other Sport80 widgets use
-  const filt = await page.evaluate(async () => {
-    const out = {};
-    for (const u of ['/api/public/widget/5', '/api/public/widget/filters/5', '/api/public/widget/data/filters/5', '/api/public/widget/5/filters']) {
-      try { const r = await fetch(u, { headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' } }); const t = await r.text(); out[u] = r.status + ' ' + t.replace(/\d{4,}/g, '#').slice(0, 1500); } catch (e) { out[u] = String(e); }
-    }
-    return out;
-  });
-  writeFileSync('data/referees-probe.json', JSON.stringify({ ui, reqs: reqs.slice(0, 30), actionUrls, filt }, null, 1) + '\n');
-  console.log('referees probe written');
-}
-
 // ---- 1b. Referees (every day): Sport80's public Referees listing (widget 5), PNW only ----
 // The listing is public on Sport80, so names are published on referees.html; only counts go to the log.
+// The widget's own filters do the narrowing: WSO = Pacific Northwest (membership), and State = Alaska /
+// Oregon / Washington (to show each official's state). The listing itself has no addresses.
 try {
   await page.goto(`${BASE}/public/widget/5`, { waitUntil: 'networkidle', timeout: 90000 });
-  const raw = await page.evaluate(async () => {
-    let all = [];
-    for (let p = 0; p < 100; p++) {
-      const r = await fetch(`/api/public/widget/data/new/5?p=${p}&i=50&s=&l=&d=&f=`, {
-        method: 'POST', body: new FormData(), headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
-      });
-      if (!r.ok) throw new Error(`widget 5 page ${p}: HTTP ${r.status}`);
-      const j = await r.json();
-      all = all.concat(j.data || []);
-      if (!j.next_page_url) break;
-    }
-    return all;
-  });
-  const infoOf = e => Object.fromEntries((e.info || []).map(i => [String(i.title || '').trim(), String(i.value || '').trim()]));
-  const pick = (info, re) => { const k = Object.keys(info).find(t => re.test(t)); return k ? info[k] : ''; };
-  const referees = raw.map(e => {
-    const info = infoOf(e);
-    const parts = String(e.address || '').split(',').map(s => s.trim()).filter(Boolean);
-    const ci = parts.findIndex(p => /^(United States( of America)?|USA)$/i.test(p));
-    const si = ci > 0 ? ci - 1 : parts.findIndex(p => STATES[p]);
-    const wso = pick(info, /wso/i);
-    const stateName = si >= 0 && STATES[parts[si]] ? parts[si] : (Object.keys(STATES).find(s => pick(info, /state/i) === s) || '');
-    if (!stateName && !/pacific northwest/i.test(wso)) return null;
-    return {
-      name: String(e.name || e.title || '').trim().replace(/\s+/g, ' '),
-      level: pick(info, /level|cert|grade|category|type/i) || String(e.subtitle || '').trim(),
-      city: si > 0 && STATES[parts[si]] ? parts[si - 1] : '',
-      state: STATES[stateName] || ''
+  const res = await page.evaluate(async () => {
+    const H = { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' };
+    const cfg = await fetch('/api/public/widget/5', { headers: H }).then(r => r.json());
+    const filters = cfg.filter || [];
+    const get = async (field, value) => {
+      let all = [], total = null;
+      for (let p = 0; p < 60; p++) {
+        const fd = new FormData(); if (field) fd.append(field, value);
+        const r = await fetch(`/api/public/widget/data/new/5?p=${p}&i=50&s=&l=&d=&f=`, { method: 'POST', body: fd, headers: H });
+        if (!r.ok) throw new Error(`widget 5 page ${p}: HTTP ${r.status}`);
+        const j = await r.json(); total = j.total; all = all.concat(j.data || []);
+        if (!j.next_page_url) break;
+      }
+      return { total, rows: all.map(e => ({ name: String(e.name || '').trim().replace(/\s+/g, ' '), level: String(e.subtitle || '').trim() })) };
     };
-  }).filter(r => r && r.name).sort((a, b) => a.name.localeCompare(b.name));
+    const all = await get(null);
+    const wsoF = filters.find(f => /wso/i.test(`${f.label} ${f.name}`));
+    const wsoItem = wsoF && (wsoF.items || []).find(i => /pacific\s*northwest/i.test(i.text));
+    const stateF = filters.find(f => /state|region/i.test(`${f.label} ${f.name}`));
+    const byState = {};
+    for (const st of ['Alaska', 'Oregon', 'Washington']) {
+      const it = stateF && (stateF.items || []).find(i => i.text === st);
+      if (it) byState[st] = await get(stateF.name, it.value);
+    }
+    const wso = wsoItem ? await get(wsoF.name, wsoItem.value) : null;
+    return { nationwide: all.rows.length, wso, byState, hasWso: !!wsoItem, hasState: !!stateF };
+  });
+  const ST = { Alaska: 'AK', Oregon: 'OR', Washington: 'WA' };
+  // A filter that comes back with the whole country was ignored; refuse rather than publish everyone.
+  const narrowed = g => g && g.rows.length < res.nationwide;
+  const stateOf = {};
+  for (const [st, g] of Object.entries(res.byState)) if (narrowed(g)) for (const r of g.rows) stateOf[r.name] = ST[st];
+  let list;
+  if (narrowed(res.wso)) list = res.wso.rows;
+  else if (Object.keys(stateOf).length) list = Object.values(res.byState).filter(narrowed).flatMap(g => g.rows);
+  else throw new Error(`could not narrow the referee listing to the PNW (WSO filter ${res.hasWso ? 'found' : 'missing'}, state filter ${res.hasState ? 'found' : 'missing'})`);
+  const seen = new Set();
+  const referees = list.filter(r => r.name && !seen.has(r.name) && seen.add(r.name))
+    .map(r => ({ name: r.name, level: r.level, state: stateOf[r.name] || '' }))
+    .sort((a, b) => a.name.split(' ').slice(-1)[0].localeCompare(b.name.split(' ').slice(-1)[0]) || a.name.localeCompare(b.name));
   const file = 'data/referees.json';
   let old = null; try { old = JSON.parse(readFileSync(file, 'utf8')); } catch { }
   const changed = !old || JSON.stringify(old.referees) !== JSON.stringify(referees);
   writeFileSync(file, JSON.stringify({
-    source: "USA Weightlifting's public Referees listing on Sport80 (widget 5), filtered to Alaska, Oregon and Washington / Pacific Northwest WSO",
+    source: "USA Weightlifting's public Referees listing on Sport80 (widget 5), filtered to the Pacific Northwest WSO; state from the listing's State filter",
     updated: changed ? today : old.updated, referees
   }, null, 1) + '\n');
-  // Field names only (no personal data), so the listing's format can be checked from the public status file.
-  const infoTitles = [...new Set(raw.flatMap(e => (e.info || []).map(i => String(i.title || '').trim())))].slice(0, 20);
-  // Format check: subtitle values and the last two address parts (state/country level only), counted.
-  const top = arr => Object.entries(arr.reduce((m, v) => (m[v] = (m[v] || 0) + 1, m), {})).sort((a, b) => b[1] - a[1]).slice(0, 12);
-  const fmt = {
-    subtitles: top(raw.map(e => String(e.subtitle || '').trim())),
-    addressTails: top(raw.map(e => String(e.address || '').split(',').map(x => x.trim()).filter(Boolean).slice(-2).join(', ').replace(/\d/g, '#'))),
-    addressParts: top(raw.map(e => String(String(e.address || '').split(',').filter(x => x.trim()).length)))
-  };
-  status.referees = { ok: true, changed, nationwide: raw.length, pnw: referees.length, fields: raw[0] ? Object.keys(raw[0]) : [], infoTitles, fmt };
-  console.log(`widget 5 (referees): ${raw.length} nationwide, ${referees.length} in the PNW`);
+  status.referees = { ok: true, changed, nationwide: res.nationwide, pnw: referees.length, by: narrowed(res.wso) ? 'WSO filter' : 'state filter',
+    states: Object.fromEntries(Object.entries(res.byState).map(([k, g]) => [k, narrowed(g) ? g.rows.length : null])) };
+  console.log(`widget 5 (referees): ${res.nationwide} nationwide, ${referees.length} in the PNW`);
 } catch (e) {
   failed = true; status.referees = { ok: false, error: String(e.message || e).slice(0, 300) };
   console.error('REFEREES FAILED:', e.message || e);
