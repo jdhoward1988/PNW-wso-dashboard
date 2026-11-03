@@ -80,6 +80,35 @@ try {
   console.error('EVENTS FAILED:', e);
 }
 
+// ---- 1a. One-off probe of the Referees widget's filters (labels and request formats only, no personal data) ----
+if (process.argv.includes('--probe-referees')) {
+  const reqs = [];
+  page.on('request', r => { const u = r.url(); if (u.includes('/api/')) reqs.push(r.method() + ' ' + u.replace(/\d{3,}/g, '#') + ' ' + (r.postData() || '').replace(/\d{3,}/g, '#').slice(0, 200)); });
+  await page.goto(`${BASE}/public/widget/5`, { waitUntil: 'networkidle', timeout: 90000 });
+  await page.waitForTimeout(3000);
+  const ui = await page.evaluate(() => ({
+    labels: [...document.querySelectorAll('label, .v-label, legend, th, button, [role=button], .v-select__selection, .v-chip')].map(e => e.innerText.trim()).filter(t => t && t.length < 40).slice(0, 60),
+    selects: [...document.querySelectorAll('select')].map(s => [...s.options].map(o => o.text).slice(0, 80)),
+    inputs: [...document.querySelectorAll('input')].map(i => [i.type, i.name, i.placeholder, i.getAttribute('aria-label')].join('|')).slice(0, 20)
+  }));
+  const actionUrls = await page.evaluate(async () => {
+    const r = await fetch('/api/public/widget/data/new/5?p=0&i=3&s=&l=&d=&f=', { method: 'POST', body: new FormData(), headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' } });
+    const j = await r.json();
+    return { topKeys: Object.keys(j), filters: j.filters ? JSON.stringify(j.filters).replace(/\d{4,}/g, '#').slice(0, 1500) : null,
+      actions: (j.data || []).map(e => JSON.stringify(e.actions).replace(/\d{3,}/g, '#').slice(0, 300)) };
+  });
+  // Try the filter endpoints other Sport80 widgets use
+  const filt = await page.evaluate(async () => {
+    const out = {};
+    for (const u of ['/api/public/widget/5', '/api/public/widget/filters/5', '/api/public/widget/data/filters/5', '/api/public/widget/5/filters']) {
+      try { const r = await fetch(u, { headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' } }); const t = await r.text(); out[u] = r.status + ' ' + t.replace(/\d{4,}/g, '#').slice(0, 1500); } catch (e) { out[u] = String(e); }
+    }
+    return out;
+  });
+  writeFileSync('data/referees-probe.json', JSON.stringify({ ui, reqs: reqs.slice(0, 30), actionUrls, filt }, null, 1) + '\n');
+  console.log('referees probe written');
+}
+
 // ---- 1b. Referees (every day): Sport80's public Referees listing (widget 5), PNW only ----
 // The listing is public on Sport80, so names are published on referees.html; only counts go to the log.
 try {
