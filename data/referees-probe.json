@@ -1,0 +1,99 @@
+{
+ "ui": {
+  "labels": [
+   "Login",
+   "Location",
+   "Within 10 miles",
+   "Within 10 miles",
+   "Danielle M C Abucewicz\nWSO Referee",
+   "Matthew Adamcheck\nNational Referee",
+   "Aaron Adams\nWSO Referee",
+   "Nick Addario\nWSO Referee",
+   "Robert Adriano\nWSO Referee",
+   "Max Aita\nWSO Referee",
+   "Dimitri Albury\nWSO Referee",
+   "Michael Alchus\nWSO Referee",
+   "Kim Alderwick\nWSO Referee",
+   "Brian Alexander\nWSO Referee",
+   "Mannie Alvarado\nWSO Referee",
+   "Jon Alvarez\nWSO Referee",
+   "Chris Amenta\nWSO Referee",
+   "Aimee Anaya Everett\nWSO Referee",
+   "Kevin Anderson\nWSO Referee",
+   "Steven Anderson\nWSO Referee",
+   "Sandra Arechaederra\nNational Referee",
+   "Alexander Argueta\nWSO Referee",
+   "Spencer Arnold\nWSO Referee",
+   "Holly Arrow\nWSO Referee",
+   "1",
+   "2",
+   "3",
+   "4",
+   "5",
+   "35",
+   "36",
+   "37",
+   "38",
+   "Help & Support",
+   "Remove All",
+   "​State",
+   "​",
+   "State",
+   "​Type",
+   "​",
+   "Type",
+   "​WSO",
+   "​",
+   "WSO",
+   "Apply"
+  ],
+  "selects": [],
+  "inputs": [
+   "text|name|Enter Name|Search",
+   "text|location||Location",
+   "text|||Distance",
+   "hidden|||",
+   "hidden|distance||",
+   "text|||",
+   "hidden|||",
+   "text|||",
+   "hidden|||",
+   "text|||",
+   "hidden|||"
+  ]
+ },
+ "reqs": [
+  "GET https://core.sport80.com/api/public/subdomain/2bedfd4d-9f8d-#-ba94-f#b#b6e ",
+  "GET https://usaweightlifting.sport80.com/api/public/widget/5 ",
+  "POST https://usaweightlifting.sport80.com/api/public/widget/data/new/5?p=0&i=20&s=&l=&d=10&f= ------WebKitFormBoundaryVvpjDoYozsityErZ--\r\n",
+  "POST https://usaweightlifting.sport80.com/api/public/widget/data/new/5?p=0&i=3&s=&l=&d=&f= ------WebKitFormBoundarybabJGo4BxAqu1TcB--\r\n",
+  "GET https://usaweightlifting.sport80.com/api/public/widget/5 ",
+  "GET https://usaweightlifting.sport80.com/api/public/widget/filters/5 ",
+  "GET https://usaweightlifting.sport80.com/api/public/widget/data/filters/5 ",
+  "GET https://usaweightlifting.sport80.com/api/public/widget/5/filters "
+ ],
+ "actionUrls": {
+  "topKeys": [
+   "total",
+   "page",
+   "items_per_page",
+   "next_page_url",
+   "previous_page_url",
+   "no_data_message",
+   "data",
+   "breadcrumbs"
+  ],
+  "filters": null,
+  "actions": [
+   "[]",
+   "[]",
+   "[]"
+  ]
+ },
+ "filt": {
+  "/api/public/widget/5": "200 {\"title\":\"Referees\",\"searchPlaceholder\":\"Enter Name\",\"postCodeLabel\":\"Zip Code\",\"distanceMetric\":\"M\",\"dataUrl\":\"\\/api\\/public\\/widget\\/data\\/new\\/5\",\"locationSearch\":true,\"displayMap\":false,\"displayPhone\":true,\"displayEmail\":true,\"subdomainUuid\":\"2bedfd4d-9f8d-#-ba94-f#b848b6e\",\"filter\":[{\"type\":\"select\",\"name\":\"region\",\"placeholder\":\"Enter state\",\"label\":\"State\",\"validators\":[],\"value\":null,\"items\":[{\"value\":62,\"text\":\"Alabama\"},{\"value\":63,\"text\":\"Alaska\"},{\"value\":64,\"text\":\"Arizona\"},{\"value\":65,\"text\":\"Arkansas\"},{\"value\":271,\"text\":\"Armed Forces Of Europe\"},{\"value\":272,\"text\":\"Armed Forces Of Pacific\"},{\"value\":66,\"text\":\"California\"},{\"value\":67,\"text\":\"Colorado\"},{\"value\":68,\"text\":\"Connecticut\"},{\"value\":69,\"text\":\"Delaware\"},{\"value\":270,\"text\":\"District of Columbia\"},{\"value\":70,\"text\":\"Florida\"},{\"value\":71,\"text\":\"Georgia\"},{\"value\":72,\"text\":\"Hawaii\"},{\"value\":73,\"text\":\"Idaho\"},{\"value\":74,\"text\":\"Illinois\"},{\"value\":75,\"text\":\"Indiana\"},{\"value\":76,\"text\":\"Iowa\"},{\"value\":77,\"text\":\"Kansas\"},{\"value\":78,\"text\":\"Kentucky\"},{\"value\":79,\"text\":\"Louisiana\"},{\"value\":80,\"text\":\"Maine\"},{\"value\":81,\"text\":\"Maryland\"},{\"value\":82,\"text\":\"Massachusetts\"},{\"value\":83,\"text\":\"Michigan\"},{\"value\":84,\"text\":\"Minnesota\"},{\"value\":85,\"text\":\"Mississippi\"},{\"value\":86,\"text\":\"Missouri\"},{\"value\":87,\"text\":\"Montana\"},{\"value\":88,\"text\":\"Nebraska\"},{\"value\":89,\"text\":\"Nevada\"},{\"value\":90,\"text\":\"New Hampshire\"},{\"value\":91,\"text\":\"New Jersey\"},{\"value\":92,\"text\":\"New Mexico\"",
+  "/api/public/widget/filters/5": "404 <!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"utf-8\"/>\n    <meta http-equiv=\"x-ua-compatible\" content=\"ie=edge\"/>\n    <meta name=\"google-translate-customization\" content=\"b6d#a2adc34e9-77c25de6a#fa-g4b#d2fd00c66-14\"/>\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, minimum-scale=1\"/>\n    <meta name=\"robots\" content=\"noindex\">\n    <!-- <meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0\"> -->\n            <title>USA Weightlifting | Sport:80</title>\n    \n    <meta property=\"og:url\" content=\"https://usaweightlifting.sport80.com/login\"/>\n    <meta property=\"og:type\" content=\"website\"/>\n    <meta property=\"og:title\" content=\"USA Weightlifting\"/>\n    <meta property=\"og:description\" content=\"USA Weightlifting membership and events Platform powered by Sport:80\"/>\n    <meta property=\"og:image\" content=\"https://d7skausf3l8pb.cloudfront.net/branding/2bedfd4d-9f8d-#-ba94-f#b848b6e/397c#d#aafb0b506ac#b2ac-5f96e2fb#.png\"/>\n    <meta property=\"og:image:secure_url\" content=\"https://d7skausf3l8pb.cloudfront.net/branding/2bedfd4d-9f8d-#-ba94-f#b848b6e/397c#d#aafb0b506ac#b2ac-5f96e2fb#.png\"/>\n\n    <!-- start: Favicon -->\n    <link rel=\"shortcut icon\" href=\"/assets/2/img/s80_globe.png\">\n    <!-- end: Favicon -->\n    <link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/5.8.55/css/materialdesignicons.min.css\" integrity=\"sha512-x96qcyADhiw/CZY7QLOo7dB8i/REOEHZDhNfoDuJlyQ+yZzhdy91eAa4EkO7g3egt8obvLeJPoUKEKu5C5J",
+  "/api/public/widget/data/filters/5": "500 {\"success\":false,\"display_e_message\":null,\"detail\":null,\"error_message\":null,\"error_code\":500}",
+  "/api/public/widget/5/filters": "404 <!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"utf-8\"/>\n    <meta http-equiv=\"x-ua-compatible\" content=\"ie=edge\"/>\n    <meta name=\"google-translate-customization\" content=\"b6d#a2adc34e9-77c25de6a#fa-g4b#d2fd00c66-14\"/>\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, minimum-scale=1\"/>\n    <meta name=\"robots\" content=\"noindex\">\n    <!-- <meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0\"> -->\n            <title>USA Weightlifting | Sport:80</title>\n    \n    <meta property=\"og:url\" content=\"https://usaweightlifting.sport80.com/login\"/>\n    <meta property=\"og:type\" content=\"website\"/>\n    <meta property=\"og:title\" content=\"USA Weightlifting\"/>\n    <meta property=\"og:description\" content=\"USA Weightlifting membership and events Platform powered by Sport:80\"/>\n    <meta property=\"og:image\" content=\"https://d7skausf3l8pb.cloudfront.net/branding/2bedfd4d-9f8d-#-ba94-f#b848b6e/397c#d#aafb0b506ac#b2ac-5f96e2fb#.png\"/>\n    <meta property=\"og:image:secure_url\" content=\"https://d7skausf3l8pb.cloudfront.net/branding/2bedfd4d-9f8d-#-ba94-f#b848b6e/397c#d#aafb0b506ac#b2ac-5f96e2fb#.png\"/>\n\n    <!-- start: Favicon -->\n    <link rel=\"shortcut icon\" href=\"/assets/2/img/s80_globe.png\">\n    <!-- end: Favicon -->\n    <link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/5.8.55/css/materialdesignicons.min.css\" integrity=\"sha512-x96qcyADhiw/CZY7QLOo7dB8i/REOEHZDhNfoDuJlyQ+yZzhdy91eAa4EkO7g3egt8obvLeJPoUKEKu5C5J"
+ }
+}
