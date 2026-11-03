@@ -1,5 +1,201 @@
 {
- "source": "USA Weightlifting's public Referees listing on Sport80 (widget 5), filtered to Alaska, Oregon and Washington / Pacific Northwest WSO",
- "updated": null,
- "referees": []
+ "source": "USA Weightlifting's public Referees listing on Sport80 (widget 5), filtered to the Pacific Northwest WSO; state from the listing's State filter",
+ "updated": "2026-11-03",
+ "referees": [
+  {
+   "name": "Holly Arrow",
+   "level": "WSO Referee",
+   "state": "OR"
+  },
+  {
+   "name": "Ryan Bader",
+   "level": "WSO Referee",
+   "state": "WA"
+  },
+  {
+   "name": "Joseph Beck",
+   "level": "WSO Referee",
+   "state": "OR"
+  },
+  {
+   "name": "Kirstin Boddy",
+   "level": "WSO Referee",
+   "state": "OR"
+  },
+  {
+   "name": "Darnell Cabana",
+   "level": "WSO Referee",
+   "state": "WA"
+  },
+  {
+   "name": "Joshua Claravall",
+   "level": "WSO Referee",
+   "state": "OR"
+  },
+  {
+   "name": "Nancy Colfer",
+   "level": "National Referee",
+   "state": "OR"
+  },
+  {
+   "name": "Melissa Doherty",
+   "level": "WSO Referee",
+   "state": "OR"
+  },
+  {
+   "name": "Christopher Douglas",
+   "level": "WSO Referee",
+   "state": "WA"
+  },
+  {
+   "name": "Aimee Anaya Everett",
+   "level": "WSO Referee",
+   "state": "OR"
+  },
+  {
+   "name": "Greg Everett",
+   "level": "WSO Referee",
+   "state": "OR"
+  },
+  {
+   "name": "Sara Ferris",
+   "level": "WSO Referee",
+   "state": "OR"
+  },
+  {
+   "name": "Jordan Franco",
+   "level": "WSO Referee",
+   "state": "OR"
+  },
+  {
+   "name": "Becky Freeman",
+   "level": "WSO Referee",
+   "state": "OR"
+  },
+  {
+   "name": "Kara Marie Gogal",
+   "level": "WSO Referee",
+   "state": "OR"
+  },
+  {
+   "name": "Steven Hallam",
+   "level": "WSO Referee",
+   "state": "AK"
+  },
+  {
+   "name": "Lauren Hatmaker",
+   "level": "WSO Referee",
+   "state": "OR"
+  },
+  {
+   "name": "Peter Hong",
+   "level": "WSO Referee",
+   "state": "WA"
+  },
+  {
+   "name": "Kayla Jones",
+   "level": "WSO Referee",
+   "state": "WA"
+  },
+  {
+   "name": "Mira Kwon",
+   "level": "WSO Referee",
+   "state": "OR"
+  },
+  {
+   "name": "Tony Lau",
+   "level": "WSO Referee",
+   "state": "WA"
+  },
+  {
+   "name": "Cody Looney",
+   "level": "WSO Referee",
+   "state": "WA"
+  },
+  {
+   "name": "JanJay Mendoza",
+   "level": "WSO Referee",
+   "state": "WA"
+  },
+  {
+   "name": "William Miller",
+   "level": "WSO Referee",
+   "state": "AK"
+  },
+  {
+   "name": "Aubree Murchison",
+   "level": "WSO Referee",
+   "state": "WA"
+  },
+  {
+   "name": "Litsa Olsson",
+   "level": "WSO Referee",
+   "state": "WA"
+  },
+  {
+   "name": "Ava Oteri",
+   "level": "WSO Referee",
+   "state": "AK"
+  },
+  {
+   "name": "Jill Peterson",
+   "level": "WSO Referee",
+   "state": "WA"
+  },
+  {
+   "name": "Lauren Plooster",
+   "level": "WSO Referee",
+   "state": "WA"
+  },
+  {
+   "name": "James Radcliffe",
+   "level": "WSO Referee",
+   "state": "OR"
+  },
+  {
+   "name": "Donna Reams",
+   "level": "National Referee",
+   "state": "OR"
+  },
+  {
+   "name": "Michael Reams",
+   "level": "National Referee",
+   "state": "OR"
+  },
+  {
+   "name": "Kat Ricker",
+   "level": "WSO Referee",
+   "state": "OR"
+  },
+  {
+   "name": "Timothy Souza",
+   "level": "WSO Referee",
+   "state": "OR"
+  },
+  {
+   "name": "Michael Street",
+   "level": "WSO Referee",
+   "state": "WA"
+  },
+  {
+   "name": "Christopher Swartz",
+   "level": "WSO Referee",
+   "state": "OR"
+  },
+  {
+   "name": "Joseph Swidler",
+   "level": "WSO Referee",
+   "state": "WA"
+  },
+  {
+   "name": "John Thrush",
+   "level": "National Referee",
+   "state": "WA"
+  },
+  {
+   "name": "Blake West",
+   "level": "WSO Referee",
+   "state": "WA"
+  }
+ ]
 }

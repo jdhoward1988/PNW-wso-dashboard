@@ -23,56 +23,14 @@
  },
  "referees": {
   "ok": true,
-  "changed": false,
+  "changed": true,
   "nationwide": 749,
-  "pnw": 0,
-  "fields": [
-   "id",
-   "is_event",
-   "name",
-   "subtitle",
-   "subtitle_icon",
-   "address",
-   "geolocation",
-   "telephone",
-   "email",
-   "info",
-   "actions",
-   "img_url",
-   "what3words"
-  ],
-  "infoTitles": [],
-  "fmt": {
-   "subtitles": [
-    [
-     "WSO Referee",
-     673
-    ],
-    [
-     "National Referee",
-     55
-    ],
-    [
-     "IWF Category 2 Referee",
-     12
-    ],
-    [
-     "IWF Category 1 Referee",
-     9
-    ]
-   ],
-   "addressTails": [
-    [
-     "",
-     749
-    ]
-   ],
-   "addressParts": [
-    [
-     "0",
-     749
-    ]
-   ]
+  "pnw": 39,
+  "by": "state filter",
+  "states": {
+   "Alaska": 3,
+   "Oregon": 21,
+   "Washington": 16
   }
  }
 }
