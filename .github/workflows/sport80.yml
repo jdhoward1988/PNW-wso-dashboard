@@ -1,18 +1,13 @@
-name: Sport80 check (events daily, rankings Wednesdays)
+name: Sport80 check (events, rankings and adaptive list, daily)
 
 # Runs on GitHub's servers so the daily Claude update doesn't need a laptop to be awake.
 # 09:07 UTC = 2:07 AM PDT / 1:07 AM PST. GitHub has been starting scheduled runs
 # 4-6 hours late, so this leaves room before the Claude update at 10:51 AM Pacific.
-# (Must stay after midnight Pacific: the Wednesday rankings check uses the Pacific date.)
+# (Keep it after midnight Pacific: the status file and rankings "updated" use the Pacific date.)
 on:
   schedule:
     - cron: '7 9 * * *'
   workflow_dispatch:
-    inputs:
-      rankings:
-        description: 'Also refresh rankings + adaptive list (normally Wednesdays only)'
-        type: boolean
-        default: false
 
 permissions:
   contents: write
@@ -37,12 +32,7 @@ jobs:
       - name: Read Sport80
         id: run
         continue-on-error: true
-        run: |
-          if [ "$(TZ=America/Los_Angeles date +%u)" = "3" ] || [ "${{ inputs.rankings }}" = "true" ]; then
-            node scripts/cloud/sport80.mjs --rankings
-          else
-            node scripts/cloud/sport80.mjs
-          fi
+        run: node scripts/cloud/sport80.mjs --rankings
       - name: Publish changes
         run: |
           git config user.name "github-actions[bot]"

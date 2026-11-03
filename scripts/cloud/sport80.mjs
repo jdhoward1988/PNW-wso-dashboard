@@ -5,7 +5,7 @@
 //
 // Every run:  data/sport80-events.json  — in-person Meets / Courses / Camps & Speaker Series
 //             in Alaska, Oregon or Washington from Sport80's public widgets 1, 2, 3.
-// --rankings (Wednesdays): runs scripts/rankings/fetch.js on the USAW rankings page, rebuilds
+// --rankings (daily, from the workflow): runs scripts/rankings/fetch.js on the USAW rankings page, rebuilds
 //             data/rankings.json through assemble.py (same length + hash check), then refreshes
 //             data/adaptive.json from the approved opt-in list (sync.py, matched by hashed
 //             USAW membership number).
@@ -80,7 +80,7 @@ try {
   console.error('EVENTS FAILED:', e);
 }
 
-// ---- 2. Rankings + adaptive (Wednesdays) ----
+// ---- 2. Rankings + adaptive (with --rankings; the workflow passes it daily) ----
 if (doRankings) {
   const dir = mkdtempSync(join(tmpdir(), 'pnw-'));
   let rankPageOk = false;
