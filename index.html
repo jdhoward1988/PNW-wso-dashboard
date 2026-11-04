@@ -5,10 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PNW WSO Weightlifting Calendar</title>
 <meta name="description" content="USA Weightlifting national events, sanctioned meets, coaching courses and camps in Alaska, Oregon and Washington, plus community lifting events like mock meets.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="PNW WSO">
+<meta property="og:title" content="PNW WSO Weightlifting Calendar">
+<meta property="og:description" content="USA Weightlifting national events, sanctioned meets, coaching courses and camps in Alaska, Oregon and Washington, plus community lifting events like mock meets.">
+<meta property="og:url" content="https://jdhoward1988.github.io/PNW-wso-dashboard/">
+<meta property="og:image" content="https://jdhoward1988.github.io/PNW-wso-dashboard/assets/og-calendar.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="PNW WSO Weightlifting Calendar">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" sizes="64x64" href="assets/pnw-wso-mark-64.png">
 <link rel="apple-touch-icon" href="assets/pnw-wso-mark-180.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" href="assets/fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/poppins-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
 <style>
   :root{
     /* PNW WSO Brand Guidelines palette (Kadrian Hinton / Foreign World Media)
@@ -958,6 +969,44 @@
       </div>`;
     }).join('') + movedNote;
   }
+
+  // Search engines: describe the upcoming calendar events as schema.org Events (built from the
+  // rows on the page, so it always matches what the daily update published).
+  (function addEventData() {
+    const MON = { Jan:1, Feb:2, Mar:3, Apr:4, May:5, Jun:6, Jul:7, Aug:8, Sep:9, Oct:10, Nov:11, Dec:12 };
+    const pad = n => String(n).padStart(2, '0');
+    const today = new Date().toISOString().slice(0, 10);
+    const events = [];
+    document.querySelectorAll('.timeline .event-row[data-start]').forEach(row => {
+      const start = row.dataset.start;
+      const name = (row.querySelector('.ev-name') || {}).textContent;
+      if (!start || !name) return;
+      // End date from the visible label: "Nov 14–15, 2026" or "Jan 30 – Feb 1, 2027"
+      let end = start;
+      const label = ((row.querySelector('.ev-date') || {}).textContent || '').replace(/\s+/g, ' ');
+      const m = label.match(/^([A-Z][a-z]{2}) (\d{1,2}) ?[–-] ?(?:([A-Z][a-z]{2}) )?(\d{1,2}), (\d{4})/);
+      if (m && MON[m[1]]) end = `${m[5]}-${pad(MON[m[3] || m[1]])}-${pad(m[4])}`;
+      if (end < today) return;
+      const meta = ((row.querySelector('.ev-meta') || {}).textContent || '').split('·').map(t => t.trim()).filter(t => t && !/^Contact\b/i.test(t));
+      const place = meta.find(t => /,\s*[A-Z]{2}\b/.test(t)) || meta[meta.length - 1] || 'Pacific Northwest';
+      const venue = meta.length > 1 && meta[0] !== place ? meta[0] : place;
+      const link = row.querySelector('a.ev-link');
+      const ev = {
+        '@type': 'Event', name: name.trim(), startDate: start, endDate: end,
+        eventStatus: 'https://schema.org/EventScheduled',
+        eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+        location: { '@type': 'Place', name: venue, address: place }
+      };
+      if (link && /^https?:/.test(link.href)) ev.url = link.href;
+      if (row.dataset.tier === 'national') ev.organizer = { '@type': 'Organization', name: 'USA Weightlifting', url: 'https://www.usaweightlifting.org' };
+      events.push(ev);
+    });
+    if (!events.length) return;
+    const tag = document.createElement('script');
+    tag.type = 'application/ld+json';
+    tag.textContent = JSON.stringify({ '@context': 'https://schema.org', '@graph': events });
+    document.head.appendChild(tag);
+  })();
 
   // Show the hourly saved copy (data/local-events.json, same site, loads instantly) first, then
   // check Google's live list and redraw only if it differs (e.g. an event added minutes ago).
