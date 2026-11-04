@@ -1,0 +1,25 @@
+{
+ "finalUrl": "https://usaweightlifting.sport80.com/public/wizard/e/15044/home",
+ "text": "Login\nLEVEL 1 - ANCHORAGE, AK\nNovember 14th 2026 to November 15th 2026\n1530 E 59th Ave, Anchorage, Alaska, 99507\nAugust 31st 2026 4:06 PM (MDT)\nNovember 13th 2026 4:06 PM (MST)\n\nUSAW Level 1 Coach Certification\n\nPrice: $549 | Duration: 1.5 days | CEUs: 13 (1.3 NASM, 13 ACSM)\n\nThe USAW Level 1 Course is the starting point for anyone looking to coach Olympic weightlifting or integrate weightlifting movements into strength and performance training.\n\nOver two hands-on days, you'll …\n\nShow more\nAdditional Information\nOrganizer\nJoseph Beck\nOrganizer Email\nheroicbarbellclub@gmail.com\nGet Started\n\nYou are currently signed in as:\n\nWould you like to continue as this user, or sign in as a different user?\n\nContinue\nLogout\n\nUSA Weightlifting\n1 Olympic Plaza, Colorado Springs, CO 80909\n\nTerms & Conditions\nPrivacy Policy\nCookies\nHelp & Support\n\nCopyright © 2026. All Rights Reserved Sport:80 Services Ltd\nPrivacy & Terms\nsport80.com",
+ "api": [
+  {
+   "url": "https://usaweightlifting.sport80.com/api/current_user",
+   "status": 401,
+   "body": "{\"type\":\"http:\\/\\/www.w3.org\\/Protocols\\/rfc2616\\/rfc2616-sec10.html\",\"title\":\"Unauthorized\",\"status\":401,\"detail\":\"Not logged in.\",\"error_type\":\"unauthorized\"}"
+  },
+  {
+   "url": "https://usaweightlifting.sport80.com/api/wizard/event/15044",
+   "status": 200,
+   "body": "{\"name\":\"LEVEL 1 - ANCHORAGE, AK\",\"logo_url\":\"https:\\/\\/d7skausf3l8pb.cloudfront.net\\/branding\\/2bedfd4d-9f8d-4504-ba94-f4085b848b6e\\/397c2015d1476aafb0b506ac3045b2ac-5f96e2fb74873381096448.png\",\"start_end_title\":\"November 14th 2026 to November 15th 2026\",\"registration_open_date\":\"August 31st 2026 4:06 PM (MDT)\",\"registration_close_date\":\"November 13th 2026 4:06 PM (MST)\",\"address\":\"1530 E 59th Ave, Anchorage, Alaska, 99507\",\"geolocation\":{\"lat\":\"61.1672892\",\"lon\":\"-149.8540132\"},\"info\":\"\\u003Cp style=\\u0022margin:0cm 0cm 8pt;line-height:18.4px;font-size:12pt;font-family:Aptos, sans-serif;color:rgb(0,0,0);font-style:normal;font-weight:400;\\u0022\\u003E\\u003Cstrong\\u003E\\u003Cspan lang=\\u0022en-us\\u0022 xml:lang=\\u0022en-us\\u0022\\u003EUSAW Level 1 Coach Certification\\u003C\\/span\\u003E\\u003C\\/strong\\u003E\\u003Cspan lang=\\u0022en-us\\u0022 xml:lang=\\u0022en-us\\u0022\\u003E\\u003C\\/span\\u003E\\u003C\\/p\\u003E\\u003Cp style=\\u0022margin:0cm 0cm 8pt;line-height:18.4px;font-size:12pt;font-family:Aptos, sans-serif;color:rgb(0,0,0);font-style:normal;font-weight:400;\\u0022\\u003E\\u003Cstrong\\u003E\\u003Cspan lang=\\u0022en-us\\u0022 xml:lang=\\u0022en-us\\u0022\\u003EPrice:\\u003C\\/span\\u003E\\u003C\\/strong\\u003E\\u003Cspan lang=\\u0022en-us\\u0022 xml:lang=\\u0022en-us\\u0022\\u003E\\u00a0$549 |\\u00a0\\u003Cstrong\\u003EDuration:\\u003C\\/strong\\u003E\\u00a01.5 days |\\u00a0\\u003Cstrong\\u003ECEUs:\\u003C\\/strong\\u003E\\u00a013 (1.3 NASM, 13 ACSM)\\u003C\\/span\\u003E\\u003C\\/p\\u003E\\u003Cp style=\\u0022margin:0cm 0cm 8p"
+  },
+  {
+   "url": "https://core.sport80.com/api/public/subdomain/2bedfd4d-9f8d-4504-ba94-f4085b848b6e",
+   "status": 200,
+   "body": "{\"uuid\":\"2bedfd4d-9f8d-4504-ba94-f4085b848b6e\",\"subdomain\":\"usaweightlifting\",\"background_img_500\":\"https:\\/\\/d7skausf3l8pb.cloudfront.net\\/branding\\/2bedfd4d-9f8d-4504-ba94-f4085b848b6e\\/usaw-500-62878964f1ba6463321366.jpg\",\"background_img_800\":\"https:\\/\\/d7skausf3l8pb.cloudfront.net\\/branding\\/2bedfd4d-9f8d-4504-ba94-f4085b848b6e\\/usaw-800-6287896514090402807066.jpg\",\"background_img_1200\":\"https:\\/\\/d7skausf3l8pb.cloudfront.net\\/branding\\/2bedfd4d-9f8d-4504-ba94-f4085b848b6e\\/usaw-1200-6287896524880032551483.jpg\",\"background_img_1600\":\"https:\\/\\/d7skausf3l8pb.cloudfront.net\\/branding\\/2bedfd4d-9f8d-4504-ba94-f4085b848b6e\\/usaw-1600-628789653c306155745422.jpg\",\"footer_company_info\":\"Sport:80 USA Inc. 2035 Sunset Lake Road, Suite B-2, Newark, 19702, Delaware\",\"hex_primary_colour\":\"#0d1c3d\",\"hex_secondary_colour\":\"#92192d\",\"logo\":\"https:\\/\\/d7skausf3l8pb.cloudfront.net\\/branding\\/2bedfd4d-9f8d-4504-ba94-f4085b848b6e\\/397c2015d1476aafb0b506ac3045b2ac-5f96e2fb74873381096448.png\",\"logo72\":null,\"name\":\"USA Weightlifting\",\"postcode_name\":\"Postal Address\",\"date_format_short\":\"m\\/d\\/y\",\"date_format_long\":\"m\\/d\\/Y\",\"region_name\":\"State\",\"stripe_image\":\"b7e5b61c983f97a0101a1c49bf41390d.png\",\"stripe_title\":\"USA Weightlifting\",\"privacy_policy_url\":\"https:\\/\\/usaweightlifting.sport80.com\\/policies\\/privacy_policy\",\"terms_and_conditions_url\":\"https:\\/\\/usaweightlifting.sport80.com\\/policies\\/terms_and_conditions\",\"sport80_privacy_and_terms_url\":\"https:\\/\\/www.sport80.com\\/privacy-and-terms"
+  }
+ ],
+ "search": {
+  "2026-10-01": [],
+  "2026-11-04": []
+ }
+}
