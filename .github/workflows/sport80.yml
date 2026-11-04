@@ -8,6 +8,11 @@ on:
   schedule:
     - cron: '7 9 * * *'
   workflow_dispatch:
+    inputs:
+      referee_check:
+        description: 'Optional: officials to look up in the referee listing, separated by ;'
+        required: false
+        default: ''
 
 permissions:
   contents: write
@@ -33,6 +38,8 @@ jobs:
       - name: Read Sport80
         id: run
         continue-on-error: true
+        env:
+          REFEREE_CHECK: ${{ inputs.referee_check }}
         run: node scripts/cloud/sport80.mjs --rankings
       - name: Rebuild draft pages data
         id: features

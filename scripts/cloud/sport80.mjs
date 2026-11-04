@@ -145,7 +145,9 @@ try {
       if (it) byState[st] = await get(stateF.name, it.value);
     }
     const wso = wsoItem ? await get(wsoF.name, wsoItem.value) : null;
-    return { nationwide: all.rows.length, wso, byState, hasWso: !!wsoItem, hasState: !!stateF };
+    const filterInfo = filters.map(f => ({ name: f.name, label: f.label, items: (f.items || []).length,
+      sample: (f.items || []).filter(i => !/^(Alabama|Arizona|Arkansas|California|Colorado|Connecticut|Delaware|Florida|Georgia|Hawaii|Idaho|Illinois|Indiana|Iowa|Kansas|Kentucky|Louisiana|Maine|Maryland|Massachusetts|Michigan|Minnesota|Mississippi|Missouri|Montana|Nebraska|Nevada|New |North |Ohio|Oklahoma|Pennsylvania|Rhode|South |Tennessee|Texas|Utah|Vermont|Virginia|West |Wisconsin|Wyoming|Armed|District)/.test(i.text)).slice(0, 40).map(i => i.text) }));
+    return { nationwide: all.rows.length, allRows: all.rows, wso, wsoCount: wso ? wso.rows.length : null, byState, hasWso: !!wsoItem, hasState: !!stateF, filterInfo };
   });
   const ST = { Alaska: 'AK', Oregon: 'OR', Washington: 'WA' };
   // A filter that comes back with the whole country was ignored; refuse rather than publish everyone.
@@ -167,6 +169,14 @@ try {
     source: "USA Weightlifting's public Referees listing on Sport80 (widget 5), filtered to the Pacific Northwest WSO; state from the listing's State filter",
     updated: changed ? today : old.updated, referees
   }, null, 1) + '\n');
+  // Optional check (manual run input): are named officials in the listing at all, and which filter drops them?
+  const check = (process.env.REFEREE_CHECK || '').split(';').map(x => x.trim()).filter(Boolean).map(n => {
+    const last = n.split(' ').slice(-1)[0].toLowerCase();
+    const hit = rows => rows.filter(r => r.name.toLowerCase().includes(last)).map(r => `${r.name} (${r.level})`);
+    return { name: n, nationwide: hit(res.allRows), wso: res.wso ? hit(res.wso.rows) : null,
+      states: Object.fromEntries(Object.entries(res.byState).map(([k, g]) => [k, hit(g.rows)])) };
+  });
+  if (check.length) status.refereeCheck = { check, wsoCount: res.wsoCount, filters: res.filterInfo };
   status.referees = { ok: true, changed, nationwide: res.nationwide, pnw: referees.length, by: narrowed(res.wso) ? 'WSO filter' : 'state filter',
     states: Object.fromEntries(Object.entries(res.byState).map(([k, g]) => [k, narrowed(g) ? g.rows.length : null])) };
   console.log(`widget 5 (referees): ${res.nationwide} nationwide, ${referees.length} in the PNW`);
