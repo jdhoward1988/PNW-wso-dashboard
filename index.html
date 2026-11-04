@@ -959,13 +959,31 @@
     }).join('') + movedNote;
   }
 
-  fetch(INTEREST_API_URL)
+  // Show the hourly saved copy (data/local-events.json, same site, loads instantly) first, then
+  // check Google's live list and redraw only if it differs (e.g. an event added minutes ago).
+  // If Google is slow or down, visitors still see the saved copy; the error shows only when
+  // neither is available.
+  let shownKey = null;
+  const showRows = rows => {
+    const key = JSON.stringify(rows);
+    if (key === shownKey) return;
+    shownKey = key;
+    renderInterestRows(rows);
+  };
+  const saved = fetch('data/local-events.json', { cache: 'no-cache' })
+    .then(res => (res.ok ? res.json() : null))
+    .then(d => { if (d && Array.isArray(d.rows)) { showRows(d.rows); return true; } return false; })
+    .catch(() => false);
+  const live = fetch(INTEREST_API_URL)
     .then(res => res.json())
-    .then(data => renderInterestRows(Array.isArray(data) ? data : []))
-    .catch(() => {
+    .then(data => { if (!Array.isArray(data)) throw new Error('bad data'); showRows(data); return true; })
+    .catch(() => false);
+  Promise.all([saved, live]).then(([gotSaved, gotLive]) => {
+    if (!gotSaved && !gotLive) {
       interestListEl.innerHTML = '<p class="interest-status">This list couldn\'t load right now. Refresh the page or check back later.</p>';
       interestCountEl.textContent = 'Unavailable';
-    });
+    }
+  });
 
   // ---------- Host-a-Meet form → real Google Form submission ----------
   const hostForm = document.getElementById('hostForm');

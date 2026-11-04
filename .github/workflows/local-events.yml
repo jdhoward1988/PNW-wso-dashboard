@@ -1,0 +1,33 @@
+name: Upcoming Local Events copy (hourly)
+
+# Saves the Add Your Event list to data/local-events.json so the calendar shows it instantly
+# and still shows it if Google's web app is slow or down. Commits only when the list changed.
+on:
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: local-events
+  cancel-in-progress: true
+
+jobs:
+  copy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Copy the list
+        run: python3 scripts/cloud/local_events.py
+      - name: Publish if changed
+        run: |
+          git add data/local-events.json
+          if git diff --cached --quiet; then echo "no change"; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Local events copy $(TZ=America/Los_Angeles date '+%F %H:%M')"
+          for i in 1 2 3; do git pull --rebase -q origin main && git push -q origin HEAD:main && exit 0; sleep 10; done
+          exit 1
