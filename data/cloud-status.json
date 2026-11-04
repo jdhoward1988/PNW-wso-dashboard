@@ -1,5 +1,5 @@
 {
- "checked": "2026-11-03",
+ "checked": "2026-11-04",
  "events": {
   "ok": true,
   "changed": false,
@@ -11,8 +11,8 @@
  },
  "rankings": {
   "ok": true,
-  "pnwChanged": false,
-  "result": "OK: 586 Open results + 59 youth results in 4 age groups, 82 clubs, season 2026"
+  "pnwChanged": true,
+  "result": "OK: 590 Open results + 59 youth results in 4 age groups, 82 clubs, season 2026"
  },
  "adaptive": {
   "ok": true,
@@ -24,13 +24,13 @@
  "referees": {
   "ok": true,
   "changed": true,
-  "nationwide": 749,
-  "pnw": 39,
+  "nationwide": 747,
+  "pnw": 38,
   "by": "state filter",
   "states": {
    "Alaska": 3,
    "Oregon": 21,
-   "Washington": 16
+   "Washington": 15
   }
  }
 }

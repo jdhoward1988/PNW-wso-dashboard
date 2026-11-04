@@ -1,6 +1,6 @@
 {
  "source": "USA Weightlifting's public Referees listing on Sport80 (widget 5), filtered to the Pacific Northwest WSO; state from the listing's State filter",
- "updated": "2026-11-03",
+ "updated": "2026-11-04",
  "referees": [
   {
    "name": "Holly Arrow",
@@ -21,11 +21,6 @@
    "name": "Kirstin Boddy",
    "level": "WSO Referee",
    "state": "OR"
-  },
-  {
-   "name": "Darnell Cabana",
-   "level": "WSO Referee",
-   "state": "WA"
   },
   {
    "name": "Joshua Claravall",
