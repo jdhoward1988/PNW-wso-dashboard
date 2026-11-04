@@ -20,7 +20,7 @@
  },
  "rankings": {
   "ok": true,
-  "pnwChanged": true,
+  "pnwChanged": false,
   "result": "OK: 589 Open results + 59 youth results in 4 age groups, 82 clubs, season 2026"
  },
  "adaptive": {
@@ -29,6 +29,67 @@
   "listed": 1,
   "unmatched": 0,
   "notRankedYet": 0
+ },
+ "refereeCheck": {
+  "check": [
+   {
+    "name": "Jacob Howard",
+    "nationwide": [],
+    "wso": [],
+    "states": {
+     "Alaska": [],
+     "Oregon": [],
+     "Washington": []
+    }
+   },
+   {
+    "name": "Stephanie Langdon",
+    "nationwide": [],
+    "wso": [],
+    "states": {
+     "Alaska": [],
+     "Oregon": [],
+     "Washington": []
+    }
+   }
+  ],
+  "wsoCount": 747,
+  "filters": [
+   {
+    "name": "region",
+    "label": "State",
+    "items": 53,
+    "sample": [
+     "Alaska",
+     "Oregon",
+     "Washington"
+    ]
+   },
+   {
+    "name": "add_on_type",
+    "label": "Type",
+    "items": 4,
+    "sample": [
+     "IWF Category 1 Referee",
+     "IWF Category 2 Referee",
+     "National Referee",
+     "WSO Referee"
+    ]
+   },
+   {
+    "name": "add_on_region",
+    "label": "WSO",
+    "items": 26,
+    "sample": [
+     "Carolina",
+     "DMV",
+     "Mountain North",
+     "Mountain South",
+     "Pacific Northwest",
+     "Southern"
+    ]
+   }
+  ]
  },
  "referees": {
   "ok": true,
