@@ -69,12 +69,46 @@ try {
   }
   const file = 'data/sport80-events.json';
   let old = null; try { old = JSON.parse(readFileSync(file, 'utf8')); } catch { }
-  const changed = !old || JSON.stringify(old.lists) !== JSON.stringify(lists);
+
+  // Events that drop out of Sport80's public lists before they happen: usually full, unlisted
+  // or cancelled. Check each one's own event page so the calendar can keep a working link
+  // (or flag a cancellation). Kept until the event's end date passes.
+  const listedIds = new Set(Object.values(lists).flat().map(e => e.id));
+  const prevUnlisted = (old && old.unlisted) || [];
+  const candidates = new Map();
+  for (const [key, arr] of Object.entries((old && old.lists) || {})) for (const e of arr) candidates.set(e.id, { ...e, list: key, droppedOn: today });
+  for (const e of prevUnlisted) candidates.set(e.id, e);
+  const unlisted = [];
+  for (const e of candidates.values()) {
+    if (listedIds.has(e.id) || (e.end || e.start) < today) continue;
+    const info = await page.evaluate(async id => {
+      try {
+        const r = await fetch(`/api/wizard/event/${id}`, { headers: { Accept: 'application/json' } });
+        if (r.status === 404 || r.status === 410) return { pageLive: false };
+        if (!r.ok) return { pageLive: null, http: r.status };
+        const j = await r.json();
+        return { pageLive: true, registrationOpen: j.registration_open_date || null, registrationClose: j.registration_close_date || null };
+      } catch (err) { return { pageLive: null }; }
+    }, e.id);
+    unlisted.push({ ...e, eventPage: `${BASE}/public/wizard/e/${e.id}`, ...info, checked: today });
+  }
+  unlisted.sort((a, b) => a.start.localeCompare(b.start) || a.id - b.id);
+  const newlyUnlisted = unlisted.filter(e => !prevUnlisted.some(p => p.id === e.id));
+  if (unlisted.length) console.log('Dropped from Sport80 lists:', unlisted.map(e => `${e.name} (${e.start}) page ${e.pageLive === true ? 'live' : e.pageLive === false ? 'GONE' : 'unknown'}`).join('; '));
+
+  const strip = o => JSON.stringify(o, (k, v) => (k === 'checked' ? undefined : v));
+  const changed = !old || JSON.stringify(old.lists) !== JSON.stringify(lists) || strip(old.unlisted || []) !== strip(unlisted);
   writeFileSync(file, JSON.stringify({
     source: 'Sport80 public widgets (1 = Meets, 2 = Courses, 3 = Camps/Speaker Series), upcoming events located in Alaska, Oregon or Washington',
-    updated: changed ? today : old.updated, lists
+    updated: changed ? today : old.updated, lists,
+    unlisted_note: 'Upcoming events that were listed before but have dropped out of Sport80\'s public lists (full, unlisted or cancelled). pageLive = their own event page still loads.',
+    unlisted
   }, null, 1) + '\n');
-  status.events = { ok: true, changed, counts: Object.fromEntries(Object.entries(lists).map(([k, v]) => [k, v.length])) };
+  status.events = {
+    ok: true, changed, counts: Object.fromEntries(Object.entries(lists).map(([k, v]) => [k, v.length])),
+    unlisted: unlisted.map(e => ({ id: e.id, name: e.name, start: e.start, pageLive: e.pageLive })),
+    newlyUnlisted: newlyUnlisted.map(e => e.id)
+  };
 } catch (e) {
   failed = true; status.events = { ok: false, error: String(e.message || e).slice(0, 300) };
   console.error('EVENTS FAILED:', e);

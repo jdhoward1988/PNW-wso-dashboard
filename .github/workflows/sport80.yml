@@ -11,6 +11,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 concurrency:
   group: sport80
@@ -46,6 +47,28 @@ jobs:
           git commit -m "Sport80 check $(TZ=America/Los_Angeles date +%F)"
           for i in 1 2 3; do git pull --rebase -q origin main && git push -q origin HEAD:main && exit 0; sleep 10; done
           exit 1
+      - name: Flag listings that dropped out of Sport80
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY' > /tmp/new-unlisted.txt
+          import json
+          st = json.load(open('data/cloud-status.json')).get('events') or {}
+          new = set(st.get('newlyUnlisted') or [])
+          for e in json.load(open('data/sport80-events.json')).get('unlisted', []):
+              if e['id'] in new:
+                  page = {True: 'its event page still loads' + (f", registration closes {e['registrationClose']}" if e.get('registrationClose') else ''),
+                          False: 'its event page is GONE (likely cancelled)'}.get(e.get('pageLive'), "its event page couldn't be checked")
+                  print(f"{e['name']} ({e['start']}, {e['city']}, {e['state']})\t{page}\t{e['eventPage']}")
+          PY
+          while IFS=$'\t' read -r name page url; do
+            [ -z "$name" ] && continue
+            title="Sport80 listing disappeared: $name"
+            if gh issue list --state open --search "\"$title\" in:title" --json number --jq 'length' | grep -qx 0; then
+              gh issue create --title "$title" --body "$(printf '%s dropped out of Sport80'"'"'s public list before it happened; %s.\n\nEvent page: %s\n\nThe calendar keeps it listed (the daily update never removes events on its own). If it was cancelled, remove the row from index.html or ask Claude to. Close this issue when handled.' "$name" "$page" "$url")"
+            fi
+          done < /tmp/new-unlisted.txt
       - name: Report a failed check
         if: steps.run.outcome == 'failure' || steps.features.outcome == 'failure'
         run: |
