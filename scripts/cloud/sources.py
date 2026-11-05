@@ -103,22 +103,23 @@ def national():
         start, end = iso(m.group(1)), iso(m.group(2) or m.group(1))
         if not start:
             continue
-        # Name: the date line minus the dates if that leaves a title, else the nearest line above.
         name, link = None, None
-        rest = (t[:m.start()] + t[m.end():]).strip(' |·-–')
-        cands = ([(rest, lines[i][1])] if len(rest) > 12 and not RANGE.search(rest) else []) + \
+        # Name: text before the dates on the same line if it's a title, else the nearest line above.
+        # Text after the dates ("| City, ST | Venue" on USAW's cards) is the location.
+        before, after = t[:m.start()].strip(' |·-–'), t[m.end():].strip(' |·-–')
+        cands = ([(before, lines[i][1])] if len(before) > 12 else []) + \
                 [lines[j] for j in range(i - 1, max(-1, i - 5), -1)]
         for ct, cl in cands:
             if len(ct) > 12 and not RANGE.search(ct) and not re.match(r'(?i)(learn more|register|view|details|more info)', ct):
                 name = ct
                 link = next((absolute(h) for a, h in cl if absolute(h)), None)
                 break
-        loc = []
+        loc = [after] if after else []
         for j in range(i + 1, min(len(lines), i + 4)):
             lt = lines[j][0]
-            if not link and re.match(r'(?i)(learn more|register|view|details|more info)', lt):
+            if not link and re.match(r'(?i)(learn more|register|view|details|more info|event page)', lt):
                 link = next((absolute(h) for a, h in lines[j][1] if absolute(h)), None)
-            if RANGE.search(lt) or len(lt) > 120 or re.match(r'(?i)(learn more|register|view|details|more info)$', lt):
+            if after or RANGE.search(lt) or len(lt) > 120 or re.match(r'(?i)(learn more|register|view|details|more info|event page)', lt):
                 break
             if name and lt == name:
                 break
@@ -153,9 +154,13 @@ def sheet():
     rows = [r for r in csv.reader(io.StringIO(body)) if any(c.strip() for c in r)]
     if not rows:
         raise RuntimeError('sheet returned no rows')
-    head, data = rows[0], rows[1:]
+    # The sheet starts with a title row; the column header is the first row with 2+ filled cells.
+    hi = next((k for k, r in enumerate(rows) if sum(1 for c in r if c.strip()) >= 2), 0)
+    head = [c.strip() or f'column {n + 1}' for n, c in enumerate(rows[hi])]
+    recs = [{h: (r[n].strip() if n < len(r) else '') for n, h in enumerate(head)} for r in rows[hi + 1:]]
     return {'source': f'https://docs.google.com/spreadsheets/d/{SHEET_ID}/edit#gid=0',
-            'header': head, 'rows': [dict(zip(head, r + [''] * (len(head) - len(r)))) for r in data]}
+            'title': ' '.join(c.strip() for r in rows[:hi] for c in r if c.strip()) or None,
+            'header': head, 'rows': recs}
 
 
 def save(name, payload, key):
