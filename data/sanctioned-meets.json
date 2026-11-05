@@ -1,43 +1,58 @@
 {
  "checked": "2026-11-05",
- "hash": "edf85a05434c9800",
+ "hash": "e3919fe3d79fa387",
  "lastChanged": "2026-11-05",
  "source": "https://docs.google.com/spreadsheets/d/1TKmTIMT-Hm0bQHlxFZ7ZC_g9FJgRmO_wdLdfOiTQyl4/edit#gid=0",
+ "title": "Pacific Northwest Weightlifting State Organization Regional Sanctioned Meet List",
  "header": [
-  "Pacific Northwest Weightlifting State Organization Regional Sanctioned Meet List",
-  "",
-  "",
-  "",
-  ""
+  "MEET DATE",
+  "NAME OF EVENT",
+  "EVENT LOCATION",
+  "ORGANIZER CONTACT",
+  "EVENT INFO"
  ],
  "rows": [
   {
-   "Pacific Northwest Weightlifting State Organization Regional Sanctioned Meet List": "MEET DATE",
-   "": "EVENT INFO "
+   "MEET DATE": "10/31/2026",
+   "NAME OF EVENT": "Nightmare on the Platform",
+   "EVENT LOCATION": "Bellingham Weightlifting Club",
+   "ORGANIZER CONTACT": "Ryan Belsito",
+   "EVENT INFO": "Contact meet director"
   },
   {
-   "Pacific Northwest Weightlifting State Organization Regional Sanctioned Meet List": "10/31/2026",
-   "": "Contact meet director"
+   "MEET DATE": "11/22/2026",
+   "NAME OF EVENT": "Valley Strength Harvest Strength Classic",
+   "EVENT LOCATION": "Harvest Valley CrossFit",
+   "ORGANIZER CONTACT": "Sarah Sarff",
+   "EVENT INFO": "More info at USAW"
   },
   {
-   "Pacific Northwest Weightlifting State Organization Regional Sanctioned Meet List": "11/22/2026",
-   "": "More info at USAW"
+   "MEET DATE": "1/23-1/24/26",
+   "NAME OF EVENT": "Winter Lifting-Land 2027",
+   "EVENT LOCATION": "Pilchuck CrossFit",
+   "ORGANIZER CONTACT": "Kimberly Andrew",
+   "EVENT INFO": "Contact meet director"
   },
   {
-   "Pacific Northwest Weightlifting State Organization Regional Sanctioned Meet List": "1/23-1/24/26",
-   "": "Contact meet director"
+   "MEET DATE": "1/23/2026",
+   "NAME OF EVENT": "2027 Third Pull",
+   "EVENT LOCATION": "CrossFit Wilsonville",
+   "ORGANIZER CONTACT": "EJ",
+   "EVENT INFO": "More info & registration"
   },
   {
-   "Pacific Northwest Weightlifting State Organization Regional Sanctioned Meet List": "1/23/2026",
-   "": "More info & registration"
+   "MEET DATE": "2/6/2027",
+   "NAME OF EVENT": "Cully Strength Winter Open",
+   "EVENT LOCATION": "Cully Strength",
+   "ORGANIZER CONTACT": "Joey Cole",
+   "EVENT INFO": "More info at USAW here"
   },
   {
-   "Pacific Northwest Weightlifting State Organization Regional Sanctioned Meet List": "2/6/2027",
-   "": "More info at USAW here"
-  },
-  {
-   "Pacific Northwest Weightlifting State Organization Regional Sanctioned Meet List": "2/13/2027",
-   "": "Contact meet director"
+   "MEET DATE": "2/13/2027",
+   "NAME OF EVENT": "Seattle Barbell Classic",
+   "EVENT LOCATION": "Foundation CrossFit",
+   "ORGANIZER CONTACT": "Tony Lau",
+   "EVENT INFO": "Contact meet director"
   }
  ]
 }

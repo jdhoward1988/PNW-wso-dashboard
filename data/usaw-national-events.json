@@ -1,36 +1,36 @@
 {
  "checked": "2026-11-05",
- "hash": "558f545623c69b8a",
+ "hash": "b73418eee93a969b",
  "lastChanged": "2026-11-05",
  "source": "https://www.usaweightlifting.org/national-events",
  "finalUrl": "https://www.usaweightlifting.org/national-events",
  "events": [
   {
-   "name": "Pleasanton, CA, United States | Alameda County Fairgrounds",
+   "name": "2026 VIRUS Weightlifting Finals",
    "start": "2026-12-03",
    "end": "2026-12-06",
-   "location": "EVENT PAGEAdd To Calendar | 2027 USA Weightlifting National Championships & Virus Weightlifting Series 1",
+   "location": "Pleasanton, CA, United States | Alameda County Fairgrounds",
    "eventPage": "https://www.usaweightlifting.org/2026-virus-weightlifting-finals"
   },
   {
-   "name": "Columbus, OH, United States | Greater Columbus Convention Center",
+   "name": "2027 USA Weightlifting National Championships & Virus Weightlifting Series 1",
    "start": "2027-03-04",
    "end": "2027-03-07",
-   "location": "EVENT PAGEAdd To Calendar | 2027 Masters National Championships & National University Championships",
+   "location": "Columbus, OH, United States | Greater Columbus Convention Center",
    "eventPage": "https://www.usaweightlifting.org/2027-virus-weightlifting-series-1"
   },
   {
-   "name": "Richmond, VA, United States | Greater Richmond Convention Center",
+   "name": "2027 Masters National Championships & National University Championships",
    "start": "2027-04-15",
    "end": "2027-04-18",
-   "location": "EVENT PAGEAdd To Calendar | 2027 Virus Weightlifting Finals & UMWF World Championships",
+   "location": "Richmond, VA, United States | Greater Richmond Convention Center",
    "eventPage": "https://www.usaweightlifting.org/2027-masters-national-championships-national-university-championships"
   },
   {
-   "name": "San Juan, Puerto Rico | Dr. Pedro Rosselló González Puerto Rico Convention Center (PRCC)",
+   "name": "2027 Virus Weightlifting Finals & UMWF World Championships",
    "start": "2027-12-02",
    "end": "2027-12-05",
-   "location": "EVENT PAGEAdd To Calendar | Qualifying Totals",
+   "location": "San Juan, Puerto Rico | Dr. Pedro Rosselló González Puerto Rico Convention Center (PRCC)",
    "eventPage": "https://www.usaweightlifting.org/2027-virus-weightlifting-finals-umwf-world-championships"
   }
  ],
