@@ -18,5 +18,5 @@ Seven new pages are published as drafts, reachable from the gold **Draft pages**
 - They share `assets/new-pages.css` and `assets/new-pages.js`, and read `data/new-pages.json`, built daily from `data/rankings.json` by `scripts/features/build.py` (Q-points, Q-Masters, Q-Youth from `scripts/features/qyouth_factors.json`, USAW-style club scoring, season bests, quarterly letter data). The same run saves each lifter's best scores to `data/history/<season>.json` for next season's Most Improved.
 - `data/qualifying-2027.json` comes from USAW's 2027 Qualifying Totals PDF; replace it when USAW posts a new version.
 - `data/adaptive-results.json` lists adaptive sessions (ADP/ADAP) from USAW's national results books; add new events as USAW posts them.
-- `data/referees.json` is refreshed daily by the cloud job from Sport80's public Referees listing (widget 5), filtered to AK/OR/WA.
+- `data/referees.json` is refreshed daily by the cloud job from Sport80's public Referees listing (widget 5), filtered to AK/OR/WA. The listing only includes officials who opt in on Sport80. WSO corrections (a different level, or an official missing from the listing) go in `data/referees-overrides.json` and are marked with * on the page.
 - To publish a draft page for real: add it to the top bar on each page and remove it from `DRAFT_PAGES` in `assets/draft-bar.js`.
