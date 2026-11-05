@@ -162,6 +162,17 @@ try {
   const referees = list.filter(r => r.name && !seen.has(r.name) && seen.add(r.name))
     .map(r => ({ name: r.name, level: r.level, state: stateOf[r.name] || '' }))
     .sort((a, b) => a.name.split(' ').slice(-1)[0].localeCompare(b.name.split(' ').slice(-1)[0]) || a.name.localeCompare(b.name));
+  // PNW WSO corrections (data/referees-overrides.json): level fixes and officials missing from USAW's listing.
+  try {
+    const ov = JSON.parse(readFileSync('data/referees-overrides.json', 'utf8'));
+    const key = n => n.toLowerCase().replace(/\s+/g, ' ').trim();
+    const lv = new Map((ov.levels || []).map(o => [key(o.name), o.level]));
+    for (const r of referees) if (lv.has(key(r.name)) && lv.get(key(r.name)) !== r.level) { r.level = lv.get(key(r.name)); r.wso = true; }
+    const have = new Set(referees.map(r => key(r.name)));
+    for (const a of ov.additions || []) if (!have.has(key(a.name))) referees.push({ name: a.name, level: lv.get(key(a.name)) || a.level, state: a.state || '', wso: true });
+    referees.sort((a, b) => a.name.split(' ').slice(-1)[0].localeCompare(b.name.split(' ').slice(-1)[0]) || a.name.localeCompare(b.name));
+    status.refereeOverrides = { levels: (ov.levels || []).length, additions: (ov.additions || []).length };
+  } catch (e) { if (e.code !== 'ENOENT') throw e; }
   const file = 'data/referees.json';
   let old = null; try { old = JSON.parse(readFileSync(file, 'utf8')); } catch { }
   const changed = !old || JSON.stringify(old.referees) !== JSON.stringify(referees);

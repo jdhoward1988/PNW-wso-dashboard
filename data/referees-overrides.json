@@ -1,0 +1,11 @@
+{
+ "note": "PNW WSO corrections to USA Weightlifting's public Referees listing. 'levels' replaces the level USAW shows for an official already in the listing; 'additions' adds officials who aren't in the listing (if USAW later lists them, the listing entry is used with any level correction below). Names must match the listing exactly. Applied by scripts/cloud/sport80.mjs each day.",
+ "levels": [
+  {"name": "Lauren Hatmaker", "level": "IWF Category 1 Referee"},
+  {"name": "Joseph Beck", "level": "IWF Category 2 Referee"}
+ ],
+ "additions": [
+  {"name": "Jacob Howard", "level": "WSO Referee", "state": "WA"},
+  {"name": "Stephanie Langdon", "level": "WSO Referee", "state": "WA"}
+ ]
+}

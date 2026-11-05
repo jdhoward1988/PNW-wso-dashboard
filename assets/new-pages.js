@@ -194,7 +194,7 @@ if(has('letter')){
 if(has('refBody')){
  fetch('data/referees.json',{cache:'no-cache'}).then(r=>r.json()).then(R=>{
   const L=R.referees||[];setText('refCount',L.length&&R.updated?`${L.length} officials · updated ${new Date(R.updated+'T12:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}`:'');
-  document.getElementById('refBody').innerHTML=L.map(r=>`<tr><td>${esc(r.name)}</td><td>${esc(r.level||'')}</td><td>${esc(r.state||'')}</td></tr>`).join('')||`<tr><td colspan="3" class="empty">${R.updated?'No PNW officials found in USAW\'s listing.':'The list loads from USAW\'s referee listing with the next daily update.'}</td></tr>`;
+  document.getElementById('refBody').innerHTML=L.map(r=>`<tr><td>${esc(r.name)}</td><td>${esc(r.level||'')}${r.wso?'<sup class="est" title="Confirmed by the PNW WSO">*</sup>':''}</td><td>${esc(r.state||'')}</td></tr>`).join('')||`<tr><td colspan="3" class="empty">${R.updated?'No PNW officials found in USAW\'s listing.':'The list loads from USAW\'s referee listing with the next daily update.'}</td></tr>`;
  }).catch(()=>{document.getElementById('refBody').innerHTML='<tr><td colspan="3" class="empty">The referee list couldn\'t be loaded. Try again later.</td></tr>';});
 }
 if(document.querySelector('[data-needs="new-pages"]')){
