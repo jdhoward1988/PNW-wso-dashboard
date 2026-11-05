@@ -33,6 +33,26 @@
  "refereeCheck": {
   "check": [
    {
+    "name": "Jacob Howard",
+    "nationwide": [],
+    "wso": [],
+    "states": {
+     "Alaska": [],
+     "Oregon": [],
+     "Washington": []
+    }
+   },
+   {
+    "name": "Stephanie Langdon",
+    "nationwide": [],
+    "wso": [],
+    "states": {
+     "Alaska": [],
+     "Oregon": [],
+     "Washington": []
+    }
+   },
+   {
     "name": "Lauren Hatmaker",
     "nationwide": [
      "Lauren Hatmaker (WSO Referee)"
@@ -49,7 +69,7 @@
     }
    },
    {
-    "name": "Joe Beck",
+    "name": "Joseph Beck",
     "nationwide": [
      "Joseph Beck (WSO Referee)",
      "Regis Becker (National Referee)",
