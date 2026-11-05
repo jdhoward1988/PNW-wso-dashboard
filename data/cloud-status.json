@@ -30,111 +30,15 @@
   "unmatched": 0,
   "notRankedYet": 0
  },
- "refereeCheck": {
-  "check": [
-   {
-    "name": "Jacob Howard",
-    "nationwide": [],
-    "wso": [],
-    "states": {
-     "Alaska": [],
-     "Oregon": [],
-     "Washington": []
-    }
-   },
-   {
-    "name": "Stephanie Langdon",
-    "nationwide": [],
-    "wso": [],
-    "states": {
-     "Alaska": [],
-     "Oregon": [],
-     "Washington": []
-    }
-   },
-   {
-    "name": "Lauren Hatmaker",
-    "nationwide": [
-     "Lauren Hatmaker (WSO Referee)"
-    ],
-    "wso": [
-     "Lauren Hatmaker (WSO Referee)"
-    ],
-    "states": {
-     "Alaska": [],
-     "Oregon": [
-      "Lauren Hatmaker (WSO Referee)"
-     ],
-     "Washington": []
-    }
-   },
-   {
-    "name": "Joseph Beck",
-    "nationwide": [
-     "Joseph Beck (WSO Referee)",
-     "Regis Becker (National Referee)",
-     "Andrew Beckert (WSO Referee)",
-     "Becky Freeman (WSO Referee)"
-    ],
-    "wso": [
-     "Joseph Beck (WSO Referee)",
-     "Regis Becker (National Referee)",
-     "Andrew Beckert (WSO Referee)",
-     "Becky Freeman (WSO Referee)"
-    ],
-    "states": {
-     "Alaska": [],
-     "Oregon": [
-      "Joseph Beck (WSO Referee)",
-      "Becky Freeman (WSO Referee)"
-     ],
-     "Washington": []
-    }
-   }
-  ],
-  "wsoCount": 747,
-  "filters": [
-   {
-    "name": "region",
-    "label": "State",
-    "items": 53,
-    "sample": [
-     "Alaska",
-     "Oregon",
-     "Washington"
-    ]
-   },
-   {
-    "name": "add_on_type",
-    "label": "Type",
-    "items": 4,
-    "sample": [
-     "IWF Category 1 Referee",
-     "IWF Category 2 Referee",
-     "National Referee",
-     "WSO Referee"
-    ]
-   },
-   {
-    "name": "add_on_region",
-    "label": "WSO",
-    "items": 26,
-    "sample": [
-     "Carolina",
-     "DMV",
-     "Mountain North",
-     "Mountain South",
-     "Pacific Northwest",
-     "Southern"
-    ]
-   }
-  ]
+ "refereeOverrides": {
+  "levels": 2,
+  "additions": 2
  },
  "referees": {
   "ok": true,
-  "changed": false,
+  "changed": true,
   "nationwide": 747,
-  "pnw": 38,
+  "pnw": 40,
   "by": "state filter",
   "states": {
    "Alaska": 3,

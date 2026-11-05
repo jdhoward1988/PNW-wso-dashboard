@@ -14,8 +14,9 @@
   },
   {
    "name": "Joseph Beck",
-   "level": "WSO Referee",
-   "state": "OR"
+   "level": "IWF Category 2 Referee",
+   "state": "OR",
+   "wso": true
   },
   {
    "name": "Kirstin Boddy",
@@ -79,13 +80,20 @@
   },
   {
    "name": "Lauren Hatmaker",
-   "level": "WSO Referee",
-   "state": "OR"
+   "level": "IWF Category 1 Referee",
+   "state": "OR",
+   "wso": true
   },
   {
    "name": "Peter Hong",
    "level": "WSO Referee",
    "state": "WA"
+  },
+  {
+   "name": "Jacob Howard",
+   "level": "WSO Referee",
+   "state": "WA",
+   "wso": true
   },
   {
    "name": "Kayla Jones",
@@ -96,6 +104,12 @@
    "name": "Mira Kwon",
    "level": "WSO Referee",
    "state": "OR"
+  },
+  {
+   "name": "Stephanie Langdon",
+   "level": "WSO Referee",
+   "state": "WA",
+   "wso": true
   },
   {
    "name": "Tony Lau",
