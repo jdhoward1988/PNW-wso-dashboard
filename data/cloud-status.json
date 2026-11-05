@@ -20,7 +20,7 @@
  },
  "rankings": {
   "ok": true,
-  "pnwChanged": true,
+  "pnwChanged": false,
   "result": "OK: 590 Open results + 59 youth results in 4 age groups, 82 clubs, season 2026"
  },
  "adaptive": {
@@ -44,6 +44,19 @@
    "Alaska": 3,
    "Oregon": 21,
    "Washington": 15
+  }
+ },
+ "sources": {
+  "checked": "2026-11-05",
+  "national": {
+   "ok": true,
+   "changed": true,
+   "count": 4
+  },
+  "sanctionedSheet": {
+   "ok": true,
+   "changed": true,
+   "count": 7
   }
  }
 }
