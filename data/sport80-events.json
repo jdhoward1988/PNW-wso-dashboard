@@ -1,6 +1,6 @@
 {
  "source": "Sport80 public widgets (1 = Meets, 2 = Courses, 3 = Camps/Speaker Series), upcoming events located in Alaska, Oregon or Washington",
- "updated": "2026-11-01",
+ "updated": "2026-11-08",
  "lists": {
   "meets": [
    {
@@ -90,18 +90,6 @@
   ],
   "courses": [
    {
-    "id": 14619,
-    "name": "LEVEL 1 - PORTLAND, OR (Women's Only Course)",
-    "start": "2026-11-06",
-    "end": "2026-11-07",
-    "city": "Portland",
-    "state": "OR",
-    "address": "2555 NW Upshur Street, Portland, Oregon",
-    "type": "Level 1 Coach",
-    "url": "https://usaweightlifting.sport80.com/public/widget/2",
-    "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/14619"
-   },
-   {
     "id": 14938,
     "name": "LEVEL 1 - RICHLAND, WA",
     "start": "2026-11-07",
@@ -172,7 +160,7 @@
    "pageLive": true,
    "registrationOpen": "August 31st 2026 4:06 PM (MDT)",
    "registrationClose": "November 13th 2026 4:06 PM (MST)",
-   "checked": "2026-11-07"
+   "checked": "2026-11-08"
   }
  ]
 }
