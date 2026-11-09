@@ -1,6 +1,6 @@
 {
  "source": "Sport80 public widgets (1 = Meets, 2 = Courses, 3 = Camps/Speaker Series), upcoming events located in Alaska, Oregon or Washington",
- "updated": "2026-11-08",
+ "updated": "2026-11-09",
  "lists": {
   "meets": [
    {
@@ -90,18 +90,6 @@
   ],
   "courses": [
    {
-    "id": 14938,
-    "name": "LEVEL 1 - RICHLAND, WA",
-    "start": "2026-11-07",
-    "end": "2026-11-08",
-    "city": "Richland",
-    "state": "WA",
-    "address": "1113 Lee Blvd, Richland, Washington",
-    "type": "Level 1 Coach",
-    "url": "https://usaweightlifting.sport80.com/public/widget/2",
-    "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/14938"
-   },
-   {
     "id": 14618,
     "name": "LEVEL  2 - PORTLAND, OR ( Women's Only Weekend)",
     "start": "2026-11-08",
@@ -160,7 +148,7 @@
    "pageLive": true,
    "registrationOpen": "August 31st 2026 4:06 PM (MDT)",
    "registrationClose": "November 13th 2026 4:06 PM (MST)",
-   "checked": "2026-11-08"
+   "checked": "2026-11-09"
   }
  ]
 }

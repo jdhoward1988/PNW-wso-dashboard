@@ -1,11 +1,11 @@
 {
- "checked": "2026-11-08",
+ "checked": "2026-11-09",
  "events": {
   "ok": true,
   "changed": true,
   "counts": {
    "meets": 7,
-   "courses": 3,
+   "courses": 2,
    "camps": 1
   },
   "unlisted": [
@@ -47,7 +47,7 @@
   }
  },
  "sources": {
-  "checked": "2026-11-08",
+  "checked": "2026-11-09",
   "national": {
    "ok": true,
    "changed": false,
