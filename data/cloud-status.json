@@ -1,11 +1,11 @@
 {
- "checked": "2026-11-09",
+ "checked": "2026-11-10",
  "events": {
   "ok": true,
   "changed": true,
   "counts": {
    "meets": 7,
-   "courses": 2,
+   "courses": 1,
    "camps": 1
   },
   "unlisted": [
@@ -37,7 +37,7 @@
  "referees": {
   "ok": true,
   "changed": false,
-  "nationwide": 742,
+  "nationwide": 740,
   "pnw": 40,
   "by": "state filter",
   "states": {
@@ -47,7 +47,7 @@
   }
  },
  "sources": {
-  "checked": "2026-11-09",
+  "checked": "2026-11-10",
   "national": {
    "ok": true,
    "changed": false,

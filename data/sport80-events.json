@@ -1,6 +1,6 @@
 {
  "source": "Sport80 public widgets (1 = Meets, 2 = Courses, 3 = Camps/Speaker Series), upcoming events located in Alaska, Oregon or Washington",
- "updated": "2026-11-09",
+ "updated": "2026-11-10",
  "lists": {
   "meets": [
    {
@@ -90,18 +90,6 @@
   ],
   "courses": [
    {
-    "id": 14618,
-    "name": "LEVEL  2 - PORTLAND, OR ( Women's Only Weekend)",
-    "start": "2026-11-08",
-    "end": "2026-11-09",
-    "city": "Portland",
-    "state": "OR",
-    "address": "2555 NW Upshur Street, Portland, Oregon",
-    "type": "Level 2 Coach",
-    "url": "https://usaweightlifting.sport80.com/public/widget/2",
-    "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/14618"
-   },
-   {
     "id": 15067,
     "name": "LEVEL 1 - FEDERAL WAY, WA",
     "start": "2026-12-13",
@@ -148,7 +136,7 @@
    "pageLive": true,
    "registrationOpen": "August 31st 2026 4:06 PM (MDT)",
    "registrationClose": "November 13th 2026 4:06 PM (MST)",
-   "checked": "2026-11-09"
+   "checked": "2026-11-10"
   }
  ]
 }
