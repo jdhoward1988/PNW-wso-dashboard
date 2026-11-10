@@ -1,6 +1,6 @@
 {
  "source": "Add Your Event responses (Apps Script web app), copied hourly; the page also checks the live list",
- "updated": "2026-11-04T21:57:20Z",
+ "updated": "2026-11-10T23:15:50Z",
  "rows": [
   {
    "Timestamp": "2026-10-16T22:41:11.000Z",
@@ -16,7 +16,7 @@
    "Event Information": "Super Total Event with Snatch, Clean & Jerk, Squat, Bench and Deadlift.  Shorter duration and rest periods than a sanctioned event.  No singlet requirement or otherwise.",
    "Event Type": "Other Lifting Event",
    "Email Address": "",
-   "Event Website": ""
+   "Event Website": "https://competitioncorner.net/events/22953/details"
   },
   {
    "Timestamp": "2026-10-16T23:35:23.000Z",
