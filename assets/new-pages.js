@@ -247,8 +247,11 @@ Promise.all(['sport80-events','usaw-national-events','local-events'].map(n=>fetc
   [['meets','meet','Enter'],['courses','course','Register'],['camps','course','Register']].forEach(([list,type,cta])=>(S.lists[list]||[]).forEach(e=>items.push({type,date:e.start,end:e.end||e.start,title:nice(e.name),place:[e.city,e.state].filter(Boolean).join(', '),loc:e.address,kind:e.type,state:e.state,url:e.entryUrl||e.url,cta,counts:type==='meet'})));
   (S.unlisted||[]).filter(e=>e.pageLive).forEach(e=>items.push({type:e.list==='meets'?'meet':'course',date:e.start,end:e.end||e.start,title:nice(e.name),place:[e.city,e.state].filter(Boolean).join(', '),loc:e.address,kind:e.type,state:e.state,url:e.eventPage||e.entryUrl,cta:'Event page',counts:e.list==='meets',flag:'Off USAW\'s public list · may be full'}));
  }
- const natStarts=new Set();
- if(U)(U.events||[]).forEach(e=>{natStarts.add(e.start);items.push({type:'national',date:e.start,end:e.end||e.start,title:e.name,place:e.location.split(' | ')[0].replace(', United States',''),loc:e.location,kind:'USAW national event',url:e.eventPage,cta:'Event page',counts:true})});
+ const natStarts=new Set(),natBy={};
+ const regLabel=x=>x.replace(/\s*\((?!\$)[^)]*\)/g,'').replace(/\s+/g,' ').trim();
+ const regs=e=>(e.keyDates||[]).filter(k=>/registration/i.test(k.label)&&k.date);
+ if(U)(U.events||[]).forEach(e=>{natStarts.add(e.start);natBy[e.start]=e;
+  regs(e).forEach(k=>{const more=(k.label.match(/\((?!\$)([^)]*)\)/)||[])[1];items.push({type:'reg',date:k.date,end:k.end||k.date,title:`${regLabel(k.label)}: ${e.name.replace(/^20\d\d\s+/,'')}`,place:k.text,kind:more||'',url:e.eventPage,cta:'Event page',tstart:e.start})});items.push({type:'national',date:e.start,end:e.end||e.start,title:e.name,place:e.location.split(' | ')[0].replace(', United States',''),loc:e.location,kind:'USAW national event',url:e.eventPage,cta:'Event page',counts:true})});
  T.forEach(t=>{
   if(!natStarts.has(t.start))items.push({type:'national',date:t.start,end:t.end,title:t.name,place:t.where,loc:t.where,kind:'USAW national event',counts:true});
   items.push({type:'deadline',date:t.close,end:t.close,title:`Last day to qualify: ${t.name}`,place:`Event ${fmtRange(t.start,t.end)} · ${t.where}`,kind:`Totals count from ${fmtD(t.open)}`,tid:t.id});
@@ -261,6 +264,12 @@ Promise.all(['sport80-events','usaw-national-events','local-events'].map(n=>fetc
  // meets that can still produce a qualifying total for a target: sanctioned, and finished inside its window
  const leftFor=t=>up.filter(i=>i.counts&&i.date>=t.open&&i.end<=t.close&&i.date!==t.start);
  const pnw=l=>l.filter(i=>i.type==='meet');
+ // registration line for an event card, from the dates on USAW's event page
+ const regLine=t=>{const e=natBy[t.start],r=e?regs(e):[];if(!r.length)return 'Registration dates not posted by USAW yet';
+  const op=r.filter(k=>/open/i.test(k.label)),cl=r.filter(k=>/close/i.test(k.label)),next=cl.find(k=>k.date>=TODAY),soon=op.find(k=>k.date>TODAY);
+  if(cl.length&&!next)return 'Registration has closed';
+  if(soon&&!op.some(k=>k.date<=TODAY))return `<b>Registration opens ${fmtD(soon.date)}</b>`;
+  return `<b>Registration is open</b>${next?` · ${esc(regLabel(next.label).replace(/\s*registration\s*/i,' ').trim().toLowerCase())} ${fmtD(next.date)}`:''}`;};
  const fromHash=()=>{const m=location.hash.match(/for=([\w]+)/);if(!m)return null;const t=T.find(t=>t.id===m[1])||T.find(t=>t.keys.includes(m[1]));return t?t.id:null};
  const st={sel:fromHash()||store.get('for')||'',type:'all',state:'all'};
  if(!T.some(t=>t.id===st.sel))st.sel='';
@@ -278,7 +287,7 @@ Promise.all(['sport80-events','usaw-national-events','local-events'].map(n=>fetc
    nm?`<div class="stat"><span class="k">Next PNW sanctioned meet</span><span class="v">${fmtD(nm.date,false)} <small>${away(daysTo(nm.date))}</small></span><span class="d">${esc(nm.title)} · ${esc(nm.place)}</span></div>`:`<div class="stat"><span class="k">Next PNW sanctioned meet</span><span class="v">—</span><span class="d">None listed on USAW right now</span></div>`,
    focus?`<div class="stat"><span class="k">PNW meets left to qualify</span><span class="v">${pnw(fl).length}</span><span class="d">before the ${esc(focus.name)} window closes</span></div>`:''].join('');
   document.getElementById('plTargets').innerHTML=T.map(t=>{const l=leftFor(t),p=pnw(l).length,n=l.length-p,closed=daysTo(t.close)<0;
-   return `<button type="button" class="tgt" data-t="${t.id}" aria-pressed="${t.id===st.sel}"><span class="nm">${esc(t.name)}</span><span class="wh">${esc(t.where)} · ${fmtRange(t.start,t.end)}</span>${tgtCountdown(t)}${tgtMeter(t)}<span class="left">${closed?'The qualifying window has closed':`<b>${plural(p,'PNW meet')}</b>${n?` and ${plural(n,'national event')}`:''} left in the window`}</span></button>`}).join('')||'<p class="empty">The 2027 qualifying windows aren\'t loaded yet.</p>';
+   return `<button type="button" class="tgt" data-t="${t.id}" aria-pressed="${t.id===st.sel}"><span class="nm">${esc(t.name)}</span><span class="wh">${esc(t.where)} · ${fmtRange(t.start,t.end)}</span>${tgtCountdown(t)}${tgtMeter(t)}<span class="left">${closed?'The qualifying window has closed':`<b>${plural(p,'PNW meet')}</b>${n?` and ${plural(n,'national event')}`:''} left in the window`}</span><span class="left">${regLine(t)}</span></button>`}).join('')||'<p class="empty">The 2027 qualifying windows aren\'t loaded yet.</p>';
   const F=document.getElementById('plFocus');
   if(sel){const l=fl,p=pnw(l),last=p[p.length-1],n=daysTo(sel.close);
    F.innerHTML=`<div class="focus-note"><p><b>${esc(sel.name)}</b> · ${fmtRange(sel.start,sel.end)}, ${esc(sel.where)}. A total counts if it was made at a USAW-sanctioned meet from ${fmtD(sel.open)} through ${fmtD(sel.close)}${n>=0?` (${plural(n,'day')} left)`:''}. ${p.length?`${plural(p.length,'PNW meet')} left in that window; the last is ${esc(last.title)} on ${fmtD(last.end)}.`:n>=0?'No PNW meets are listed inside that window yet.':''}</p><span><a class="linkbtn" href="roster.html#for=${sel.id}">Who has qualified →</a> &nbsp; <button type="button" class="linkbtn" id="plIcsSel">Add these to my calendar</button> &nbsp; <button type="button" class="linkbtn" id="plClear">Show everything</button></span></div>`;
@@ -288,7 +297,7 @@ Promise.all(['sport80-events','usaw-national-events','local-events'].map(n=>fetc
   shown.forEach((i,ix)=>{const d=dOf(i.date),m=d.toLocaleDateString('en-US',{month:'long',year:'numeric'});
    if(m!==mon){h+=(mon?'</ul>':'')+`<h3 class="month">${m}</h3><ul class="agenda">`;mon=m}
    const inWin=sel&&i.counts&&i.date>=sel.open&&i.end<=sel.close&&i.date!==sel.start,own=sel&&(i.tid===sel.id||(i.type==='national'&&i.date===sel.start));
-   const off=sel&&!own&&!inWin&&(i.type==='meet'||i.type==='planned'||i.type==='national'||i.type==='deadline');
+   const off=sel&&!own&&!inWin&&i.tstart!==sel.start&&(i.type==='meet'||i.type==='planned'||i.type==='national'||i.type==='deadline'||i.type==='reg');
    const chips=[inWin?'<span class="chip ok">Counts toward qualifying</span>':'',sel&&i.type==='national'&&i.date===sel.start?'<span class="chip">The event you\'re planning for</span>':'',sel&&i.counts&&!inWin&&!own&&i.end>sel.close?'<span class="chip">After the window</span>':'',i.flag?`<span class="chip red">${esc(i.flag)}</span>`:''].join('');
    h+=`<li class="ag ${i.type}${off?' off':''}"><div class="dt"><b>${d.getDate()}</b><span>${MON[d.getMonth()]}</span></div><div><div class="ti">${esc(i.title)}</div><div class="su">${[i.end!==i.date?fmtRange(i.date,i.end):'',esc(i.place||''),esc(i.kind||'')].filter(Boolean).join(' · ')}</div>${chips?`<div class="tg">${chips}</div>`:''}</div><div class="act"><span class="away">${away(daysTo(i.date))}</span><span class="links">${i.url?`<a href="${esc(i.url)}" target="_blank" rel="noopener">${i.cta}</a>`:''}<button type="button" data-ics="${ix}" aria-label="Add ${esc(i.title)} to my calendar">Add to calendar</button></span></div></li>`;});
   document.getElementById('plAgenda').innerHTML=h?h+'</ul>':'<p class="empty">Nothing matches these filters.</p>';
@@ -304,23 +313,29 @@ Promise.all(['sport80-events','usaw-national-events','local-events'].map(n=>fetc
 }
 if(has('rtList')){
 // qualifying tracker: every ranked PNW lifter's totals against the qualifying totals and windows for one national event
-fetch('data/rankings.json',{cache:'no-cache'}).then(r=>r.json()).then(R=>{
+Promise.all([fetch('data/rankings.json',{cache:'no-cache'}).then(r=>r.json()),fetch('data/results.json',{cache:'no-cache'}).then(r=>r.json()).catch(()=>null)]).then(([R,RS])=>{
+ const FULL=!!(RS&&RS.lifters&&RS.meets);
  const Q=D.qt,EVS=qualEvents(Q).sort((a,b)=>a.close<b.close?-1:1),C=R.clubs;
  const lim=c=>c.includes('+')?Infinity:parseFloat(c);
  // qualifying totals by event, age group, sub-group and sex, lightest class first
  const QT={};Q.totals.forEach(t=>{const k=[t.event,t.age,t.sub||'',t.sex].join('|');(QT[k]=QT[k]||[]).push(t)});
  Object.values(QT).forEach(a=>a.sort((x,y)=>lim(x.cls)-lim(y.cls)));
  const AGES={};Q.totals.forEach(t=>(AGES[t.event]=AGES[t.event]||new Set()).add(t.age));
- // every ranked result per lifter (Open classes and youth age-group classes; the same lift can be in both)
+ // Every result saved for each lifter (data/results.json: all meets since last season, with birth year).
+ // If that file can't be loaded, fall back to the rankings, which only have each lifter's best total per class.
  const L=new Map();
- const add=(cls,x)=>{const sex=cls.startsWith('Women')?'W':'M',d=`${R.season}-${x[7].slice(0,2)}-${x[7].slice(2)}`;
-  let l=L.get(x[9]);if(!l)L.set(x[9],l={id:x[9],name:x[3],club:x[4]>=0?C[x[4]]:'',sex,age:x[5],res:[]});
-  if(!l.res.some(r=>r.total===x[2]&&r.date===d&&r.bw===x[6]))l.res.push({total:x[2],bw:x[6],date:d,lvl:x[8]});};
- Object.entries(R.classes).forEach(([c,xs])=>xs.forEach(x=>add(c,x)));
- Object.values(R.youth||{}).forEach(g=>Object.entries(g).forEach(([c,xs])=>xs.forEach(x=>add(c,x))));
+ if(FULL)Object.entries(RS.lifters).forEach(([id,l])=>L.set(+id,{id:+id,name:l.n,club:l.c||'',sex:l.s,by:l.by,res:l.r.filter(x=>x[2]>0).map(x=>({date:x[0],total:x[1],bw:x[2],sn:x[3],cj:x[4],meet:RS.meets[x[6]]||''}))}));
+ else{
+  const add=(cls,x)=>{const sex=cls.startsWith('Women')?'W':'M',d=`${R.season}-${x[7].slice(0,2)}-${x[7].slice(2)}`;
+   let l=L.get(x[9]);if(!l)L.set(x[9],l={id:x[9],name:x[3],club:x[4]>=0?C[x[4]]:'',sex,by:R.season-x[5],res:[]});
+   if(!l.res.some(r=>r.total===x[2]&&r.date===d&&r.bw===x[6]))l.res.push({total:x[2],bw:x[6],date:d,meet:''});};
+  Object.entries(R.classes).forEach(([c,xs])=>xs.forEach(x=>add(c,x)));
+  Object.values(R.youth||{}).forEach(g=>Object.entries(g).forEach(([c,xs])=>xs.forEach(x=>add(c,x))));
+  const k=document.getElementById('rtLegacyKey');if(k)k.insertAdjacentText('beforeend',' The full results file didn\'t load, so this page is using each lifter\'s best total only; a smaller total made later may already qualify them.');
+ }
  const lifters=[...L.values()];
- // the age groups a lifter can enter, by the age they turn in the event's year (USAW goes by birth year)
- function tracks(ev,l){const a=l.age+(dOf(ev.start).getFullYear()-R.season),out=[];
+ // the age groups a lifter can enter, by the age they turn in the event's year (event year minus birth year)
+ function tracks(ev,l){const a=dOf(ev.start).getFullYear()-l.by,out=[];
   (AGES[ev.keys[0]]||[]).forEach(g=>{
    if(g==='Open')out.push([g,'']);
    else if(g==='Junior'){if(a>=15&&a<=20)out.push([g,''])}
@@ -329,18 +344,20 @@ fetch('data/rankings.json',{cache:'no-cache'}).then(r=>r.json()).then(R=>{
    else if(g==='Youth'){if(a<=17)out.push([g,a>=16?'16–17':a>=14?'14–15':a>=12?'12–13':'11 & Under'])}
    else if(g==='Masters'){if(a>=35){const lo=Math.floor(a/5)*5;out.push([g,a>=90?'90+':`${lo}–${lo+4}`])}}
   });return {age:a,list:out};}
- // one lifter against one event: the best standing across the age groups they can enter
+ // One lifter against one event, for each age group they can enter. USAW's rule: the total must be made inside the
+ // event's window and must meet the qualifying total for the class the lifter was in that day (taken from bodyweight);
+ // a lifter who has done that may register in any class. Every saved result is checked.
  function standing(ev,l){const tr=tracks(ev,l),rows=[];
   tr.list.forEach(([g,sub])=>{const tbl=QT[[ev.keys[0],g,sub,l.sex].join('|')];if(!tbl)return;let best=null;
    l.res.forEach(r=>{const q=tbl.find(t=>r.bw<=lim(t.cls));if(!q)return;const inWin=r.date>=ev.open&&r.date<=ev.close,m=r.total-q.total;
     const rank=m>=0?(inWin?3:2):1,c={g,sub,cls:q.cls,need:q.total,r,m,inWin,rank};
     if(!best||c.rank>best.rank||(c.rank===best.rank&&(c.rank===1?(c.inWin-best.inWin||c.m-best.m)>0:c.m>best.m)))best=c;});
-   if(best)rows.push(best);});
+   if(best){if(best.rank<3){const ins=l.res.filter(r=>r.date>=ev.open&&r.date<=ev.close).map(r=>{const q=tbl.find(t=>r.bw<=lim(t.cls));return q?{r,need:q.total,m:r.total-q.total}:null}).filter(Boolean).sort((x,y)=>y.m-x.m);best.inBest=ins[0]||null;}rows.push(best);}});
   rows.sort((x,y)=>y.rank-x.rank||y.m-x.m);
   return {age:tr.age,rows,top:rows[0]||null};}
  const CLOSE=10, grp=c=>c.g+(c.sub?' '+c.sub:'')+(c.g==='University'?' (if enrolled)':'');
  const code=c=>!c?'n':c.rank===3?'q':c.rank===2?'l':c.m>=-CLOSE?'c':'n';
- const lvl={N:'a national meet',I:'an international meet',A:'a North American Open Series meet',L:'a local meet'};
+ const short=m=>m.length>52?m.slice(0,50).trim()+'…':m;
  const hash=k=>{const m=location.hash.match(new RegExp(k+'=([^&]+)'));return m?decodeURIComponent(m[1]):null};
  const st={ev:hash('for')||store.get('for')||'',club:hash('club')||store.get('club')||'*',sex:'A',show:'list',q:''};
  if(!EVS.some(e=>e.id===st.ev))st.ev=(EVS.find(e=>daysTo(e.close)>=0)||EVS[0]||{}).id;
@@ -351,20 +368,22 @@ fetch('data/rankings.json',{cache:'no-cache'}).then(r=>r.json()).then(R=>{
  document.getElementById('rtEvent').innerHTML=EVS.map(e=>`<button type="button" data-k="${e.id}" aria-pressed="${e.id===st.ev}">${esc(e.name)}</button>`).join('');
  let rows=[],openId=null;
  const statusChip=c=>c.rank===3?`<span class="chip ok">Qualified · ${esc(grp(c))}</span>`:c.rank===2?`<span class="chip gold">Legacy total · ${esc(grp(c))}</span>`:`<span class="chip">${-c.m} kg short · ${esc(grp(c))}</span>`;
- const why=(c,ev)=>{const made=`${c.r.total} kg at ${c.r.bw} kg bodyweight on ${fmtD(c.r.date)}, ${lvl[c.r.lvl]||'a sanctioned meet'}`;
-  if(c.rank===3)return `${made}. Needs ${c.need} in the ${esc(c.cls)} class, so ${c.m?c.m+' kg over':'right on the total'}.`;
-  if(c.rank===2)return c.r.date<ev.open?`${made}. That beats the ${c.need} needed in the ${esc(c.cls)} class, but it was made ${plural(Math.round((dOf(ev.open)-dOf(c.r.date))/864e5),'day')} before the window opened on ${fmtD(ev.open)}, so it won't count. A new total is needed by ${fmtD(ev.close)}.`:`${made}. That beats the ${c.need} needed in the ${esc(c.cls)} class, but it was made after the window closed.`;
-  return `${made}. Needs ${c.need} in the ${esc(c.cls)} class.${c.inWin?'':' This total is also outside the window.'}`;};
+ const why=(c,ev)=>{const made=`${c.r.total} kg at ${c.r.bw} kg bodyweight on ${fmtD(c.r.date)}${c.r.meet?', '+esc(short(c.r.meet)):''}`;
+  const inside=c.inBest?` Best inside the window so far: ${c.inBest.r.total} kg on ${fmtD(c.inBest.r.date)}, ${-c.inBest.m} kg short.`:FULL?' No total inside the window yet.':'';
+  if(c.rank===3)return `${made}. Needed ${c.need} for the ${esc(c.cls)} class, so ${c.m?c.m+' kg over':'right on the total'}. Qualified, and may register in any class.`;
+  if(c.rank===2)return c.r.date<ev.open?`${made}. That beats the ${c.need} needed for the ${esc(c.cls)} class, but it was made ${plural(Math.round((dOf(ev.open)-dOf(c.r.date))/864e5),'day')} before the window opened on ${fmtD(ev.open)}, so it doesn't count.${inside} A new total is needed by ${fmtD(ev.close)}.`:`${made}. That beats the ${c.need} needed for the ${esc(c.cls)} class, but it was made after the window closed.`;
+  return `${made}. Needed ${c.need} for the ${esc(c.cls)} class.${c.inWin?'':' This total is also outside the window.'+inside}`;};
  function detail(l){const out=[];
   const body=EVS.map(e=>{const s=standing(e,l);if(!s.rows.length){out.push(e.name);return ''}
    return s.rows.map((c,i)=>`<tr><td>${i?'':esc(e.name)+`<div class="club">by ${fmtD(e.close)}</div>`}</td><td>${c.rank===3?'<span class="chip ok">Qualified</span>':c.rank===2?'<span class="chip gold">Legacy</span>':`<span class="chip">${-c.m} kg short</span>`}</td><td>${esc(grp(c))}<div class="club">${esc(c.cls)}</div></td><td class="kg">${c.need}</td><td class="kg">${c.r.total}<div class="club" style="font:400 12px var(--body)">${fmtD(c.r.date,false)}${c.inWin?'':' · outside window'}</div></td></tr>`).join('')}).join('');
-  return `<div class="rt-detail"><div class="tscroll"><table><thead><tr><th>Event</th><th>Standing</th><th>Entering as</th><th class="num">Needs</th><th class="num">Best total</th></tr></thead><tbody>${body}</tbody></table></div>${out.length?`<p class="note">Outside the age groups for: ${out.map(esc).join(', ')}.</p>`:''}${l.res.length>1?`<p class="note">Ranked ${R.season} results: ${l.res.slice().sort((a,b)=>a.date<b.date?-1:1).map(r=>`${r.total} kg at ${r.bw} (${fmtD(r.date,false)})`).join(' · ')}</p>`:''}</div>`;}
+  return `<div class="rt-detail"><div class="tscroll"><table><thead><tr><th>Event</th><th>Standing</th><th>Entering as</th><th class="num">Needs</th><th class="num">Best total</th></tr></thead><tbody>${body}</tbody></table></div>${out.length?`<p class="note">Outside the age groups for: ${out.map(esc).join(', ')}.</p>`:''}<div class="tscroll" style="margin-top:10px"><table><thead><tr><th>${FULL?'Every result since '+fmtD(RS.since):'Ranked results'}</th><th class="num">BW</th>${FULL?'<th class="num">Snatch</th><th class="num">C&amp;J</th>':''}<th class="num">Total</th></tr></thead><tbody>${l.res.slice().sort((a,b)=>a.date<b.date?1:-1).map(r=>`<tr><td>${fmtD(r.date)}${r.meet?`<div class="club">${esc(r.meet)}</div>`:''}</td><td class="num">${r.bw}</td>${FULL?`<td class="num">${r.sn||'—'}</td><td class="num">${r.cj||'—'}</td>`:''}<td class="kg">${r.total}</td></tr>`).join('')}</tbody></table></div></div>`;}
  function draw(){
   const ev=EVS.find(e=>e.id===st.ev);if(!ev)return;
   const pool=lifters.filter(l=>(st.club==='*'||(st.club==='-'?!l.club:l.club===st.club))&&(st.sex==='A'||l.sex===st.sex)&&(!st.q||l.name.toLowerCase().includes(st.q)));
   const all=pool.map(l=>{const s=standing(ev,l);return {l,s,c:s.top,k:code(s.top)}}).filter(x=>x.c);
   const n=k=>all.filter(x=>x.k===k).length,left=daysTo(ev.close);
-  document.getElementById('rtStats').innerHTML=`<div class="stat q"><span class="k">Qualified</span><span class="v">${n('q')}</span><span class="d">total made inside the window</span></div><div class="stat l"><span class="k">Legacy total</span><span class="v">${n('l')}</span><span class="d">big enough, but made before ${fmtD(ev.open)}</span></div><div class="stat c"><span class="k">Within ${CLOSE} kg</span><span class="v">${n('c')}</span><span class="d">of the total for their class</span></div><div class="stat"><span class="k">Window closes</span><span class="v">${left<0?'Closed':plural(left,'day')}</span><span class="d">${fmtD(ev.close)} · <a href="planner.html#for=${ev.id}">see the meets left →</a></span></div>`;
+  const card=(k,cls,label,v,d)=>`<button type="button" class="stat ${cls}" data-show="${k}" aria-pressed="${st.show===k}" title="Show these lifters"><span class="k">${label}</span><span class="v">${v}</span><span class="d">${d}</span></button>`;
+  document.getElementById('rtStats').innerHTML=card('q','q','Qualified',n('q'),'total made inside the window')+card('l','l','Legacy total',n('l'),`big enough, but made before ${fmtD(ev.open)}`)+card('c','c',`Within ${CLOSE} kg`,n('c'),'of the total for their class')+`<div class="stat"><span class="k">Window closes</span><span class="v">${left<0?'Closed':plural(left,'day')}</span><span class="d">${fmtD(ev.close)} · <a href="planner.html#for=${ev.id}">see the meets left →</a></span></div>`;
   const want={list:['q','l'],q:['q'],l:['l'],c:['c'],all:['q','l','c','n']}[st.show];
   const ord={q:0,l:1,c:2,n:3};
   rows=all.filter(x=>want.includes(x.k)).sort((a,b)=>ord[a.k]-ord[b.k]||b.c.m-a.c.m||a.l.name.localeCompare(b.l.name));
@@ -379,9 +398,11 @@ fetch('data/rankings.json',{cache:'no-cache'}).then(r=>r.json()).then(R=>{
  document.getElementById('rtSearch').addEventListener('input',e=>{st.q=e.target.value.trim().toLowerCase();draw()});
  document.getElementById('rtList').addEventListener('click',e=>{const b=e.target.closest('[data-more]');if(!b)return;const id=+b.dataset.more;openId=openId===id?null:id;draw();});
  document.getElementById('rtCsv').addEventListener('click',()=>{const ev=EVS.find(e=>e.id===st.ev),q=v=>`"${String(v==null?'':v).replace(/"/g,'""')}"`;
-  const lines=[['Event','Lifter','Club','Sex','Age in event year','Entering as','Class','Qualifying total','Best total','Bodyweight','Date made','Standing','Margin kg'],...rows.map(({l,s,c,k})=>[ev.name,l.name,tc(l.club),l.sex,s.age,grp(c),c.cls,c.need,c.r.total,c.r.bw,c.r.date,{q:'Qualified',l:'Legacy total, needs a new one',c:'Within '+CLOSE+' kg',n:'Not yet'}[k],c.m])].map(r=>r.map(q).join(','));
+  const lines=[['Event','Lifter','Club','Sex','Age in event year','Entering as','Class','Qualifying total','Best total','Bodyweight','Date made','Meet','Standing','Margin kg'],...rows.map(({l,s,c,k})=>[ev.name,l.name,tc(l.club),l.sex,s.age,grp(c),c.cls,c.need,c.r.total,c.r.bw,c.r.date,c.r.meet,{q:'Qualified',l:'Legacy total, needs a new one',c:'Within '+CLOSE+' kg',n:'Not yet'}[k],c.m])].map(r=>r.map(q).join(','));
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+lines.join('\r\n')],{type:'text/csv'}));a.download=`pnw-${ev.id.toLowerCase()}-qualifying.csv`;document.body.appendChild(a);a.click();a.remove();});
  document.getElementById('rtPrint').addEventListener('click',()=>print());
+ // the summary cards work like the Show buttons: tap one to list those lifters, tap it again to go back
+ document.getElementById('rtStats').addEventListener('click',e=>{const b=e.target.closest('[data-show]');if(!b)return;const k=st.show===b.dataset.show?'list':b.dataset.show;document.querySelector(`#rtShow [data-k="${k}"]`).click();document.getElementById('rtHead').scrollIntoView({behavior:'smooth',block:'nearest'});});
  draw();rememberTabs();
 }).catch(e=>{console.error(e);document.getElementById('rtList').innerHTML='<li class="empty">The rankings couldn\'t be loaded. Try again later.</li>';});
 }

@@ -11,7 +11,7 @@
 <link rel="preload" href="assets/fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/poppins-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/fonts/fonts.css">
-<link rel="stylesheet" href="assets/new-pages.css">
+<link rel="stylesheet" href="assets/new-pages.css?v=20261111">
 </head>
 <body>
 
@@ -53,6 +53,7 @@
       <button type="button" data-k="all" aria-pressed="true">Everything</button>
       <button type="button" data-k="meet" aria-pressed="false">PNW meets</button>
       <button type="button" data-k="deadline" aria-pressed="false">Deadlines</button>
+      <button type="button" data-k="reg" aria-pressed="false">Registration</button>
       <button type="button" data-k="national" aria-pressed="false">National events</button>
       <button type="button" data-k="course" aria-pressed="false">Courses &amp; camps</button>
     </div>
@@ -65,19 +66,19 @@
   </div>
   <div id="plFocus" aria-live="polite"></div>
   <div id="plAgenda"></div>
-  <p class="legend"><span><i style="background:var(--brand-green)"></i>Sanctioned PNW meet</span><span><i style="background:var(--brand-red)"></i>Qualifying deadline</span><span><i style="background:var(--brand-navy)"></i>National event</span><span><i style="background:var(--brand-gold)"></i>Course or camp</span><span><i style="background:var(--brand-grey)"></i>Planned, not yet sanctioned</span></p>
-  <p class="note">Only totals from USAW-sanctioned meets count toward qualifying, so community events from the calendar aren't listed here. Check the event's own page before entering: registration can close or fill well before the meet, and USAW can change dates and windows. Your filters and chosen event are remembered on this device.</p>
+  <p class="legend"><span><i style="background:var(--brand-green)"></i>Sanctioned PNW meet</span><span><i style="background:var(--brand-red)"></i>Qualifying deadline</span><span><i style="background:var(--brand-blue)"></i>Registration opens or closes</span><span><i style="background:var(--brand-navy)"></i>National event</span><span><i style="background:var(--brand-gold)"></i>Course or camp</span><span><i style="background:var(--brand-grey)"></i>Planned, not yet sanctioned</span></p>
+  <p class="note">Only totals from USAW-sanctioned meets count toward qualifying, so community events from the calendar aren't listed here. Registration dates for national events are read from each event's USAW page every day; local meets set their own, so check the meet's entry page. Your filters and chosen event are remembered on this device.</p>
 
   <details class="review" style="margin-top:18px"><summary>Draft notes for the board</summary><dl>
-    <dt>Data</dt><dd>Nothing here is typed in by hand. Qualifying windows and event dates come from <code>data/qualifying-2027.json</code>, PNW meets, courses and camps from the daily Sport80 check, national events from USAW's national events page, and planned sanctioned meets from the Add Your Event form.</dd>
-    <dt>Limit</dt><dd>USAW's registration open and close dates aren't in any of those sources, so the page shows the last day to make a total, not the last day to register.</dd>
+    <dt>Data</dt><dd>Nothing here is typed in by hand. Qualifying windows and event dates come from <code>data/qualifying-2027.json</code>, PNW meets, courses and camps from the daily Sport80 check, national events and their registration dates from USAW's pages, and planned sanctioned meets from the Add Your Event form.</dd>
+    <dt>Registration</dt><dd>Opening and closing dates are read daily from the dated list on each national event's USAW page (<code>keyDates</code> in <code>data/usaw-national-events.json</code>). Events USAW hasn't given a page yet show “not posted yet”.</dd>
     <dt>Open question</dt><dd>Whether the last day of a window counts. The page treats the closing date as included.</dd>
   </dl></details>
 </div></section>
 </main>
 
 <footer><div class="wrap">This is a draft page under review by the PNW WSO and may change. Meets and courses come from USA Weightlifting's public listings and update daily.</div></footer>
-<script src="assets/draft-bar.js"></script>
-<script src="assets/new-pages.js"></script>
+<script src="assets/draft-bar.js?v=20261111"></script>
+<script src="assets/new-pages.js?v=20261111"></script>
 </body>
 </html>
