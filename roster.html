@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>PNW WSO qualifying tracker (draft)</title>
+<meta name="description" content="For PNW coaches: which lifters have made a 2027 USA Weightlifting qualifying total inside the qualifying window, and whose total was made too early to count.">
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" sizes="64x64" href="assets/pnw-wso-mark-64.png">
+<link rel="apple-touch-icon" href="assets/pnw-wso-mark-180.png">
+<link rel="preload" href="assets/fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/poppins-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<link rel="stylesheet" href="assets/new-pages.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="https://www.pnwwsoweightlifting.com/" aria-label="Pacific Northwest Weightlifting State Organization — main site">
+      <img class="brand-logo" src="assets/pnw-wso-logo.png" width="413" height="232" alt="Pacific Northwest Weightlifting State Organization">
+    </a>
+    <div class="topbar-right">
+      <a class="icon-link" href="https://www.instagram.com/pnw_wso_weightlifting/" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+      </a>
+      <a class="icon-link" href="https://www.facebook.com/pnwwsoweightlifting" target="_blank" rel="noopener" aria-label="Facebook">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1V8c0-.9.25-1.5 1.55-1.5H17V3.7C16.6 3.65 15.4 3.5 14 3.5c-2.8 0-4.5 1.7-4.5 4.8V10H6.8v3.1h2.7v8z"/></svg>
+      </a>
+      <a class="pill-btn dark" href="index.html">Calendar</a>
+      <a class="pill-btn dark" href="rankings.html">Rankings</a>
+      <a class="pill-btn dark" href="https://www.pnwwsoweightlifting.com/">← PNW WSO site</a>
+    </div>
+  </div>
+</div>
+
+<div class="hero"><div class="wrap">
+  <div class="eyebrow"><span class="tag">Draft</span><span>PNW WSO · for coaches</span><span id="pgUpdated"></span></div>
+  <h1>Qualifying tracker</h1>
+  <p class="sub">Which PNW lifters have the total for a 2027 national event, and whose total is a legacy one: big enough, but made before the qualifying window opened, so it has to be done again.</p>
+</div></div>
+
+<main>
+<section class="feat" id="tracker" data-needs="new-pages"><div class="wrap">
+  <div class="filters">
+    <div class="tabs scrollx" role="group" aria-label="National event" id="rtEvent"></div>
+    <div class="fields">
+      <label for="rtClub">Club<select id="rtClub"></select></label>
+      <label for="rtSearch">Find a lifter<input id="rtSearch" type="search" placeholder="Name" autocomplete="off"></label>
+    </div>
+    <div class="tabs scrollx" role="group" aria-label="Show" id="rtShow">
+      <button type="button" data-k="list" aria-pressed="true">Qualified + legacy</button>
+      <button type="button" data-k="q" aria-pressed="false">Qualified</button>
+      <button type="button" data-k="l" aria-pressed="false">Legacy total</button>
+      <button type="button" data-k="c" aria-pressed="false">Within 10 kg</button>
+      <button type="button" data-k="all" aria-pressed="false">Everyone ranked</button>
+    </div>
+    <div class="tabs" role="group" aria-label="Gender" id="rtSex">
+      <button type="button" data-k="A" aria-pressed="true">Women &amp; men</button>
+      <button type="button" data-k="W" aria-pressed="false">Women</button>
+      <button type="button" data-k="M" aria-pressed="false">Men</button>
+    </div>
+  </div>
+
+  <div class="stats" id="rtStats"></div>
+
+  <div class="sec-h"><h2 id="rtHead"></h2><span><button type="button" class="linkbtn" id="rtCsv">Download this list</button> &nbsp; <button type="button" class="linkbtn" id="rtPrint">Print</button></span></div>
+  <p class="note" id="rtSub" style="margin:0 0 12px"></p>
+  <ul class="agenda" id="rtList"><li class="empty">Loading the rankings…</li></ul>
+
+  <ul class="key">
+    <li><b>Qualified</b>: the lifter's best ranked total meets the qualifying total for their class and was made inside this event's window.</li>
+    <li><b>Legacy total</b>: the total is big enough, but it was made before the window opened, so it doesn't count for this event. USAW's rankings keep only each lifter's best total in a class, so a smaller total made later may already qualify them. Check their results before planning another meet.</li>
+    <li><b>Class and age group</b>: the class is the one the lifter's bodyweight on the day falls in, and the age group uses the age they turn in the event's year. “All events” on a lifter shows the same check for every 2027 event.</li>
+    <li>This list is a planning aid, not an entry list. USAW confirms qualification at registration. University totals only apply to enrolled students, and adaptive totals aren't checked here.</li>
+  </ul>
+
+  <details class="review" style="margin-top:18px"><summary>Draft notes for the board</summary><dl>
+    <dt>Data</dt><dd>Nothing is typed in by hand. Lifters, totals, bodyweights and dates come from <code>data/rankings.json</code> (USAW's public rankings, refreshed daily); totals and windows from <code>data/qualifying-2027.json</code>.</dd>
+    <dt>Limit</dt><dd>The rankings feed has each lifter's best total per class for the season, not every meet. A lifter shown as “legacy” or “short” may have another result that qualifies. Saving every result would remove this limit.</dd>
+    <dt>Assumptions to confirm</dt><dd><ul><li>The age in the rankings is the lifter's birth-year age for the season, so next year's age is one more.</li><li>A lifter enters the class their bodyweight fell in when they made the total.</li><li>Age ranges used: Junior 15–20, U25 15–25, University 17–28, Youth 17 and under, Masters 35 and up.</li><li>The first and last days of a window count.</li></ul></dd>
+  </dl></details>
+</div></section>
+</main>
+
+<footer><div class="wrap">This is a draft page under review by the PNW WSO and may change. Results come from USA Weightlifting's public rankings and update daily.</div></footer>
+<script src="assets/draft-bar.js"></script>
+<script src="assets/new-pages.js"></script>
+</body>
+</html>

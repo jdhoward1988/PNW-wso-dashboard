@@ -10,13 +10,59 @@ const tc=s=>s===s.toUpperCase()?s.split(' ').map(w=>/^[A-Z]{2,4}$/.test(w)&&!/[A
 const fd=m=>MON[+m.slice(0,2)-1]+' '+(+m.slice(2));
 const prof=(id,n)=>`<a href="https://usaweightlifting.sport80.com/public/rankings/member/${id}" target="_blank" rel="noopener">${esc(n)}</a>`;
 function tabs(id,fn){const g=document.getElementById(id);g.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;g.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));fn(b.dataset.k)});}
+// ---- dates, qualifying windows and saved filters (shared by the planner and the qualifying totals page) ----
+const isoD=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const TODAY=isoD(new Date());
+const dOf=s=>new Date(s+'T12:00');
+const daysTo=s=>Math.round((dOf(s)-dOf(TODAY))/864e5);
+const fmtD=(s,y)=>dOf(s).toLocaleDateString('en-US',y===false?{month:'short',day:'numeric'}:{month:'short',day:'numeric',year:'numeric'});
+const fmtRange=(a,b)=>{if(!b||a===b)return fmtD(a);const x=dOf(a),y=dOf(b);return x.getMonth()===y.getMonth()?`${MON[x.getMonth()]} ${x.getDate()}–${y.getDate()}, ${y.getFullYear()}`:`${fmtD(a,false)} – ${fmtD(b)}`};
+const away=n=>n===0?'today':n===1?'tomorrow':n<28?`in ${n} days`:`in ${Math.round(n/7)} wks`;
+const plural=(n,w)=>`${n} ${w}${n===1?'':'s'}`;
+// "Mar 4–7, 2027", "Sept 9–12" (year given separately) or "Feb 4, 2026 – Feb 4, 2027" -> [start, end] as YYYY-MM-DD
+function parseRange(str,yr){
+ const mi=m=>MON.findIndex(x=>x.toLowerCase()===m.slice(0,3).toLowerCase()), iso=(y,m,d)=>`${y}-${String(mi(m)+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+ const full=[...str.matchAll(/([A-Z][a-z]+)\.? (\d{1,2}), (\d{4})/g)];
+ if(full.length>=2)return [iso(full[0][3],full[0][1],full[0][2]),iso(full[1][3],full[1][1],full[1][2])];
+ const m=str.match(/([A-Z][a-z]+)\.? (\d{1,2})(?:\s*[–-]\s*(?:([A-Z][a-z]+)\.? )?(\d{1,2}))?(?:, (\d{4}))?/);
+ if(!m)return null;const y=m[5]||yr;return [iso(y,m[1],m[2]),iso(y,m[3]||m[1],m[4]||m[2])];
+}
+// The national events a lifter can qualify for, one entry per event weekend (events that share dates and a
+// qualifying window, such as Nationals and Series 1, are one entry). Read from the qualifying totals data.
+// Each national event with its own dates and qualifying window (Series 1 and Series 2 are separate entries).
+function qualEvents(Q){
+ if(!Q)return [];const out=[];
+ Q.events.forEach(e=>{try{
+  const yr=(e.dates.match(/\d{4}/)||[])[0],dp=e.dates.split(' and '),wp=e.window.split(' · '),pl=e.where.split(' · '),multi=dp.length>1,strip=x=>x.replace(/^[^:]*: /,'');
+  dp.forEach((d,i)=>{const r=parseRange(d,yr),w=parseRange(strip(wp[i]||wp[0]));if(!r||!w)return;
+   out.push({id:e.key+(multi?i+1:''),keys:[e.key],names:[multi?e.name.replace(/ \d.*$/,'')+' '+(i+1):e.name],where:strip(pl[i]||pl[0]),start:r[0],end:r[1],open:w[0],close:w[1]});});
+ }catch(err){console.error(err)}});
+ out.forEach(t=>t.name=t.names[0]);return out;
+}
+function qualTargets(Q){
+ const out=qualEvents(Q),g=new Map();
+ out.forEach(t=>{const k=t.start+'|'+t.close,x=g.get(k);if(x){x.keys.push(...t.keys);x.names.push(...t.names)}else g.set(k,t)});
+ return [...g.values()].map(t=>{const n=t.names;
+  t.name=n.length>1&&n.every(x=>/ Nationals$/.test(x))?n.map(x=>x.replace(/ Nationals$/,'')).join(', ').replace(/, ([^,]*)$/,' & $1')+' Nationals':n.join(' & ');return t}).sort((a,b)=>a.close<b.close?-1:1);
+}
+const tgtCountdown=t=>{const n=daysTo(t.close);return n<0?`<span class="cd">Closed</span>`:`<span class="cd${n<=45?' soon':''}">${plural(n,'day')} <small>left to qualify · closes ${fmtD(t.close)}</small></span>`};
+const tgtMeter=t=>{const n=daysTo(t.close),len=(dOf(t.close)-dOf(t.open))/864e5,p=Math.max(0,Math.min(100,100*(1-n/len)));return `<div class="meter${n<=45?' soon':''}" role="img" aria-label="${Math.round(p)}% of the qualifying window has passed"><i style="width:${p.toFixed(1)}%"></i></div>`};
+// Filter buttons are remembered on this device, so the page reopens the way the coach left it.
+const PAGE_KEY='pnw:'+(location.pathname.split('/').pop()||'index').replace('.html','');
+const store={get(k){try{return JSON.parse(localStorage.getItem(PAGE_KEY+':'+k))}catch(e){return null}},set(k,v){try{localStorage.setItem(PAGE_KEY+':'+k,JSON.stringify(v))}catch(e){}}};
+function rememberTabs(){
+ const saved=store.get('tabs')||{};
+ for(let pass=0;pass<2;pass++)Object.entries(saved).forEach(([id,k])=>{const g=document.getElementById(id);if(!g||g.hidden)return;const b=[...g.querySelectorAll('button')].find(x=>x.dataset.k===k);if(b&&!b.disabled&&b.getAttribute('aria-pressed')!=='true')b.click();});
+ document.addEventListener('click',e=>{const b=e.target.closest('.tabs button');if(!b||!b.dataset.k)return;const g=b.closest('.tabs');if(!g.id)return;const t=store.get('tabs')||{};t[g.id]=b.dataset.k;store.set('tabs',t);});
+}
 function render(D){
 document.querySelectorAll('.sbSeason').forEach(e=>e.textContent=D.season);
 setText('pgUpdated','Updated '+new Date(D.updated+'T12:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}));
 if(has('qtTable')){
 // qualifying totals
 (function(){
- const Q=D.qt, EV=Q?Object.fromEntries(Q.events.map(e=>[e.key,e.name])):{};
+ const Q=D.qt, EV=Q?Object.fromEntries(Q.events.map(e=>[e.key,e.name])):{}, TG=qualTargets(Q);
+ const closes=k=>{const c=TG.filter(t=>t.keys.includes(k)&&daysTo(t.close)>=0).map(t=>fmtD(t.close,false));return c.length?`<small>by ${[...new Set(c)].join(' / ')}</small>`:''};
  const st={sex:'W',age:null,sub:null,adp:false};
  const ageBtns=document.getElementById('qtAge'),subBtns=document.getElementById('qtSub'),tbl=document.getElementById('qtTable');
  if(!Q){document.getElementById('qtHead').textContent='Totals not loaded yet';tbl.innerHTML='<tbody><tr><td class="empty">The 2027 totals appear here once they\'re read from USAW\'s 2027 Qualifying Totals PDF. Each weight class gets a row, with one column per national event the age group can qualify for.</td></tr></tbody>';ageBtns.innerHTML=['Open','Youth','Junior','U25','University','Masters'].map((a,i)=>`<button type="button" aria-pressed="${i===0}" disabled>${a}</button>`).join('');return;}
@@ -32,8 +78,9 @@ if(has('qtTable')){
   const evs=Q.events.map(e=>e.key).filter(k=>rows.some(r=>r.event===k)),classes=[...new Set(rows.map(r=>r.cls))];
   document.getElementById('qtHead').textContent=`${st.sex==='W'?'Women':'Men'} · ${st.age}${subs.length?' '+st.sub:''}${st.adp?' · Adaptive':''}`;
   const val=(c,e)=>{const r=rows.find(x=>x.cls===c&&x.event===e);if(!r)return '—';return st.adp?r.adp:r.total};
-  tbl.innerHTML=`<thead><tr><th>Class</th>${evs.map(e=>`<th class="num">${esc(EV[e]||e)}</th>`).join('')}</tr></thead><tbody>${classes.map(c=>`<tr><td class="wcls">${esc(c)}</td>${evs.map(e=>`<td class="kg">${val(c,e)}</td>`).join('')}</tr>`).join('')||'<tr><td class="empty">No totals for this group.</td></tr>'}</tbody>`;
-  document.getElementById('qtEvents').innerHTML=Q.events.filter(e=>evs.includes(e.key)).map(e=>`<p class="note" style="margin:6px 0 0"><b>${esc(e.name)}</b> · ${esc(e.where)} · ${esc(e.dates)} · qualifying window ${esc(e.window)}</p>`).join('')+(rows.some(r=>r.event==='VWF')&&st.age==='Masters'&&st.sub==='90+'&&st.sex==='M'?'<p class="note" style="margin:6px 0 0">USAW\'s 2027 table has no Finals total for Masters 90+ men\'s 60 kg.</p>':'');
+  tbl.innerHTML=`<thead><tr><th>Class</th>${evs.map(e=>`<th class="num">${esc(EV[e]||e)}${closes(e)}</th>`).join('')}</tr></thead><tbody>${classes.map(c=>`<tr><td class="wcls">${esc(c)}</td>${evs.map(e=>`<td class="kg">${val(c,e)}</td>`).join('')}</tr>`).join('')||'<tr><td class="empty">No totals for this group.</td></tr>'}</tbody>`;
+  tbl.className='stick';
+  document.getElementById('qtEvents').innerHTML=TG.filter(t=>t.keys.some(k=>evs.includes(k))).map(t=>`<a class="tgt" href="planner.html#for=${t.id}"><span class="nm">${esc(t.name)}</span><span class="wh">${esc(t.where)} · ${fmtRange(t.start,t.end)}</span>${tgtCountdown(t)}${tgtMeter(t)}<span class="left">Totals count from ${fmtD(t.open)}</span><span class="go">See the meets left →</span></a>`).join('')+(rows.some(r=>r.event==='VWF')&&st.age==='Masters'&&st.sub==='90+'&&st.sex==='M'?'<p class="note" style="margin:6px 0 0">USAW\'s 2027 table has no Finals total for Masters 90+ men\'s 60 kg.</p>':'');
  }
  tabs('qtSex',k=>{st.sex=k;draw()});tabs('qtAge',k=>{st.age=k;st.sub=null;draw()});
  subBtns.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;st.sub=b.dataset.k;draw()});
@@ -189,6 +236,156 @@ if(has('letter')){
   navigator.clipboard.writeText(text).then(()=>m.textContent='Copied',()=>{const r=document.createRange();r.selectNodeContents(document.getElementById('letter'));const s=getSelection();s.removeAllRanges();s.addRange(r);m.textContent='Letter selected; copy it manually'});});
 })();
 }
+if(has('plAgenda')){
+// season planner: qualifying windows, national events and the sanctioned PNW meets left inside each window
+Promise.all(['sport80-events','usaw-national-events','local-events'].map(n=>fetch(`data/${n}.json`,{cache:'no-cache'}).then(r=>r.json()).catch(()=>null))).then(([S,U,LE])=>{
+ const T=qualTargets(D.qt), items=[];
+ const norm=x=>x.toLowerCase().replace(/\b20\d\d\b/g,'').replace(/[^a-z]/g,'');
+ const nice=x=>tc(x).replace(/, (Ak|Or|Wa)\b/g,m=>m.toUpperCase());
+ const ST={Alaska:'AK',Oregon:'OR',Washington:'WA'};
+ if(S){
+  [['meets','meet','Enter'],['courses','course','Register'],['camps','course','Register']].forEach(([list,type,cta])=>(S.lists[list]||[]).forEach(e=>items.push({type,date:e.start,end:e.end||e.start,title:nice(e.name),place:[e.city,e.state].filter(Boolean).join(', '),loc:e.address,kind:e.type,state:e.state,url:e.entryUrl||e.url,cta,counts:type==='meet'})));
+  (S.unlisted||[]).filter(e=>e.pageLive).forEach(e=>items.push({type:e.list==='meets'?'meet':'course',date:e.start,end:e.end||e.start,title:nice(e.name),place:[e.city,e.state].filter(Boolean).join(', '),loc:e.address,kind:e.type,state:e.state,url:e.eventPage||e.entryUrl,cta:'Event page',counts:e.list==='meets',flag:'Off USAW\'s public list · may be full'}));
+ }
+ const natStarts=new Set();
+ if(U)(U.events||[]).forEach(e=>{natStarts.add(e.start);items.push({type:'national',date:e.start,end:e.end||e.start,title:e.name,place:e.location.split(' | ')[0].replace(', United States',''),loc:e.location,kind:'USAW national event',url:e.eventPage,cta:'Event page',counts:true})});
+ T.forEach(t=>{
+  if(!natStarts.has(t.start))items.push({type:'national',date:t.start,end:t.end,title:t.name,place:t.where,loc:t.where,kind:'USAW national event',counts:true});
+  items.push({type:'deadline',date:t.close,end:t.close,title:`Last day to qualify: ${t.name}`,place:`Event ${fmtRange(t.start,t.end)} · ${t.where}`,kind:`Totals count from ${fmtD(t.open)}`,tid:t.id});
+ });
+ if(LE){const have=items.filter(i=>i.type==='meet').map(i=>norm(i.title));
+  (LE.rows||[]).filter(r=>r['Event Type']==='Sanctioned Meet'&&r['Planned Date']).forEach(r=>{const n=norm(r['Name of Event']);if(have.some(h=>h.includes(n)||n.includes(h)))return;
+   const d=new Date(r['Planned Date']).toLocaleDateString('en-CA',{timeZone:'America/Los_Angeles'});const web=/^https?:\/\//i.test(r['Event Website']||'')?r['Event Website']:'';
+   items.push({type:'planned',date:d,end:d,title:r['Name of Event'],place:[r.City,ST[r.State]||r.State].filter(Boolean).join(', '),loc:r.Venue,kind:'Planned by '+(r['Host Club']||'the host'),state:ST[r.State]||'',url:web,cta:'Details',counts:false,flag:'Not yet on USAW\'s list'})});}
+ const up=items.filter(i=>i.end>=TODAY).sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:(a.type==='deadline')-(b.type==='deadline'));
+ // meets that can still produce a qualifying total for a target: sanctioned, and finished inside its window
+ const leftFor=t=>up.filter(i=>i.counts&&i.date>=t.open&&i.end<=t.close&&i.date!==t.start);
+ const pnw=l=>l.filter(i=>i.type==='meet');
+ const fromHash=()=>{const m=location.hash.match(/for=([\w]+)/);if(!m)return null;const t=T.find(t=>t.id===m[1])||T.find(t=>t.keys.includes(m[1]));return t?t.id:null};
+ const st={sel:fromHash()||store.get('for')||'',type:'all',state:'all'};
+ if(!T.some(t=>t.id===st.sel))st.sel='';
+ function ics(list,name){
+  const z=d=>d.replace(/-/g,''),next=d=>{const x=dOf(d);x.setDate(x.getDate()+1);return isoD(x)},e=x=>String(x||'').replace(/([,;\\])/g,'\\$1').replace(/\n/g,'\\n');
+  const body=list.map((i,n)=>['BEGIN:VEVENT',`UID:${z(i.date)}-${n}-${norm(i.title).slice(0,30)}@pnwwso`,`DTSTAMP:${z(TODAY)}T120000Z`,`DTSTART;VALUE=DATE:${z(i.date)}`,`DTEND;VALUE=DATE:${z(next(i.end))}`,`SUMMARY:${e(i.title)}`,`DESCRIPTION:${e([i.kind,i.place,i.url].filter(Boolean).join('\n'))}`,i.loc?`LOCATION:${e(i.loc)}`:'','END:VEVENT'].filter(Boolean).join('\r\n')).join('\r\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([`BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//PNW WSO//Season planner//EN\r\n${body}\r\nEND:VCALENDAR\r\n`],{type:'text/calendar'}));a.download=name+'.ics';document.body.appendChild(a);a.click();a.remove();
+ }
+ let shown=[];
+ function draw(){
+  const sel=T.find(t=>t.id===st.sel),open=T.filter(t=>daysTo(t.close)>=0),nextT=open[0],meets=up.filter(i=>i.type==='meet'),nm=meets[0];
+  const focus=sel||nextT, fl=focus?leftFor(focus):[];
+  document.getElementById('plStats').innerHTML=[
+   nextT?`<div class="stat"><span class="k">Next qualifying deadline</span><span class="v">${plural(daysTo(nextT.close),'day')}</span><span class="d">${esc(nextT.name)} · ${fmtD(nextT.close)}</span></div>`:'',
+   nm?`<div class="stat"><span class="k">Next PNW sanctioned meet</span><span class="v">${fmtD(nm.date,false)} <small>${away(daysTo(nm.date))}</small></span><span class="d">${esc(nm.title)} · ${esc(nm.place)}</span></div>`:`<div class="stat"><span class="k">Next PNW sanctioned meet</span><span class="v">—</span><span class="d">None listed on USAW right now</span></div>`,
+   focus?`<div class="stat"><span class="k">PNW meets left to qualify</span><span class="v">${pnw(fl).length}</span><span class="d">before the ${esc(focus.name)} window closes</span></div>`:''].join('');
+  document.getElementById('plTargets').innerHTML=T.map(t=>{const l=leftFor(t),p=pnw(l).length,n=l.length-p,closed=daysTo(t.close)<0;
+   return `<button type="button" class="tgt" data-t="${t.id}" aria-pressed="${t.id===st.sel}"><span class="nm">${esc(t.name)}</span><span class="wh">${esc(t.where)} · ${fmtRange(t.start,t.end)}</span>${tgtCountdown(t)}${tgtMeter(t)}<span class="left">${closed?'The qualifying window has closed':`<b>${plural(p,'PNW meet')}</b>${n?` and ${plural(n,'national event')}`:''} left in the window`}</span></button>`}).join('')||'<p class="empty">The 2027 qualifying windows aren\'t loaded yet.</p>';
+  const F=document.getElementById('plFocus');
+  if(sel){const l=fl,p=pnw(l),last=p[p.length-1],n=daysTo(sel.close);
+   F.innerHTML=`<div class="focus-note"><p><b>${esc(sel.name)}</b> · ${fmtRange(sel.start,sel.end)}, ${esc(sel.where)}. A total counts if it was made at a USAW-sanctioned meet from ${fmtD(sel.open)} through ${fmtD(sel.close)}${n>=0?` (${plural(n,'day')} left)`:''}. ${p.length?`${plural(p.length,'PNW meet')} left in that window; the last is ${esc(last.title)} on ${fmtD(last.end)}.`:n>=0?'No PNW meets are listed inside that window yet.':''}</p><span><a class="linkbtn" href="roster.html#for=${sel.id}">Who has qualified →</a> &nbsp; <button type="button" class="linkbtn" id="plIcsSel">Add these to my calendar</button> &nbsp; <button type="button" class="linkbtn" id="plClear">Show everything</button></span></div>`;
+  }else F.innerHTML='';
+  shown=up.filter(i=>(st.type==='all'||i.type===st.type||(st.type==='meet'&&i.type==='planned'))&&(st.state==='all'||!i.state||i.state===st.state));
+  let h='',mon='';
+  shown.forEach((i,ix)=>{const d=dOf(i.date),m=d.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+   if(m!==mon){h+=(mon?'</ul>':'')+`<h3 class="month">${m}</h3><ul class="agenda">`;mon=m}
+   const inWin=sel&&i.counts&&i.date>=sel.open&&i.end<=sel.close&&i.date!==sel.start,own=sel&&(i.tid===sel.id||(i.type==='national'&&i.date===sel.start));
+   const off=sel&&!own&&!inWin&&(i.type==='meet'||i.type==='planned'||i.type==='national'||i.type==='deadline');
+   const chips=[inWin?'<span class="chip ok">Counts toward qualifying</span>':'',sel&&i.type==='national'&&i.date===sel.start?'<span class="chip">The event you\'re planning for</span>':'',sel&&i.counts&&!inWin&&!own&&i.end>sel.close?'<span class="chip">After the window</span>':'',i.flag?`<span class="chip red">${esc(i.flag)}</span>`:''].join('');
+   h+=`<li class="ag ${i.type}${off?' off':''}"><div class="dt"><b>${d.getDate()}</b><span>${MON[d.getMonth()]}</span></div><div><div class="ti">${esc(i.title)}</div><div class="su">${[i.end!==i.date?fmtRange(i.date,i.end):'',esc(i.place||''),esc(i.kind||'')].filter(Boolean).join(' · ')}</div>${chips?`<div class="tg">${chips}</div>`:''}</div><div class="act"><span class="away">${away(daysTo(i.date))}</span><span class="links">${i.url?`<a href="${esc(i.url)}" target="_blank" rel="noopener">${i.cta}</a>`:''}<button type="button" data-ics="${ix}" aria-label="Add ${esc(i.title)} to my calendar">Add to calendar</button></span></div></li>`;});
+  document.getElementById('plAgenda').innerHTML=h?h+'</ul>':'<p class="empty">Nothing matches these filters.</p>';
+ }
+ document.getElementById('plTargets').addEventListener('click',e=>{const b=e.target.closest('.tgt');if(!b)return;st.sel=st.sel===b.dataset.t?'':b.dataset.t;store.set('for',st.sel);history.replaceState(null,'',st.sel?'#for='+st.sel:location.pathname+location.search);draw();});
+ document.getElementById('plFocus').addEventListener('click',e=>{const sel=T.find(t=>t.id===st.sel);if(!sel)return;
+  if(e.target.id==='plClear'){st.sel='';store.set('for','');history.replaceState(null,'',location.pathname+location.search);draw();}
+  if(e.target.id==='plIcsSel')ics([...pnw(leftFor(sel)),up.find(i=>i.tid===sel.id)].filter(Boolean),'pnw-'+sel.id.toLowerCase()+'-qualifying');});
+ document.getElementById('plAgenda').addEventListener('click',e=>{const b=e.target.closest('[data-ics]');if(b){const i=shown[+b.dataset.ics];ics([i],'pnw-'+norm(i.title).slice(0,30));}});
+ document.getElementById('plIcsAll').addEventListener('click',()=>ics(up.filter(i=>i.type==='deadline'),'pnw-qualifying-deadlines'));
+ tabs('plType',k=>{st.type=k;draw()});tabs('plState',k=>{st.state=k;draw()});draw();rememberTabs();
+});
+}
+if(has('rtList')){
+// qualifying tracker: every ranked PNW lifter's totals against the qualifying totals and windows for one national event
+fetch('data/rankings.json',{cache:'no-cache'}).then(r=>r.json()).then(R=>{
+ const Q=D.qt,EVS=qualEvents(Q).sort((a,b)=>a.close<b.close?-1:1),C=R.clubs;
+ const lim=c=>c.includes('+')?Infinity:parseFloat(c);
+ // qualifying totals by event, age group, sub-group and sex, lightest class first
+ const QT={};Q.totals.forEach(t=>{const k=[t.event,t.age,t.sub||'',t.sex].join('|');(QT[k]=QT[k]||[]).push(t)});
+ Object.values(QT).forEach(a=>a.sort((x,y)=>lim(x.cls)-lim(y.cls)));
+ const AGES={};Q.totals.forEach(t=>(AGES[t.event]=AGES[t.event]||new Set()).add(t.age));
+ // every ranked result per lifter (Open classes and youth age-group classes; the same lift can be in both)
+ const L=new Map();
+ const add=(cls,x)=>{const sex=cls.startsWith('Women')?'W':'M',d=`${R.season}-${x[7].slice(0,2)}-${x[7].slice(2)}`;
+  let l=L.get(x[9]);if(!l)L.set(x[9],l={id:x[9],name:x[3],club:x[4]>=0?C[x[4]]:'',sex,age:x[5],res:[]});
+  if(!l.res.some(r=>r.total===x[2]&&r.date===d&&r.bw===x[6]))l.res.push({total:x[2],bw:x[6],date:d,lvl:x[8]});};
+ Object.entries(R.classes).forEach(([c,xs])=>xs.forEach(x=>add(c,x)));
+ Object.values(R.youth||{}).forEach(g=>Object.entries(g).forEach(([c,xs])=>xs.forEach(x=>add(c,x))));
+ const lifters=[...L.values()];
+ // the age groups a lifter can enter, by the age they turn in the event's year (USAW goes by birth year)
+ function tracks(ev,l){const a=l.age+(dOf(ev.start).getFullYear()-R.season),out=[];
+  (AGES[ev.keys[0]]||[]).forEach(g=>{
+   if(g==='Open')out.push([g,'']);
+   else if(g==='Junior'){if(a>=15&&a<=20)out.push([g,''])}
+   else if(g==='U25'){if(a>=15&&a<=25)out.push([g,''])}
+   else if(g==='University'){if(a>=17&&a<=28)out.push([g,''])}
+   else if(g==='Youth'){if(a<=17)out.push([g,a>=16?'16–17':a>=14?'14–15':a>=12?'12–13':'11 & Under'])}
+   else if(g==='Masters'){if(a>=35){const lo=Math.floor(a/5)*5;out.push([g,a>=90?'90+':`${lo}–${lo+4}`])}}
+  });return {age:a,list:out};}
+ // one lifter against one event: the best standing across the age groups they can enter
+ function standing(ev,l){const tr=tracks(ev,l),rows=[];
+  tr.list.forEach(([g,sub])=>{const tbl=QT[[ev.keys[0],g,sub,l.sex].join('|')];if(!tbl)return;let best=null;
+   l.res.forEach(r=>{const q=tbl.find(t=>r.bw<=lim(t.cls));if(!q)return;const inWin=r.date>=ev.open&&r.date<=ev.close,m=r.total-q.total;
+    const rank=m>=0?(inWin?3:2):1,c={g,sub,cls:q.cls,need:q.total,r,m,inWin,rank};
+    if(!best||c.rank>best.rank||(c.rank===best.rank&&(c.rank===1?(c.inWin-best.inWin||c.m-best.m)>0:c.m>best.m)))best=c;});
+   if(best)rows.push(best);});
+  rows.sort((x,y)=>y.rank-x.rank||y.m-x.m);
+  return {age:tr.age,rows,top:rows[0]||null};}
+ const CLOSE=10, grp=c=>c.g+(c.sub?' '+c.sub:'')+(c.g==='University'?' (if enrolled)':'');
+ const code=c=>!c?'n':c.rank===3?'q':c.rank===2?'l':c.m>=-CLOSE?'c':'n';
+ const lvl={N:'a national meet',I:'an international meet',A:'a North American Open Series meet',L:'a local meet'};
+ const hash=k=>{const m=location.hash.match(new RegExp(k+'=([^&]+)'));return m?decodeURIComponent(m[1]):null};
+ const st={ev:hash('for')||store.get('for')||'',club:hash('club')||store.get('club')||'*',sex:'A',show:'list',q:''};
+ if(!EVS.some(e=>e.id===st.ev))st.ev=(EVS.find(e=>daysTo(e.close)>=0)||EVS[0]||{}).id;
+ const clubs=[...new Set(lifters.map(l=>l.club).filter(Boolean))].sort((a,b)=>tc(a).localeCompare(tc(b)));
+ if(st.club!=='*'&&st.club!=='-'&&!clubs.includes(st.club))st.club='*';
+ const cs=document.getElementById('rtClub');
+ cs.innerHTML=`<option value="*">All PNW clubs</option>${clubs.map(c=>`<option value="${esc(c)}">${esc(tc(c))}</option>`).join('')}<option value="-">No club listed</option>`;cs.value=st.club;
+ document.getElementById('rtEvent').innerHTML=EVS.map(e=>`<button type="button" data-k="${e.id}" aria-pressed="${e.id===st.ev}">${esc(e.name)}</button>`).join('');
+ let rows=[],openId=null;
+ const statusChip=c=>c.rank===3?`<span class="chip ok">Qualified · ${esc(grp(c))}</span>`:c.rank===2?`<span class="chip gold">Legacy total · ${esc(grp(c))}</span>`:`<span class="chip">${-c.m} kg short · ${esc(grp(c))}</span>`;
+ const why=(c,ev)=>{const made=`${c.r.total} kg at ${c.r.bw} kg bodyweight on ${fmtD(c.r.date)}, ${lvl[c.r.lvl]||'a sanctioned meet'}`;
+  if(c.rank===3)return `${made}. Needs ${c.need} in the ${esc(c.cls)} class, so ${c.m?c.m+' kg over':'right on the total'}.`;
+  if(c.rank===2)return c.r.date<ev.open?`${made}. That beats the ${c.need} needed in the ${esc(c.cls)} class, but it was made ${plural(Math.round((dOf(ev.open)-dOf(c.r.date))/864e5),'day')} before the window opened on ${fmtD(ev.open)}, so it won't count. A new total is needed by ${fmtD(ev.close)}.`:`${made}. That beats the ${c.need} needed in the ${esc(c.cls)} class, but it was made after the window closed.`;
+  return `${made}. Needs ${c.need} in the ${esc(c.cls)} class.${c.inWin?'':' This total is also outside the window.'}`;};
+ function detail(l){const out=[];
+  const body=EVS.map(e=>{const s=standing(e,l);if(!s.rows.length){out.push(e.name);return ''}
+   return s.rows.map((c,i)=>`<tr><td>${i?'':esc(e.name)+`<div class="club">by ${fmtD(e.close)}</div>`}</td><td>${c.rank===3?'<span class="chip ok">Qualified</span>':c.rank===2?'<span class="chip gold">Legacy</span>':`<span class="chip">${-c.m} kg short</span>`}</td><td>${esc(grp(c))}<div class="club">${esc(c.cls)}</div></td><td class="kg">${c.need}</td><td class="kg">${c.r.total}<div class="club" style="font:400 12px var(--body)">${fmtD(c.r.date,false)}${c.inWin?'':' · outside window'}</div></td></tr>`).join('')}).join('');
+  return `<div class="rt-detail"><div class="tscroll"><table><thead><tr><th>Event</th><th>Standing</th><th>Entering as</th><th class="num">Needs</th><th class="num">Best total</th></tr></thead><tbody>${body}</tbody></table></div>${out.length?`<p class="note">Outside the age groups for: ${out.map(esc).join(', ')}.</p>`:''}${l.res.length>1?`<p class="note">Ranked ${R.season} results: ${l.res.slice().sort((a,b)=>a.date<b.date?-1:1).map(r=>`${r.total} kg at ${r.bw} (${fmtD(r.date,false)})`).join(' · ')}</p>`:''}</div>`;}
+ function draw(){
+  const ev=EVS.find(e=>e.id===st.ev);if(!ev)return;
+  const pool=lifters.filter(l=>(st.club==='*'||(st.club==='-'?!l.club:l.club===st.club))&&(st.sex==='A'||l.sex===st.sex)&&(!st.q||l.name.toLowerCase().includes(st.q)));
+  const all=pool.map(l=>{const s=standing(ev,l);return {l,s,c:s.top,k:code(s.top)}}).filter(x=>x.c);
+  const n=k=>all.filter(x=>x.k===k).length,left=daysTo(ev.close);
+  document.getElementById('rtStats').innerHTML=`<div class="stat q"><span class="k">Qualified</span><span class="v">${n('q')}</span><span class="d">total made inside the window</span></div><div class="stat l"><span class="k">Legacy total</span><span class="v">${n('l')}</span><span class="d">big enough, but made before ${fmtD(ev.open)}</span></div><div class="stat c"><span class="k">Within ${CLOSE} kg</span><span class="v">${n('c')}</span><span class="d">of the total for their class</span></div><div class="stat"><span class="k">Window closes</span><span class="v">${left<0?'Closed':plural(left,'day')}</span><span class="d">${fmtD(ev.close)} · <a href="planner.html#for=${ev.id}">see the meets left →</a></span></div>`;
+  const want={list:['q','l'],q:['q'],l:['l'],c:['c'],all:['q','l','c','n']}[st.show];
+  const ord={q:0,l:1,c:2,n:3};
+  rows=all.filter(x=>want.includes(x.k)).sort((a,b)=>ord[a.k]-ord[b.k]||b.c.m-a.c.m||a.l.name.localeCompare(b.l.name));
+  document.getElementById('rtHead').textContent=`${ev.name} · ${fmtRange(ev.start,ev.end)}, ${ev.where}`;
+  document.getElementById('rtSub').textContent=`Totals count from ${fmtD(ev.open)} through ${fmtD(ev.close)}. ${plural(rows.length,'lifter')} shown${st.club==='*'?'':' from '+(st.club==='-'?'lifters with no club listed':tc(st.club))}.`;
+  document.getElementById('rtList').innerHTML=rows.map(({l,s,c,k})=>`<li class="ag rt ${k}" data-id="${l.id}"><div class="dt"><b>${c.r.total}</b><span>kg</span></div><div><div class="ti">${prof(l.id,l.name)}</div><div class="su">${[l.club?esc(tc(l.club)):'',esc(c.cls),`age ${s.age} in ${dOf(ev.start).getFullYear()}`].filter(Boolean).join(' · ')}</div><div class="tg">${s.rows.filter((x,i)=>!i||x.rank>1).map(statusChip).join('')}</div><div class="su why">${why(c,ev)}</div></div><div class="act"><span class="away">${c.m>=0?'+'+c.m:c.m} kg</span><span class="links"><button type="button" data-more="${l.id}" aria-expanded="${openId===l.id}">${openId===l.id?'Hide events':'All events'}</button></span></div>${openId===l.id?detail(l):''}</li>`).join('')
+   ||`<li class="empty" style="padding:8px 0">${all.length?'No lifters match this filter. Try “Everyone ranked”.':'No ranked lifters match.'}</li>`;
+ }
+ const save=()=>{store.set('for',st.ev);store.set('club',st.club);history.replaceState(null,'',`#for=${st.ev}${st.club!=='*'?'&club='+encodeURIComponent(st.club):''}`)};
+ tabs('rtEvent',k=>{st.ev=k;save();draw()});tabs('rtSex',k=>{st.sex=k;draw()});tabs('rtShow',k=>{st.show=k;draw()});
+ cs.addEventListener('change',()=>{st.club=cs.value;openId=null;save();draw()});
+ document.getElementById('rtSearch').addEventListener('input',e=>{st.q=e.target.value.trim().toLowerCase();draw()});
+ document.getElementById('rtList').addEventListener('click',e=>{const b=e.target.closest('[data-more]');if(!b)return;const id=+b.dataset.more;openId=openId===id?null:id;draw();});
+ document.getElementById('rtCsv').addEventListener('click',()=>{const ev=EVS.find(e=>e.id===st.ev),q=v=>`"${String(v==null?'':v).replace(/"/g,'""')}"`;
+  const lines=[['Event','Lifter','Club','Sex','Age in event year','Entering as','Class','Qualifying total','Best total','Bodyweight','Date made','Standing','Margin kg'],...rows.map(({l,s,c,k})=>[ev.name,l.name,tc(l.club),l.sex,s.age,grp(c),c.cls,c.need,c.r.total,c.r.bw,c.r.date,{q:'Qualified',l:'Legacy total, needs a new one',c:'Within '+CLOSE+' kg',n:'Not yet'}[k],c.m])].map(r=>r.map(q).join(','));
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+lines.join('\r\n')],{type:'text/csv'}));a.download=`pnw-${ev.id.toLowerCase()}-qualifying.csv`;document.body.appendChild(a);a.click();a.remove();});
+ document.getElementById('rtPrint').addEventListener('click',()=>print());
+ draw();rememberTabs();
+}).catch(e=>{console.error(e);document.getElementById('rtList').innerHTML='<li class="empty">The rankings couldn\'t be loaded. Try again later.</li>';});
+}
+if(!has('plAgenda')&&!has('rtList'))rememberTabs();
 }
 // referees (Sport80's public Referees listing, refreshed daily)
 if(has('refBody')){
