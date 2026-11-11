@@ -1,5 +1,7 @@
 name: Sport80 check (events, rankings and adaptive list, daily)
-# Also saves the USAW national-events page and the PNW WSO Sanctioned Meets sheet (scripts/cloud/sources.py).
+# Also saves the USAW national-events page (with each event's registration dates) and the PNW WSO Sanctioned Meets
+# sheet (scripts/cloud/sources.py), every meet result per lifter (scripts/rankings/results.py) and USAW's
+# qualifying totals (scripts/cloud/qualifying.py).
 
 # Runs on GitHub's servers so the daily Claude update doesn't need a laptop to be awake.
 # 09:07 UTC = 2:07 AM PDT / 1:07 AM PST. GitHub has been starting scheduled runs
@@ -46,6 +48,16 @@ jobs:
         id: sources
         continue-on-error: true
         run: python3 scripts/cloud/sources.py
+      - name: Save every meet result for PNW lifters
+        id: results
+        continue-on-error: true
+        run: python3 scripts/rankings/results.py
+      - name: Read USAW's qualifying totals PDF
+        id: qualifying
+        continue-on-error: true
+        run: |
+          pip install --quiet pypdf
+          python3 scripts/cloud/qualifying.py
       - name: Rebuild draft pages data
         id: features
         continue-on-error: true
@@ -55,7 +67,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/sport80-events.json data/cloud-status.json data/rankings.json data/adaptive.json data/referees.json data/new-pages.json data/history
-          for f in data/usaw-national-events.json data/sanctioned-meets.json; do if [ -e "$f" ]; then git add "$f"; fi; done
+          for f in data/usaw-national-events.json data/sanctioned-meets.json data/results.json data/qualifying-2027.json; do if [ -e "$f" ]; then git add "$f"; fi; done
           if git diff --cached --quiet; then echo "nothing changed"; exit 0; fi
           git commit -m "Sport80 check $(TZ=America/Los_Angeles date +%F)"
           for i in 1 2 3; do git pull --rebase -q origin main && git push -q origin HEAD:main && exit 0; sleep 10; done
@@ -83,7 +95,7 @@ jobs:
             fi
           done < /tmp/new-unlisted.txt
       - name: Report a failed check
-        if: steps.run.outcome == 'failure' || steps.sources.outcome == 'failure' || steps.features.outcome == 'failure'
+        if: steps.run.outcome == 'failure' || steps.sources.outcome == 'failure' || steps.features.outcome == 'failure' || steps.results.outcome == 'failure' || steps.qualifying.outcome == 'failure'
         run: |
           cat data/cloud-status.json
           echo "::error::Part of the Sport80 check failed; see data/cloud-status.json"

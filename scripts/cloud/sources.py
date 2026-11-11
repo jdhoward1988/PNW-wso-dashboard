@@ -143,7 +143,74 @@ def national():
     snippet = text[a if a >= 0 else 0:][:8000]
     if not uniq and not RANGE.search(text):
         raise RuntimeError(f'no events or dates found on the page (final URL {final}, {ctype}); layout may have changed')
+    # Each event page's dated list (registration opens and closes, qualification period ...).
+    # A page that can't be read keeps the dates saved on the previous run.
+    try:
+        old = {e.get('eventPage'): e.get('keyDates') for e in json.loads((DATA / 'usaw-national-events.json').read_text()).get('events', [])}
+    except Exception:
+        old = {}
+    for e in uniq:
+        if not e.get('eventPage'):
+            continue
+        try:
+            kd = key_dates(e['eventPage'])
+        except Exception as err:
+            print(f"key dates not read for one event page: {err}", file=sys.stderr)
+            kd = None
+        e['keyDates'] = kd if kd else (old.get(e['eventPage']) or [])
     return {'source': NATIONAL_URL, 'finalUrl': final, 'events': uniq, 'pageText': snippet}
+
+
+MD = re.compile(r'(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+(\d{1,2})(?:\s*[-–—]\s*(\d{1,2})(?!\s*:))?(?:,?\s+(\d{4}))?')
+
+
+def dates_in(text):
+    """Dates in a line such as "Oct. 1-Nov. 9, 2026", "March 4-7, 2027" or "January 1, 2027 - 2:00 p.m. MT"
+    -> (first, last) as ISO dates. A date without a year takes the year of the next date on the line."""
+    found = [(m.group(1), int(m.group(2)), m.group(3), m.group(4)) for m in MD.finditer(text)]
+    year, out = None, []
+    for mon, day, day2, yr in reversed(found):
+        year = yr or year
+        if not year:
+            continue
+        for d in ([int(day2)] if day2 else []) + [day]:
+            try:
+                out.append(datetime.datetime.strptime(f'{mon} {d} {year}', '%b %d %Y').date().isoformat())
+            except ValueError:
+                pass
+    out.sort()
+    return (out[0], out[-1]) if out else (None, None)
+
+
+def key_dates(url):
+    """The dated list on a USAW event page (qualification period, registration opens and closes,
+    schedule release ...), as [{label, text, date, end}]. USAW writes it as a label line followed by
+    a date line, sometimes with part of the label on the date line."""
+    _, _, body = get(url)
+    p = Lines(); p.feed(body); p.flush()
+    lines = [t for t, _ in p.lines]
+    starts = [i for i, t in enumerate(lines) if re.match(r'(?i)qualification period', t)]
+    if not starts:
+        return []
+    out, label = [], []
+    for t in lines[starts[-1]:starts[-1] + 45]:
+        if t == 'Related' or (len(out) >= 2 and t.isupper() and len(t) > 12):
+            break
+        m = MD.search(t)
+        tba = re.search(r'\bTBA\b', t)
+        if not m and not tba:
+            label.append(t)
+            if len(' '.join(label)) > 260:   # ran past the list into ordinary page text
+                break
+            continue
+        cut = (m or tba).start()
+        name = re.sub(r'\s+', ' ', ' '.join(label + [t[:cut]])).strip(' :-–')
+        value = t[cut:].strip()
+        first, last = dates_in(value) if m else (None, None)
+        if name:
+            out.append({'label': name, 'text': value, 'date': first, 'end': last})
+        label = []
+    return out
 
 
 def sheet():

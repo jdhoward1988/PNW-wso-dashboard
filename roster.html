@@ -69,16 +69,16 @@
   <ul class="agenda" id="rtList"><li class="empty">Loading the rankings…</li></ul>
 
   <ul class="key">
-    <li><b>Qualified</b>: the lifter's best ranked total meets the qualifying total for their class and was made inside this event's window.</li>
-    <li><b>Legacy total</b>: the total is big enough, but it was made before the window opened, so it doesn't count for this event. USAW's rankings keep only each lifter's best total in a class, so a smaller total made later may already qualify them. Check their results before planning another meet.</li>
-    <li><b>Class and age group</b>: the class is the one the lifter's bodyweight on the day falls in, and the age group uses the age they turn in the event's year. “All events” on a lifter shows the same check for every 2027 event.</li>
+    <li><b>Qualified</b>: the lifter has a total inside this event's window that meets the qualifying total for the class they lifted in that day. Under USAW's rule they may then register in any class.</li>
+    <li id="rtLegacyKey"><b>Legacy total</b>: the lifter has made the total, but only before the window opened, so it doesn't count for this event and has to be done again. Every meet result since last season is checked, not just the lifter's best.</li>
+    <li><b>Class and age group</b>: the class is the one the lifter's bodyweight fell in on the day, using the 2027 classes. The age group uses the age they turn in the event's year, from their birth year. “All events” on a lifter shows the same check for every 2027 event and lists their results.</li>
     <li>This list is a planning aid, not an entry list. USAW confirms qualification at registration. University totals only apply to enrolled students, and adaptive totals aren't checked here.</li>
   </ul>
 
   <details class="review" style="margin-top:18px"><summary>Draft notes for the board</summary><dl>
-    <dt>Data</dt><dd>Nothing is typed in by hand. Lifters, totals, bodyweights and dates come from <code>data/rankings.json</code> (USAW's public rankings, refreshed daily); totals and windows from <code>data/qualifying-2027.json</code>.</dd>
-    <dt>Limit</dt><dd>The rankings feed has each lifter's best total per class for the season, not every meet. A lifter shown as “legacy” or “short” may have another result that qualifies. Saving every result would remove this limit.</dd>
-    <dt>Assumptions to confirm</dt><dd><ul><li>The age in the rankings is the lifter's birth-year age for the season, so next year's age is one more.</li><li>A lifter enters the class their bodyweight fell in when they made the total.</li><li>Age ranges used: Junior 15–20, U25 15–25, University 17–28, Youth 17 and under, Masters 35 and up.</li><li>The first and last days of a window count.</li></ul></dd>
+    <dt>Data</dt><dd>Nothing is typed in by hand. Every meet result since January 1 of last season, and each lifter's birth year, are saved daily to <code>data/results.json</code> from the public results table on each lifter's USAW rankings profile. Qualifying totals are read daily from USAW's own PDF into <code>data/qualifying-2027.json</code>.</dd>
+    <dt>Rule used</dt><dd>From USAW's 2027 qualifying totals page: the total must be posted inside the event's qualification period, and a lifter who makes the qualifying total for the class they lifted in can register in that or any other class. A total that misses the standard for the class it was made in can't be used for a lighter class.</dd>
+    <dt>Limits</dt><dd><ul><li>Results appear here when USAW adds them to its rankings, which can lag a meet, especially international ones.</li><li>Totals made before August 1, 2026 were lifted in the old classes; they are checked against the 2027 class their bodyweight falls in.</li><li>Qualifying windows and event dates are still the ones entered from USAW's August 6, 2026 announcement. USAW's event pages are read daily for registration dates, but not every event has a page yet.</li><li>Age ranges used: Junior 15–20, U25 15–25, University 17–28, Youth 17 and under, Masters 35 and up.</li></ul></dd>
   </dl></details>
 </div></section>
 </main>
