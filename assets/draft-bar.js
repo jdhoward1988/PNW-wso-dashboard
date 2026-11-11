@@ -4,6 +4,7 @@
 (function () {
   var DRAFT_PAGES = [
     ['planner.html', 'Season planner'],
+    ['roster.html', 'Qualifying tracker'],
     ['season-bests.html', 'Season bests'],
     ['qualifying-totals.html', '2027 qualifying totals'],
     ['outstanding-athletes.html', 'Outstanding athletes'],

@@ -187,6 +187,26 @@ button.tgt:hover{border-color:var(--ink)}
 .legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12.5px;color:var(--dim);margin:18px 0 0}
 .legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
 
+/* ---------- qualifying tracker ---------- */
+.ag.rt.q::before{background:var(--brand-green)}
+.ag.rt.l::before{background:var(--brand-gold)}
+.ag.rt.c::before{background:var(--brand-blue)}
+.ag.rt.n::before{background:var(--brand-grey)}
+.ag.rt .ti a{color:var(--ink);text-decoration:none}
+.ag.rt .ti a:hover{text-decoration:underline}
+.ag.rt .why{margin-top:6px;max-width:78ch}
+.ag.rt .away{font-size:14px;color:var(--ink)}
+.ag.rt.l .away{color:var(--gold-ink)}.ag.rt.q .away{color:var(--green-ink)}
+.chip.gold{border-color:var(--brand-gold);color:var(--gold-ink);background:var(--gold-soft)}
+.rt-detail{grid-column:1/-1;margin-top:8px;min-width:0}
+.rt-detail table{font-size:13px}
+.stat.q{border-top:4px solid var(--brand-green)}.stat.l{border-top:4px solid var(--brand-gold)}.stat.c{border-top:4px solid var(--brand-blue)}
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:10px}
+.fields label{display:grid;gap:4px;font:600 10.5px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+.fields select,.fields input{font:500 15px var(--body);letter-spacing:0;text-transform:none;padding:10px 12px;border:1.5px solid var(--ink);border-radius:var(--radius-sm);background:var(--card);color:var(--ink);width:100%;min-height:44px}
+.key{display:grid;gap:8px;margin:18px 0 0;padding:0;list-style:none;font-size:13.5px;color:var(--dim);max-width:86ch}
+.key b{color:var(--ink)}
+
 /* wider laptops and desktops get a wider column; 4K screens scale the whole page up */
 @media (min-width:1500px){:root{--wrap:1240px}}
 @media (min-width:2200px){html{zoom:1.25}}
@@ -223,7 +243,8 @@ button.tgt:hover{border-color:var(--ink)}
   .plan-bar{margin-inline:-16px;padding-inline:16px}
 }
 @media print{
-  .topbar,.draftbar,.plan-bar,.review,.ag .act .links,.linkbtn,footer{display:none!important}
+  .topbar,.draftbar,.plan-bar,.review,.ag .act .links,.linkbtn,.filters,.key,footer{display:none!important}
+  .ag{padding-block:6px}.stats{display:grid!important;grid-template-columns:repeat(4,1fr)}
   html{zoom:1!important}
   .hero{background:none;color:#000}.hero h1,.hero .sub{color:#000}.hero .wrap{padding-block:0 10px}
   .ag,.tgt,.stat{break-inside:avoid}
