@@ -1,8 +1,8 @@
 {
- "checked": "2026-11-10",
+ "checked": "2026-11-11",
  "events": {
   "ok": true,
-  "changed": true,
+  "changed": false,
   "counts": {
    "meets": 7,
    "courses": 1,
@@ -37,7 +37,7 @@
  "referees": {
   "ok": true,
   "changed": false,
-  "nationwide": 740,
+  "nationwide": 741,
   "pnw": 40,
   "by": "state filter",
   "states": {
@@ -47,7 +47,7 @@
   }
  },
  "sources": {
-  "checked": "2026-11-10",
+  "checked": "2026-11-11",
   "national": {
    "ok": true,
    "changed": false,
@@ -58,5 +58,21 @@
    "changed": false,
    "count": 6
   }
+ },
+ "results": {
+  "checked": "2026-11-11",
+  "ok": true,
+  "lifters": 537,
+  "results": 1713,
+  "reread": 87,
+  "failed": 0,
+  "recentlyLifted": 0
+ },
+ "qualifying": {
+  "checked": "2026-11-11",
+  "ok": true,
+  "count": 925,
+  "changed": 0,
+  "pdf": "https://assets.contentstack.io/v3/assets/blteb7d012fc7ebef7f/blt00265fdf02980ad4/6a74b50fb8c2e67a99be199d/2027_-_Qualifying_Totals.pdf"
  }
 }
