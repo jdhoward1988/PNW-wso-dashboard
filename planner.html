@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>PNW WSO season planner (draft)</title>
+<meta name="description" content="For PNW coaches: 2027 USA Weightlifting qualifying deadlines, national event dates, and the sanctioned Alaska, Oregon and Washington meets left inside each qualifying window.">
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" sizes="64x64" href="assets/pnw-wso-mark-64.png">
+<link rel="apple-touch-icon" href="assets/pnw-wso-mark-180.png">
+<link rel="preload" href="assets/fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/poppins-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<link rel="stylesheet" href="assets/new-pages.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="https://www.pnwwsoweightlifting.com/" aria-label="Pacific Northwest Weightlifting State Organization — main site">
+      <img class="brand-logo" src="assets/pnw-wso-logo.png" width="413" height="232" alt="Pacific Northwest Weightlifting State Organization">
+    </a>
+    <div class="topbar-right">
+      <a class="icon-link" href="https://www.instagram.com/pnw_wso_weightlifting/" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+      </a>
+      <a class="icon-link" href="https://www.facebook.com/pnwwsoweightlifting" target="_blank" rel="noopener" aria-label="Facebook">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1V8c0-.9.25-1.5 1.55-1.5H17V3.7C16.6 3.65 15.4 3.5 14 3.5c-2.8 0-4.5 1.7-4.5 4.8V10H6.8v3.1h2.7v8z"/></svg>
+      </a>
+      <a class="pill-btn dark" href="index.html">Calendar</a>
+      <a class="pill-btn dark" href="rankings.html">Rankings</a>
+      <a class="pill-btn dark" href="https://www.pnwwsoweightlifting.com/">← PNW WSO site</a>
+    </div>
+  </div>
+</div>
+
+<div class="hero"><div class="wrap">
+  <div class="eyebrow"><span class="tag">Draft</span><span>PNW WSO · for coaches</span><span id="pgUpdated"></span></div>
+  <h1>Season planner</h1>
+  <p class="sub">Every 2027 qualifying deadline, and the sanctioned Alaska, Oregon and Washington meets your lifters can still use to hit a total before it.</p>
+</div></div>
+
+<main>
+<section class="feat" id="planner" data-needs="new-pages"><div class="wrap">
+  <div class="stats" id="plStats"></div>
+
+  <div class="sec-h"><h2>Which event are you planning for?</h2><p>Pick one to see the meets left inside its qualifying window.</p></div>
+  <div class="targets" id="plTargets"></div>
+
+  <div class="sec-h"><h2>Coming up</h2><button type="button" class="linkbtn" id="plIcsAll">Add all qualifying deadlines to my calendar</button></div>
+  <div class="plan-bar">
+    <div class="tabs scrollx" role="group" aria-label="Show" id="plType">
+      <button type="button" data-k="all" aria-pressed="true">Everything</button>
+      <button type="button" data-k="meet" aria-pressed="false">PNW meets</button>
+      <button type="button" data-k="deadline" aria-pressed="false">Deadlines</button>
+      <button type="button" data-k="national" aria-pressed="false">National events</button>
+      <button type="button" data-k="course" aria-pressed="false">Courses &amp; camps</button>
+    </div>
+    <div class="tabs scrollx" role="group" aria-label="State" id="plState">
+      <button type="button" data-k="all" aria-pressed="true">All states</button>
+      <button type="button" data-k="AK" aria-pressed="false">AK</button>
+      <button type="button" data-k="OR" aria-pressed="false">OR</button>
+      <button type="button" data-k="WA" aria-pressed="false">WA</button>
+    </div>
+  </div>
+  <div id="plFocus" aria-live="polite"></div>
+  <div id="plAgenda"></div>
+  <p class="legend"><span><i style="background:var(--brand-green)"></i>Sanctioned PNW meet</span><span><i style="background:var(--brand-red)"></i>Qualifying deadline</span><span><i style="background:var(--brand-navy)"></i>National event</span><span><i style="background:var(--brand-gold)"></i>Course or camp</span><span><i style="background:var(--brand-grey)"></i>Planned, not yet sanctioned</span></p>
+  <p class="note">Only totals from USAW-sanctioned meets count toward qualifying, so community events from the calendar aren't listed here. Check the event's own page before entering: registration can close or fill well before the meet, and USAW can change dates and windows. Your filters and chosen event are remembered on this device.</p>
+
+  <details class="review" style="margin-top:18px"><summary>Draft notes for the board</summary><dl>
+    <dt>Data</dt><dd>Nothing here is typed in by hand. Qualifying windows and event dates come from <code>data/qualifying-2027.json</code>, PNW meets, courses and camps from the daily Sport80 check, national events from USAW's national events page, and planned sanctioned meets from the Add Your Event form.</dd>
+    <dt>Limit</dt><dd>USAW's registration open and close dates aren't in any of those sources, so the page shows the last day to make a total, not the last day to register.</dd>
+    <dt>Open question</dt><dd>Whether the last day of a window counts. The page treats the closing date as included.</dd>
+  </dl></details>
+</div></section>
+</main>
+
+<footer><div class="wrap">This is a draft page under review by the PNW WSO and may change. Meets and courses come from USA Weightlifting's public listings and update daily.</div></footer>
+<script src="assets/draft-bar.js"></script>
+<script src="assets/new-pages.js"></script>
+</body>
+</html>
