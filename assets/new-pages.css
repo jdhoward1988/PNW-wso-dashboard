@@ -197,6 +197,7 @@ button.tgt:hover{border-color:var(--ink)}
 .ag.rt .why{margin-top:6px;max-width:78ch}
 .ag.rt .away{font-size:14px;color:var(--ink)}
 .ag.rt.l .away{color:var(--gold-ink)}.ag.rt.q .away{color:var(--green-ink)}
+.chip.navy{border-color:var(--brand-navy);background:var(--brand-navy);color:var(--brand-white);vertical-align:2px;margin-left:4px}
 .chip.gold{border-color:var(--brand-gold);color:var(--gold-ink);background:var(--gold-soft)}
 .rt-detail{grid-column:1/-1;margin-top:8px;min-width:0}
 .rt-detail table{font-size:13px}
