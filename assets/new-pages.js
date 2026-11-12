@@ -313,7 +313,10 @@ Promise.all(['sport80-events','usaw-national-events','local-events'].map(n=>fetc
 }
 if(has('rtList')){
 // qualifying tracker: every ranked PNW lifter's totals against the qualifying totals and windows for one national event
-Promise.all([fetch('data/rankings.json',{cache:'no-cache'}).then(r=>r.json()),fetch('data/results.json',{cache:'no-cache'}).then(r=>r.json()).catch(()=>null)]).then(([R,RS])=>{
+Promise.all([fetch('data/rankings.json',{cache:'no-cache'}).then(r=>r.json()),fetch('data/results.json',{cache:'no-cache'}).then(r=>r.json()).catch(()=>null),fetch('data/adaptive.json',{cache:'no-cache'}).then(r=>r.json()).catch(()=>null)]).then(([R,RS,AD])=>{
+ // Adaptive athletes who have self-identified through the WSO's opt-in form (the same list the rankings page marks).
+ // USAW sets their qualifying total at 50% of the standard one; the page uses the adaptive total USAW lists for each class.
+ const ADP=new Set(Object.keys((AD&&AD.athletes)||{}));
  const FULL=!!(RS&&RS.lifters&&RS.meets);
  const Q=D.qt,EVS=qualEvents(Q).sort((a,b)=>a.close<b.close?-1:1),C=R.clubs;
  const lim=c=>c.includes('+')?Infinity:parseFloat(c);
@@ -333,7 +336,7 @@ Promise.all([fetch('data/rankings.json',{cache:'no-cache'}).then(r=>r.json()),fe
   Object.values(R.youth||{}).forEach(g=>Object.entries(g).forEach(([c,xs])=>xs.forEach(x=>add(c,x))));
   const k=document.getElementById('rtLegacyKey');if(k)k.insertAdjacentText('beforeend',' The full results file didn\'t load, so this page is using each lifter\'s best total only; a smaller total made later may already qualify them.');
  }
- const lifters=[...L.values()];
+ const lifters=[...L.values()];lifters.forEach(l=>l.adp=ADP.has(String(l.id)));
  // the age groups a lifter can enter, by the age they turn in the event's year (event year minus birth year)
  function tracks(ev,l){const a=dOf(ev.start).getFullYear()-l.by,out=[];
   (AGES[ev.keys[0]]||[]).forEach(g=>{
@@ -349,13 +352,14 @@ Promise.all([fetch('data/rankings.json',{cache:'no-cache'}).then(r=>r.json()),fe
  // a lifter who has done that may register in any class. Every saved result is checked.
  function standing(ev,l){const tr=tracks(ev,l),rows=[];
   tr.list.forEach(([g,sub])=>{const tbl=QT[[ev.keys[0],g,sub,l.sex].join('|')];if(!tbl)return;let best=null;
-   l.res.forEach(r=>{const q=tbl.find(t=>r.bw<=lim(t.cls));if(!q)return;const inWin=r.date>=ev.open&&r.date<=ev.close,m=r.total-q.total;
-    const rank=m>=0?(inWin?3:2):1,c={g,sub,cls:q.cls,need:q.total,r,m,inWin,rank};
+   l.res.forEach(r=>{const q=tbl.find(t=>r.bw<=lim(t.cls));if(!q)return;const need=l.adp&&q.adp?q.adp:q.total,inWin=r.date>=ev.open&&r.date<=ev.close,m=r.total-need;
+    const rank=m>=0?(inWin?3:2):1,c={g,sub,cls:q.cls,need,std:q.total,adp:l.adp&&!!q.adp,r,m,inWin,rank};
     if(!best||c.rank>best.rank||(c.rank===best.rank&&(c.rank===1?(c.inWin-best.inWin||c.m-best.m)>0:c.m>best.m)))best=c;});
-   if(best){if(best.rank<3){const ins=l.res.filter(r=>r.date>=ev.open&&r.date<=ev.close).map(r=>{const q=tbl.find(t=>r.bw<=lim(t.cls));return q?{r,need:q.total,m:r.total-q.total}:null}).filter(Boolean).sort((x,y)=>y.m-x.m);best.inBest=ins[0]||null;}rows.push(best);}});
+   if(best){if(best.rank<3){const ins=l.res.filter(r=>r.date>=ev.open&&r.date<=ev.close).map(r=>{const q=tbl.find(t=>r.bw<=lim(t.cls));const need=l.adp&&q&&q.adp?q.adp:q&&q.total;return q?{r,need,m:r.total-need}:null}).filter(Boolean).sort((x,y)=>y.m-x.m);best.inBest=ins[0]||null;}rows.push(best);}});
   rows.sort((x,y)=>y.rank-x.rank||y.m-x.m);
   return {age:tr.age,rows,top:rows[0]||null};}
- const CLOSE=10, grp=c=>c.g+(c.sub?' '+c.sub:'')+(c.g==='University'?' (if enrolled)':'');
+ const CLOSE=10, grp=c=>(c.adp?'Adaptive · ':'')+c.g+(c.sub?' '+c.sub:'')+(c.g==='University'?' (if enrolled)':'');
+ const needTxt=c=>c.adp?`${c.need} (the adaptive total; the standard total is ${c.std})`:c.need;
  const code=c=>!c?'n':c.rank===3?'q':c.rank===2?'l':c.m>=-CLOSE?'c':'n';
  const short=m=>m.length>52?m.slice(0,50).trim()+'…':m;
  const hash=k=>{const m=location.hash.match(new RegExp(k+'=([^&]+)'));return m?decodeURIComponent(m[1]):null};
@@ -370,9 +374,9 @@ Promise.all([fetch('data/rankings.json',{cache:'no-cache'}).then(r=>r.json()),fe
  const statusChip=c=>c.rank===3?`<span class="chip ok">Qualified · ${esc(grp(c))}</span>`:c.rank===2?`<span class="chip gold">Legacy total · ${esc(grp(c))}</span>`:`<span class="chip">${-c.m} kg short · ${esc(grp(c))}</span>`;
  const why=(c,ev)=>{const made=`${c.r.total} kg at ${c.r.bw} kg bodyweight on ${fmtD(c.r.date)}${c.r.meet?', '+esc(short(c.r.meet)):''}`;
   const inside=c.inBest?` Best inside the window so far: ${c.inBest.r.total} kg on ${fmtD(c.inBest.r.date)}, ${-c.inBest.m} kg short.`:FULL?' No total inside the window yet.':'';
-  if(c.rank===3)return `${made}. Needed ${c.need} for the ${esc(c.cls)} class, so ${c.m?c.m+' kg over':'right on the total'}. Qualified, and may register in any class.`;
-  if(c.rank===2)return c.r.date<ev.open?`${made}. That beats the ${c.need} needed for the ${esc(c.cls)} class, but it was made ${plural(Math.round((dOf(ev.open)-dOf(c.r.date))/864e5),'day')} before the window opened on ${fmtD(ev.open)}, so it doesn't count.${inside} A new total is needed by ${fmtD(ev.close)}.`:`${made}. That beats the ${c.need} needed for the ${esc(c.cls)} class, but it was made after the window closed.`;
-  return `${made}. Needed ${c.need} for the ${esc(c.cls)} class.${c.inWin?'':' This total is also outside the window.'+inside}`;};
+  if(c.rank===3)return `${made}. Needed ${needTxt(c)} for the ${esc(c.cls)} class, so ${c.m?c.m+' kg over':'right on the total'}. Qualified${c.adp?(c.r.total>=c.std?' as an adaptive athlete, and also meets the standard total':' as an adaptive athlete; USAW also needs the health professional\'s approval form to enter'):', and may register in any class'}.`;
+  if(c.rank===2)return c.r.date<ev.open?`${made}. That beats the ${needTxt(c)} needed for the ${esc(c.cls)} class, but it was made ${plural(Math.round((dOf(ev.open)-dOf(c.r.date))/864e5),'day')} before the window opened on ${fmtD(ev.open)}, so it doesn't count.${inside} A new total is needed by ${fmtD(ev.close)}.`:`${made}. That beats the ${c.need} needed for the ${esc(c.cls)} class, but it was made after the window closed.`;
+  return `${made}. Needed ${needTxt(c)} for the ${esc(c.cls)} class.${c.inWin?'':' This total is also outside the window.'+inside}`;};
  function detail(l){const out=[];
   const body=EVS.map(e=>{const s=standing(e,l);if(!s.rows.length){out.push(e.name);return ''}
    return s.rows.map((c,i)=>`<tr><td>${i?'':esc(e.name)+`<div class="club">by ${fmtD(e.close)}</div>`}</td><td>${c.rank===3?'<span class="chip ok">Qualified</span>':c.rank===2?'<span class="chip gold">Legacy</span>':`<span class="chip">${-c.m} kg short</span>`}</td><td>${esc(grp(c))}<div class="club">${esc(c.cls)}</div></td><td class="kg">${c.need}</td><td class="kg">${c.r.total}<div class="club" style="font:400 12px var(--body)">${fmtD(c.r.date,false)}${c.inWin?'':' · outside window'}</div></td></tr>`).join('')}).join('');
@@ -389,7 +393,7 @@ Promise.all([fetch('data/rankings.json',{cache:'no-cache'}).then(r=>r.json()),fe
   rows=all.filter(x=>want.includes(x.k)).sort((a,b)=>ord[a.k]-ord[b.k]||b.c.m-a.c.m||a.l.name.localeCompare(b.l.name));
   document.getElementById('rtHead').textContent=`${ev.name} · ${fmtRange(ev.start,ev.end)}, ${ev.where}`;
   document.getElementById('rtSub').textContent=`Totals count from ${fmtD(ev.open)} through ${fmtD(ev.close)}. ${plural(rows.length,'lifter')} shown${st.club==='*'?'':' from '+(st.club==='-'?'lifters with no club listed':tc(st.club))}.`;
-  document.getElementById('rtList').innerHTML=rows.map(({l,s,c,k})=>`<li class="ag rt ${k}" data-id="${l.id}"><div class="dt"><b>${c.r.total}</b><span>kg</span></div><div><div class="ti">${prof(l.id,l.name)}</div><div class="su">${[l.club?esc(tc(l.club)):'',esc(c.cls),`age ${s.age} in ${dOf(ev.start).getFullYear()}`].filter(Boolean).join(' · ')}</div><div class="tg">${s.rows.filter((x,i)=>!i||x.rank>1).map(statusChip).join('')}</div><div class="su why">${why(c,ev)}</div></div><div class="act"><span class="away">${c.m>=0?'+'+c.m:c.m} kg</span><span class="links"><button type="button" data-more="${l.id}" aria-expanded="${openId===l.id}">${openId===l.id?'Hide events':'All events'}</button></span></div>${openId===l.id?detail(l):''}</li>`).join('')
+  document.getElementById('rtList').innerHTML=rows.map(({l,s,c,k})=>`<li class="ag rt ${k}" data-id="${l.id}"><div class="dt"><b>${c.r.total}</b><span>kg</span></div><div><div class="ti">${prof(l.id,l.name)}${l.adp?' <span class="chip navy">Adaptive</span>':''}</div><div class="su">${[l.club?esc(tc(l.club)):'',esc(c.cls),`age ${s.age} in ${dOf(ev.start).getFullYear()}`].filter(Boolean).join(' · ')}</div><div class="tg">${s.rows.filter((x,i)=>!i||x.rank>1).map(statusChip).join('')}</div><div class="su why">${why(c,ev)}</div></div><div class="act"><span class="away">${c.m>=0?'+'+c.m:c.m} kg</span><span class="links"><button type="button" data-more="${l.id}" aria-expanded="${openId===l.id}">${openId===l.id?'Hide events':'All events'}</button></span></div>${openId===l.id?detail(l):''}</li>`).join('')
    ||`<li class="empty" style="padding:8px 0">${all.length?'No lifters match this filter. Try “Everyone ranked”.':'No ranked lifters match.'}</li>`;
  }
  const save=()=>{store.set('for',st.ev);store.set('club',st.club);history.replaceState(null,'',`#for=${st.ev}${st.club!=='*'?'&club='+encodeURIComponent(st.club):''}`)};
