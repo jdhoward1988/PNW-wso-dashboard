@@ -1,27 +1,20 @@
 {
- "checked": "2026-11-15",
+ "checked": "2026-11-16",
  "events": {
   "ok": true,
-  "changed": false,
+  "changed": true,
   "counts": {
    "meets": 7,
-   "courses": 1,
+   "courses": 2,
    "camps": 1
   },
-  "unlisted": [
-   {
-    "id": 15044,
-    "name": "LEVEL 1 - ANCHORAGE, AK",
-    "start": "2026-11-14",
-    "pageLive": true
-   }
-  ],
+  "unlisted": [],
   "newlyUnlisted": []
  },
  "rankings": {
   "ok": true,
-  "pnwChanged": false,
-  "result": "OK: 591 Open results + 59 youth results in 4 age groups, 83 clubs, season 2026"
+  "pnwChanged": true,
+  "result": "OK: 593 Open results + 59 youth results in 4 age groups, 83 clubs, season 2026"
  },
  "adaptive": {
   "ok": true,
@@ -47,7 +40,7 @@
   }
  },
  "sources": {
-  "checked": "2026-11-15",
+  "checked": "2026-11-16",
   "national": {
    "ok": true,
    "changed": false,
@@ -60,16 +53,16 @@
   }
  },
  "results": {
-  "checked": "2026-11-15",
+  "checked": "2026-11-16",
   "ok": true,
-  "lifters": 537,
-  "results": 1713,
+  "lifters": 538,
+  "results": 1715,
   "reread": 73,
   "failed": 0,
   "recentlyLifted": 0
  },
  "qualifying": {
-  "checked": "2026-11-15",
+  "checked": "2026-11-16",
   "ok": true,
   "count": 925,
   "changed": 0,

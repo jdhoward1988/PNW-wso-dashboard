@@ -1,6 +1,6 @@
 {
  "source": "Sport80 public widgets (1 = Meets, 2 = Courses, 3 = Camps/Speaker Series), upcoming events located in Alaska, Oregon or Washington",
- "updated": "2026-11-10",
+ "updated": "2026-11-16",
  "lists": {
   "meets": [
    {
@@ -100,6 +100,18 @@
     "type": "Level 1 Coach",
     "url": "https://usaweightlifting.sport80.com/public/widget/2",
     "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/15067"
+   },
+   {
+    "id": 15179,
+    "name": "LEVEL 1 - SEATTLE, WA",
+    "start": "2027-02-07",
+    "end": "2027-02-07",
+    "city": "Mountlake Terrace",
+    "state": "WA",
+    "address": "22402 44th Ave W, Suite A, Mountlake Terrace, Washington",
+    "type": "Level 1 Coach",
+    "url": "https://usaweightlifting.sport80.com/public/widget/2",
+    "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/15179"
    }
   ],
   "camps": [
@@ -118,25 +130,5 @@
   ]
  },
  "unlisted_note": "Upcoming events that were listed before but have dropped out of Sport80's public lists (full, unlisted or cancelled). pageLive = their own event page still loads.",
- "unlisted": [
-  {
-   "id": 15044,
-   "name": "LEVEL 1 - ANCHORAGE, AK",
-   "start": "2026-11-14",
-   "end": "2026-11-15",
-   "city": "Anchorage",
-   "state": "AK",
-   "address": "1530 E 59th Ave, Anchorage, Alaska",
-   "type": "Level 1 Coach",
-   "url": "https://usaweightlifting.sport80.com/public/widget/2",
-   "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/15044",
-   "list": "courses",
-   "droppedOn": "2026-10-31",
-   "eventPage": "https://usaweightlifting.sport80.com/public/wizard/e/15044",
-   "pageLive": true,
-   "registrationOpen": "August 31st 2026 4:06 PM (MDT)",
-   "registrationClose": "November 13th 2026 4:06 PM (MST)",
-   "checked": "2026-11-15"
-  }
- ]
+ "unlisted": []
 }
