@@ -1,8 +1,20 @@
 {
  "source": "Sport80 public widgets (1 = Meets, 2 = Courses, 3 = Camps/Speaker Series), upcoming events located in Alaska, Oregon or Washington",
- "updated": "2026-11-16",
+ "updated": "2026-11-17",
  "lists": {
   "meets": [
+   {
+    "id": 15187,
+    "name": "Bare Bones Meet",
+    "start": "2026-11-21",
+    "end": "2026-11-21",
+    "city": "Tacoma",
+    "state": "WA",
+    "address": "2354 Jefferson AVE, Tacoma, Washington",
+    "type": "Local (WSO) Meet",
+    "url": "https://usaweightlifting.sport80.com/public/widget/1",
+    "entryUrl": null
+   },
    {
     "id": 14815,
     "name": "Valley Strength Harvest Strength Classic",
