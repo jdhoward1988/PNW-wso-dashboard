@@ -30,11 +30,11 @@ const iso = s => { const m = String(s || '').match(/(\d\d)\/(\d\d)\/(\d{4})/); r
 // First website named in a Sport80 "Additional Info" block (a link, or a bare address such as
 // PARAMOUNTBARBELLCLUB.COM/EVENTS). Social media, maps and Sport80 itself are skipped.
 function siteIn(htmlText) {
-  const t = String(htmlText || '');
+  const t = String(htmlText || '').replace(/mailto:[^"'\s<]+/gi, ' ').replace(/[^\s<>"']+@[^\s<>"']+/g, ' ');
   const cands = [...t.matchAll(/href="([^"]+)"/g)].map(m => m[1].replace(/&amp;/g, '&'))
     .concat(t.replace(/<[^>]+>/g, ' ').match(/\b(?:https?:\/\/)?(?:www\.)?[a-z0-9-]+(?:\.[a-z0-9-]+)*\.(?:com|org|net|io|us|co)(?:\/[^\s<"]*)?/gi) || []);
   for (let u of cands) {
-    if (/instagram|facebook|google\.com\/maps|maps\.app|sport80|mailto:|tiktok|youtube/i.test(u)) continue;
+    if (/instagram|facebook|google\.com\/maps|maps\.app|sport80|mailto:|tiktok|youtube|usaweightlifting\.org/i.test(u)) continue;
     if (!/^https?:\/\//i.test(u)) u = 'https://' + u;
     try { const x = new URL(u); return x.origin.toLowerCase() + x.pathname.replace(/\/$/, '').toLowerCase() + x.search; } catch { }
   }
@@ -108,13 +108,20 @@ try {
     return r ? r['Event Website'].trim() : null;
   };
   for (const arr of Object.values(lists)) for (const e of arr) {
-    if (!e.entryUrl) {
-      e.onPlatform = await page.evaluate(async id => {
-        try { const r = await fetch(`/api/wizard/event/${id}`, { headers: { Accept: 'application/json' } }); return r.ok ? true : (r.status === 404 ? false : null); }
-        catch { return null; }
-      }, e.id);
-    }
+    const pg = await page.evaluate(async id => {
+      try {
+        const r = await fetch(`/api/wizard/event/${id}`, { headers: { Accept: 'application/json' } });
+        if (!r.ok) return { live: r.status === 404 ? false : null };
+        const j = await r.json();
+        return { live: true, text: [j.info, ...(j.additional_info || []).map(x => x && x.value)].filter(Boolean).join(' ') };
+      } catch { return { live: null }; }
+    }, e.id);
+    if (!e.entryUrl) e.onPlatform = pg.live;
+    // a website written on the meet's own Sport80 page counts too (not an organizer's email address)
+    if (!e.website && pg.text) e.website = siteIn(pg.text);
     Object.assign(e, linkFor(e, formSites));
+    // shown as a second link next to the main button, when the main button goes somewhere else
+    e.siteLink = e.website && e.website !== e.link ? e.website : null;
   }
 
   const file = 'data/sport80-events.json';

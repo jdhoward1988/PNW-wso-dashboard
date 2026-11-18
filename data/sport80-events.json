@@ -19,7 +19,8 @@
     "onPlatform": false,
     "link": "mailto:weightlifting@tacomastrength.com?subject=Bare%20Bones%20Meet",
     "linkLabel": "Email the meet director",
-    "linkKind": "email"
+    "linkKind": "email",
+    "siteLink": null
    },
    {
     "id": 14815,
@@ -36,7 +37,8 @@
     "email": "Sarff_Sarah24@yahoo.com",
     "link": "https://usaweightlifting.sport80.com/public/wizard/e/14815",
     "linkLabel": "Register on USAW",
-    "linkKind": "entry"
+    "linkKind": "entry",
+    "siteLink": null
    },
    {
     "id": 15061,
@@ -54,7 +56,8 @@
     "onPlatform": false,
     "link": "mailto:INFO@PILCHUCKCROSSFIT.COM?subject=Winter%20Lifting-Land%202027",
     "linkLabel": "Email the meet director",
-    "linkKind": "email"
+    "linkKind": "email",
+    "siteLink": null
    },
    {
     "id": 15075,
@@ -71,7 +74,8 @@
     "email": "ejk3773@gmail.com",
     "link": "https://usaweightlifting.sport80.com/public/wizard/e/15075",
     "linkLabel": "Register on USAW",
-    "linkKind": "entry"
+    "linkKind": "entry",
+    "siteLink": null
    },
    {
     "id": 14958,
@@ -88,7 +92,8 @@
     "email": "joey@cullystrength.com",
     "link": "https://usaweightlifting.sport80.com/public/wizard/e/14958",
     "linkLabel": "Register on USAW",
-    "linkKind": "entry"
+    "linkKind": "entry",
+    "siteLink": null
    },
    {
     "id": 15092,
@@ -106,7 +111,8 @@
     "onPlatform": false,
     "link": "mailto:info@foundationcrossfit.com?subject=Seattle%20Barbell%20Classic",
     "linkLabel": "Email the meet director",
-    "linkKind": "email"
+    "linkKind": "email",
+    "siteLink": null
    },
    {
     "id": 15129,
@@ -124,7 +130,8 @@
     "onPlatform": false,
     "link": "https://paramountbarbellclub.com/events",
     "linkLabel": "Meet website",
-    "linkKind": "website"
+    "linkKind": "website",
+    "siteLink": null
    },
    {
     "id": 15130,
@@ -142,7 +149,8 @@
     "onPlatform": false,
     "link": "https://paramountbarbellclub.com/events",
     "linkLabel": "Meet website",
-    "linkKind": "website"
+    "linkKind": "website",
+    "siteLink": null
    }
   ],
   "courses": [
@@ -161,7 +169,8 @@
     "email": "pnw.wso.mira@gmail.com",
     "link": "https://usaweightlifting.sport80.com/public/wizard/e/15067",
     "linkLabel": "Register on USAW",
-    "linkKind": "entry"
+    "linkKind": "entry",
+    "siteLink": null
    },
    {
     "id": 15179,
@@ -178,7 +187,8 @@
     "email": "mattforeman72@yahoo.com",
     "link": "https://usaweightlifting.sport80.com/public/wizard/e/15179",
     "linkLabel": "Register on USAW",
-    "linkKind": "entry"
+    "linkKind": "entry",
+    "siteLink": null
    }
   ],
   "camps": [
@@ -197,7 +207,8 @@
     "email": "joey@cullystrength.com",
     "link": "https://usaweightlifting.sport80.com/public/wizard/e/15107",
     "linkLabel": "Register on USAW",
-    "linkKind": "entry"
+    "linkKind": "entry",
+    "siteLink": null
    }
   ]
  },
