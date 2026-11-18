@@ -41,16 +41,19 @@ function siteIn(htmlText) {
   return null;
 }
 
-// The link the calendar shows for an event, best first: its Sport80 entry page; its Sport80 event page
-// (registration not open yet); the host's website (Sport80's Additional Info, or the WSO's Add Your Event
-// form); an email to the meet director; and only then Sport80's list for that kind of event.
-function linkFor(e, formSites) {
+// The link the calendar shows for an event: its Sport80 entry page when registration is open there;
+// otherwise USAW's Sport80 search for that kind of event (meets, courses or camps), filtered to the
+// event's state and dates, so the search opens showing just that event. (Sport80 doesn't let a link fill
+// in the name box; the State and date filters are the part of the search a link can carry.)
+let REGION = {};  // state code -> Sport80 region id, read from the search page's own filter list
+function searchLink(e) {
+  const f = { event_from_date: e.start, event_to_date: e.end || e.start };
+  if (REGION[e.state]) f.region = REGION[e.state];
+  return `${e.url}?filters=${encodeURIComponent(Buffer.from(JSON.stringify(f)).toString('base64'))}`;
+}
+function linkFor(e) {
   if (e.entryUrl) return { link: e.entryUrl, linkLabel: 'Register on USAW', linkKind: 'entry' };
-  if (e.onPlatform) return { link: `${BASE}/public/wizard/e/${e.id}`, linkLabel: 'Event page on USAW', linkKind: 'event' };
-  const site = e.website || formSites(e);
-  if (site) return { link: site, linkLabel: 'Meet website', linkKind: 'website' };
-  if (e.email) return { link: `mailto:${e.email}?subject=${encodeURIComponent(e.name)}`, linkLabel: 'Email the meet director', linkKind: 'email' };
-  return { link: e.url, linkLabel: 'Find it on USAW', linkKind: 'list' };
+  return { link: searchLink(e), linkLabel: 'Find it on USAW', linkKind: 'search' };
 }
 
 const browser = await chromium.launch();
@@ -97,25 +100,13 @@ try {
     }).filter(Boolean).sort((a, b) => (a.start || '').localeCompare(b.start || '') || a.id - b.id);
     console.log(`widget ${w} (${key}): ${items.length} upcoming nationwide, ${lists[key].length} in AK/OR/WA`);
   }
-  // Events without an "Enter Now" button: is there still a Sport80 event page (registration not open yet),
-  // or is the meet not run on Sport80 at all? Then pick each event's link.
-  let formRows = [];
-  try { formRows = JSON.parse(readFileSync('data/local-events.json', 'utf8')).rows || []; } catch { }
-  const norm = x => String(x || '').toLowerCase().replace(/\b20\d\d\b/g, '').replace(/[^a-z]/g, '');
-  const formSites = e => {
-    const n = norm(e.name);
-    const r = formRows.find(r => /^https?:\/\//i.test(r['Event Website'] || '') && n && (norm(r['Name of Event']).includes(n) || n.includes(norm(r['Name of Event']))));
-    return r ? r['Event Website'].trim() : null;
-  };
-  for (const arr of Object.values(lists)) for (const e of arr) {
-    if (!e.entryUrl) {
-      e.onPlatform = await page.evaluate(async id => {
-        try { const r = await fetch(`/api/wizard/event/${id}`, { headers: { Accept: 'application/json' } }); return r.ok ? true : (r.status === 404 ? false : null); }
-        catch { return null; }
-      }, e.id);
-    }
-    Object.assign(e, linkFor(e, formSites));
-  }
+  // Each event's link (entry page, or the search filtered to its state and dates).
+  try {
+    const cfg = await page.evaluate(async () => (await fetch('/api/public/widget/1', { headers: { Accept: 'application/json' } })).json());
+    const NAMES = { Alaska: 'AK', Oregon: 'OR', Washington: 'WA' };
+    for (const it of ((cfg.filter || []).find(x => x.name === 'region') || {}).items || []) if (NAMES[it.text]) REGION[NAMES[it.text]] = it.value;
+  } catch { }
+  for (const arr of Object.values(lists)) for (const e of arr) Object.assign(e, linkFor(e));
 
   const file = 'data/sport80-events.json';
   let old = null; try { old = JSON.parse(readFileSync(file, 'utf8')); } catch { }
@@ -142,7 +133,7 @@ try {
     }, e.id);
     const u = { ...e, eventPage: `${BASE}/public/wizard/e/${e.id}`, ...info, checked: today };
     if (info.pageLive) Object.assign(u, { link: u.eventPage, linkLabel: 'Event page on USAW', linkKind: 'event' });
-    else if (info.pageLive === false) Object.assign(u, linkFor({ ...u, entryUrl: null, onPlatform: false }, formSites));
+    else Object.assign(u, linkFor({ ...u, entryUrl: null }));
     unlisted.push(u);
   }
   unlisted.sort((a, b) => a.start.localeCompare(b.start) || a.id - b.id);

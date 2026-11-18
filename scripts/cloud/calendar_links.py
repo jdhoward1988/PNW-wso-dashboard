@@ -14,7 +14,7 @@ import html, json, pathlib, re
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 PAGE = ROOT / 'index.html'
-LIST_LINK = re.compile(r'https://usaweightlifting\.sport80\.com/public/widget/[123]\b')
+LIST_LINK = re.compile(r'https://usaweightlifting\.sport80\.com/public/widget/[123]\b[^"]*')
 STOP = {'the', 'and', 'of', 'at', 'usaw', 'meet', 'open', 'classic', 'wa', 'or', 'ak'}
 
 
@@ -55,8 +55,10 @@ def main():
         if not e:
             left += 1
             return block
-        fixed += 1
         url = html.escape(e['link'], quote=True)
+        if f'href="{url}"' in block:
+            return block
+        fixed += 1
         a = re.compile(r'<a class="ev-link([^"]*)" href="' + LIST_LINK.pattern + r'"( target="_blank" rel="noopener")?>[^<]*</a>')
         attrs = '' if url.startswith('mailto:') else ' target="_blank" rel="noopener"'
         return a.sub(lambda x: f'<a class="ev-link{x.group(1)}" href="{url}"{attrs}>{html.escape(e["linkLabel"])} →</a>', block, count=1)
@@ -64,7 +66,7 @@ def main():
     out = re.sub(r'<div class="event-row"[^>]*>.*?\n    </div>\n', row, s, flags=re.S)
     if out != s:
         PAGE.write_text(out)
-    print(f'calendar links: {fixed} rows now link to the event, {left} rows still link to a Sport80 list (no match, usually past events)')
+    print(f'calendar links: {fixed} rows updated, {left} rows left on the plain Sport80 search (no match, usually past events)')
 
 
 if __name__ == '__main__':
