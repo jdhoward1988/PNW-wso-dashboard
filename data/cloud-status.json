@@ -1,8 +1,15 @@
 {
  "checked": "2026-11-18",
  "events": {
-  "ok": false,
-  "error": "page.evaluate: Error: widget 2 page 1: HTTP 500\n    at eval (eval at evaluate (:234:30), <anonymous>:8:26)\n    at async <anonymous>:260:30"
+  "ok": true,
+  "changed": false,
+  "counts": {
+   "meets": 8,
+   "courses": 2,
+   "camps": 1
+  },
+  "unlisted": [],
+  "newlyUnlisted": []
  },
  "rankings": {
   "ok": true,
