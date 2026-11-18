@@ -60,7 +60,8 @@ def all_pages(post, path, body):
     while p < 30:
         d = post(f'{path}?p={p}&l=100&sort=&d=asc&s=&st=', body)
         rows += d.get('data') or []
-        if not d.get('next_page_url'): break
+        # stop once every row is in: with an exact full page Sport80 offers an empty next page that errors
+        if not d.get('next_page_url') or (str(d.get('total', '')).isdigit() and 0 < int(d['total']) <= len(rows)): break
         p += 1
     return rows
 

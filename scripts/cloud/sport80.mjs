@@ -72,7 +72,9 @@ try {
         if (!r.ok) throw new Error(`widget ${w} page ${p}: HTTP ${r.status}`);
         const j = await r.json();
         all = all.concat(j.data || []);
-        if (!j.next_page_url) break;
+        // Stop once every event Sport80 reports is in hand: with exactly a full page of events it still
+        // offers a "next page", and asking for that empty page returns a server error (HTTP 500).
+        if (!j.next_page_url || (+j.total > 0 && all.length >= +j.total)) break;
       }
       return all;
     }, { w, today });
@@ -191,7 +193,7 @@ try {
         const r = await fetch(`/api/public/widget/data/new/5?p=${p}&i=50&s=&l=&d=&f=`, { method: 'POST', body: fd, headers: H });
         if (!r.ok) throw new Error(`widget 5 page ${p}: HTTP ${r.status}`);
         const j = await r.json(); total = j.total; all = all.concat(j.data || []);
-        if (!j.next_page_url) break;
+        if (!j.next_page_url || (+j.total > 0 && all.length >= +j.total)) break;  // see the events loop above
       }
       return { total, rows: all.map(e => ({ name: String(e.name || '').trim().replace(/\s+/g, ' '), level: String(e.subtitle || '').trim() })) };
     };
