@@ -1,15 +1,8 @@
 {
- "checked": "2026-11-17",
+ "checked": "2026-11-18",
  "events": {
-  "ok": true,
-  "changed": true,
-  "counts": {
-   "meets": 8,
-   "courses": 2,
-   "camps": 1
-  },
-  "unlisted": [],
-  "newlyUnlisted": []
+  "ok": false,
+  "error": "page.evaluate: Error: widget 2 page 1: HTTP 500\n    at eval (eval at evaluate (:234:30), <anonymous>:8:26)\n    at async <anonymous>:260:30"
  },
  "rankings": {
   "ok": true,
@@ -30,7 +23,7 @@
  "referees": {
   "ok": true,
   "changed": false,
-  "nationwide": 739,
+  "nationwide": 734,
   "pnw": 40,
   "by": "state filter",
   "states": {
@@ -40,10 +33,10 @@
   }
  },
  "sources": {
-  "checked": "2026-11-17",
+  "checked": "2026-11-18",
   "national": {
    "ok": true,
-   "changed": true,
+   "changed": false,
    "count": 6
   },
   "sanctionedSheet": {
@@ -53,16 +46,16 @@
   }
  },
  "results": {
-  "checked": "2026-11-17",
+  "checked": "2026-11-18",
   "ok": true,
   "lifters": 538,
   "results": 1715,
-  "reread": 79,
+  "reread": 87,
   "failed": 0,
   "recentlyLifted": 0
  },
  "qualifying": {
-  "checked": "2026-11-17",
+  "checked": "2026-11-18",
   "ok": true,
   "count": 925,
   "changed": 0,
