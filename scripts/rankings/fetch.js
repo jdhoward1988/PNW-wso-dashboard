@@ -67,7 +67,8 @@
         body: JSON.stringify({ date_range_start: `${season}-01-01`, date_range_end: `${season}-12-31`, wso: WSO_PNW, weight_class: id })
       }).then(r => r.json());
       list = list.concat(r.data || []);
-      if (!r.next_page_url) break;
+      // stop once every row is in: with an exact full page Sport80 offers an empty next page that errors
+      if (!r.next_page_url || (+r.total > 0 && list.length >= +r.total)) break;
     }
     for (const r of list) {
       const num = String(r.membership || '').replace(/\D/g, '');
