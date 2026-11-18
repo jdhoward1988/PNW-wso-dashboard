@@ -44,6 +44,10 @@ jobs:
         env:
           REFEREE_CHECK: ${{ inputs.referee_check }}
         run: node scripts/cloud/sport80.mjs --rankings
+      - name: Point calendar rows at each event's own page
+        id: links
+        continue-on-error: true
+        run: python3 scripts/cloud/calendar_links.py
       - name: Read USAW national events page and Sanctioned Meets sheet
         id: sources
         continue-on-error: true
@@ -66,7 +70,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/sport80-events.json data/cloud-status.json data/rankings.json data/adaptive.json data/referees.json data/new-pages.json data/history
+          git add index.html data/sport80-events.json data/cloud-status.json data/rankings.json data/adaptive.json data/referees.json data/new-pages.json data/history
           for f in data/usaw-national-events.json data/sanctioned-meets.json data/results.json data/qualifying-2027.json; do if [ -e "$f" ]; then git add "$f"; fi; done
           if git diff --cached --quiet; then echo "nothing changed"; exit 0; fi
           git commit -m "Sport80 check $(TZ=America/Los_Angeles date +%F)"

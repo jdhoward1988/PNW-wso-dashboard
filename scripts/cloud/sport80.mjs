@@ -27,6 +27,32 @@ const status = { checked: today, events: null, rankings: doRankings ? null : 'no
 const run = (cmd, args) => execFileSync(cmd, args, { encoding: 'utf8', env: { ...process.env, PNW_NO_NAMES: '1' } }).trim();
 const iso = s => { const m = String(s || '').match(/(\d\d)\/(\d\d)\/(\d{4})/); return m ? `${m[3]}-${m[1]}-${m[2]}` : null; };
 
+// First website named in a Sport80 "Additional Info" block (a link, or a bare address such as
+// PARAMOUNTBARBELLCLUB.COM/EVENTS). Social media, maps and Sport80 itself are skipped.
+function siteIn(htmlText) {
+  const t = String(htmlText || '');
+  const cands = [...t.matchAll(/href="([^"]+)"/g)].map(m => m[1].replace(/&amp;/g, '&'))
+    .concat(t.replace(/<[^>]+>/g, ' ').match(/\b(?:https?:\/\/)?(?:www\.)?[a-z0-9-]+(?:\.[a-z0-9-]+)*\.(?:com|org|net|io|us|co)(?:\/[^\s<"]*)?/gi) || []);
+  for (let u of cands) {
+    if (/instagram|facebook|google\.com\/maps|maps\.app|sport80|mailto:|tiktok|youtube/i.test(u)) continue;
+    if (!/^https?:\/\//i.test(u)) u = 'https://' + u;
+    try { const x = new URL(u); return x.origin.toLowerCase() + x.pathname.replace(/\/$/, '').toLowerCase() + x.search; } catch { }
+  }
+  return null;
+}
+
+// The link the calendar shows for an event, best first: its Sport80 entry page; its Sport80 event page
+// (registration not open yet); the host's website (Sport80's Additional Info, or the WSO's Add Your Event
+// form); an email to the meet director; and only then Sport80's list for that kind of event.
+function linkFor(e, formSites) {
+  if (e.entryUrl) return { link: e.entryUrl, linkLabel: 'Register on USAW', linkKind: 'entry' };
+  if (e.onPlatform) return { link: `${BASE}/public/wizard/e/${e.id}`, linkLabel: 'Event page on USAW', linkKind: 'event' };
+  const site = e.website || formSites(e);
+  if (site) return { link: site, linkLabel: 'Meet website', linkKind: 'website' };
+  if (e.email) return { link: `mailto:${e.email}?subject=${encodeURIComponent(e.name)}`, linkLabel: 'Email the meet director', linkKind: 'email' };
+  return { link: e.url, linkLabel: 'Find it on USAW', linkKind: 'list' };
+}
+
 const browser = await chromium.launch();
 const page = await browser.newPage();
 let failed = false;
@@ -62,11 +88,35 @@ try {
         id: +e.id, name: String(e.name || '').trim(), start, end: end || start,
         city: si > 0 ? parts[si - 1] : '', state: STATES[parts[si]], address: parts.slice(0, si + 1).join(', '),
         type: ((e.info || []).find(i => /Type$/.test(i.title)) || {}).value || '',
-        url: `${BASE}/public/widget/${w}`, entryUrl: ((e.actions || [])[0] || {}).url || null
+        url: `${BASE}/public/widget/${w}`, entryUrl: ((e.actions || [])[0] || {}).url || null,
+        // Not every meet is run on Sport80. Keep the host's own website (from Additional Info) and the
+        // listed contact email so the calendar can link to the meet itself, not to the meet search.
+        website: siteIn(((e.info || []).find(i => /Additional/i.test(i.title)) || {}).value),
+        email: /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(String(e.email || '').trim()) ? String(e.email).trim() : null
       };
     }).filter(Boolean).sort((a, b) => (a.start || '').localeCompare(b.start || '') || a.id - b.id);
     console.log(`widget ${w} (${key}): ${items.length} upcoming nationwide, ${lists[key].length} in AK/OR/WA`);
   }
+  // Events without an "Enter Now" button: is there still a Sport80 event page (registration not open yet),
+  // or is the meet not run on Sport80 at all? Then pick each event's link.
+  let formRows = [];
+  try { formRows = JSON.parse(readFileSync('data/local-events.json', 'utf8')).rows || []; } catch { }
+  const norm = x => String(x || '').toLowerCase().replace(/\b20\d\d\b/g, '').replace(/[^a-z]/g, '');
+  const formSites = e => {
+    const n = norm(e.name);
+    const r = formRows.find(r => /^https?:\/\//i.test(r['Event Website'] || '') && n && (norm(r['Name of Event']).includes(n) || n.includes(norm(r['Name of Event']))));
+    return r ? r['Event Website'].trim() : null;
+  };
+  for (const arr of Object.values(lists)) for (const e of arr) {
+    if (!e.entryUrl) {
+      e.onPlatform = await page.evaluate(async id => {
+        try { const r = await fetch(`/api/wizard/event/${id}`, { headers: { Accept: 'application/json' } }); return r.ok ? true : (r.status === 404 ? false : null); }
+        catch { return null; }
+      }, e.id);
+    }
+    Object.assign(e, linkFor(e, formSites));
+  }
+
   const file = 'data/sport80-events.json';
   let old = null; try { old = JSON.parse(readFileSync(file, 'utf8')); } catch { }
 
@@ -90,7 +140,10 @@ try {
         return { pageLive: true, registrationOpen: j.registration_open_date || null, registrationClose: j.registration_close_date || null };
       } catch (err) { return { pageLive: null }; }
     }, e.id);
-    unlisted.push({ ...e, eventPage: `${BASE}/public/wizard/e/${e.id}`, ...info, checked: today });
+    const u = { ...e, eventPage: `${BASE}/public/wizard/e/${e.id}`, ...info, checked: today };
+    if (info.pageLive) Object.assign(u, { link: u.eventPage, linkLabel: 'Event page on USAW', linkKind: 'event' });
+    else if (info.pageLive === false) Object.assign(u, linkFor({ ...u, entryUrl: null, onPlatform: false }, formSites));
+    unlisted.push(u);
   }
   unlisted.sort((a, b) => a.start.localeCompare(b.start) || a.id - b.id);
   const newlyUnlisted = unlisted.filter(e => !prevUnlisted.some(p => p.id === e.id));

@@ -13,7 +13,13 @@
     "address": "2354 Jefferson AVE, Tacoma, Washington",
     "type": "Local (WSO) Meet",
     "url": "https://usaweightlifting.sport80.com/public/widget/1",
-    "entryUrl": null
+    "entryUrl": null,
+    "website": null,
+    "email": "weightlifting@tacomastrength.com",
+    "onPlatform": false,
+    "link": "mailto:weightlifting@tacomastrength.com?subject=Bare%20Bones%20Meet",
+    "linkLabel": "Email the meet director",
+    "linkKind": "email"
    },
    {
     "id": 14815,
@@ -25,7 +31,12 @@
     "address": "745 Main St, Dallas, Oregon",
     "type": "Local (WSO) Meet",
     "url": "https://usaweightlifting.sport80.com/public/widget/1",
-    "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/14815"
+    "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/14815",
+    "website": null,
+    "email": "Sarff_Sarah24@yahoo.com",
+    "link": "https://usaweightlifting.sport80.com/public/wizard/e/14815",
+    "linkLabel": "Register on USAW",
+    "linkKind": "entry"
    },
    {
     "id": 15061,
@@ -37,7 +48,13 @@
     "address": "6205 192nd ST NE, Arlington, Washington",
     "type": "Local (WSO) Meet",
     "url": "https://usaweightlifting.sport80.com/public/widget/1",
-    "entryUrl": null
+    "entryUrl": null,
+    "website": null,
+    "email": "INFO@PILCHUCKCROSSFIT.COM",
+    "onPlatform": false,
+    "link": "mailto:INFO@PILCHUCKCROSSFIT.COM?subject=Winter%20Lifting-Land%202027",
+    "linkLabel": "Email the meet director",
+    "linkKind": "email"
    },
    {
     "id": 15075,
@@ -49,7 +66,12 @@
     "address": "25589 SW Canyon Creek Rd, Ste 100, Wilsonville, Oregon",
     "type": "Local (WSO) Meet",
     "url": "https://usaweightlifting.sport80.com/public/widget/1",
-    "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/15075"
+    "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/15075",
+    "website": null,
+    "email": "ejk3773@gmail.com",
+    "link": "https://usaweightlifting.sport80.com/public/wizard/e/15075",
+    "linkLabel": "Register on USAW",
+    "linkKind": "entry"
    },
    {
     "id": 14958,
@@ -61,7 +83,12 @@
     "address": "5230 NE 42nd Ave, Portland, Oregon",
     "type": "Local (WSO) Meet",
     "url": "https://usaweightlifting.sport80.com/public/widget/1",
-    "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/14958"
+    "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/14958",
+    "website": null,
+    "email": "joey@cullystrength.com",
+    "link": "https://usaweightlifting.sport80.com/public/wizard/e/14958",
+    "linkLabel": "Register on USAW",
+    "linkKind": "entry"
    },
    {
     "id": 15092,
@@ -73,7 +100,13 @@
     "address": "1415 12th Ave, Seattle, Washington",
     "type": "Local (WSO) Meet",
     "url": "https://usaweightlifting.sport80.com/public/widget/1",
-    "entryUrl": null
+    "entryUrl": null,
+    "website": null,
+    "email": "info@foundationcrossfit.com",
+    "onPlatform": false,
+    "link": "mailto:info@foundationcrossfit.com?subject=Seattle%20Barbell%20Classic",
+    "linkLabel": "Email the meet director",
+    "linkKind": "email"
    },
    {
     "id": 15129,
@@ -85,7 +118,13 @@
     "address": "22402 44th Ave W, Suite A, Mountlake Terrace, Washington",
     "type": "Local (WSO) Meet",
     "url": "https://usaweightlifting.sport80.com/public/widget/1",
-    "entryUrl": null
+    "entryUrl": null,
+    "website": "https://paramountbarbellclub.com/events",
+    "email": "kayla@paramountsc.com",
+    "onPlatform": false,
+    "link": "https://paramountbarbellclub.com/events",
+    "linkLabel": "Meet website",
+    "linkKind": "website"
    },
    {
     "id": 15130,
@@ -97,7 +136,13 @@
     "address": "22402 44th Ave W, Suite A, Mountlake Terrace, Washington",
     "type": "Local (WSO) Meet",
     "url": "https://usaweightlifting.sport80.com/public/widget/1",
-    "entryUrl": null
+    "entryUrl": null,
+    "website": "https://paramountbarbellclub.com/events",
+    "email": "kayla@paramountsc.com",
+    "onPlatform": false,
+    "link": "https://paramountbarbellclub.com/events",
+    "linkLabel": "Meet website",
+    "linkKind": "website"
    }
   ],
   "courses": [
@@ -111,7 +156,12 @@
     "address": "Crossfit Federal Way, 33753 9th Ave S., Federal Way, Washington",
     "type": "Level 1 Coach",
     "url": "https://usaweightlifting.sport80.com/public/widget/2",
-    "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/15067"
+    "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/15067",
+    "website": null,
+    "email": "pnw.wso.mira@gmail.com",
+    "link": "https://usaweightlifting.sport80.com/public/wizard/e/15067",
+    "linkLabel": "Register on USAW",
+    "linkKind": "entry"
    },
    {
     "id": 15179,
@@ -123,7 +173,12 @@
     "address": "22402 44th Ave W, Suite A, Mountlake Terrace, Washington",
     "type": "Level 1 Coach",
     "url": "https://usaweightlifting.sport80.com/public/widget/2",
-    "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/15179"
+    "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/15179",
+    "website": null,
+    "email": "mattforeman72@yahoo.com",
+    "link": "https://usaweightlifting.sport80.com/public/wizard/e/15179",
+    "linkLabel": "Register on USAW",
+    "linkKind": "entry"
    }
   ],
   "camps": [
@@ -137,7 +192,12 @@
     "address": "5230 NE 42nd Ave, Portland, Oregon",
     "type": "Open Camp",
     "url": "https://usaweightlifting.sport80.com/public/widget/3",
-    "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/15107"
+    "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/15107",
+    "website": null,
+    "email": "joey@cullystrength.com",
+    "link": "https://usaweightlifting.sport80.com/public/wizard/e/15107",
+    "linkLabel": "Register on USAW",
+    "linkKind": "entry"
    }
   ]
  },
