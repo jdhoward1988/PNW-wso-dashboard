@@ -16,9 +16,10 @@
     "entryUrl": null,
     "website": null,
     "email": "weightlifting@tacomastrength.com",
-    "link": "https://usaweightlifting.sport80.com/public/widget/1?filters=eyJldmVudF9mcm9tX2RhdGUiOiIyMDI2LTExLTIxIiwiZXZlbnRfdG9fZGF0ZSI6IjIwMjYtMTEtMjEiLCJyZWdpb24iOjEwOH0%3D",
-    "linkLabel": "Find it on USAW",
-    "linkKind": "search"
+    "onPlatform": false,
+    "link": "mailto:weightlifting@tacomastrength.com?subject=Bare%20Bones%20Meet",
+    "linkLabel": "Email the meet director",
+    "linkKind": "email"
    },
    {
     "id": 14815,
@@ -50,9 +51,10 @@
     "entryUrl": null,
     "website": null,
     "email": "INFO@PILCHUCKCROSSFIT.COM",
-    "link": "https://usaweightlifting.sport80.com/public/widget/1?filters=eyJldmVudF9mcm9tX2RhdGUiOiIyMDI3LTAxLTIzIiwiZXZlbnRfdG9fZGF0ZSI6IjIwMjctMDEtMjQiLCJyZWdpb24iOjEwOH0%3D",
-    "linkLabel": "Find it on USAW",
-    "linkKind": "search"
+    "onPlatform": false,
+    "link": "mailto:INFO@PILCHUCKCROSSFIT.COM?subject=Winter%20Lifting-Land%202027",
+    "linkLabel": "Email the meet director",
+    "linkKind": "email"
    },
    {
     "id": 15075,
@@ -101,9 +103,10 @@
     "entryUrl": null,
     "website": null,
     "email": "info@foundationcrossfit.com",
-    "link": "https://usaweightlifting.sport80.com/public/widget/1?filters=eyJldmVudF9mcm9tX2RhdGUiOiIyMDI3LTAyLTEzIiwiZXZlbnRfdG9fZGF0ZSI6IjIwMjctMDItMTMiLCJyZWdpb24iOjEwOH0%3D",
-    "linkLabel": "Find it on USAW",
-    "linkKind": "search"
+    "onPlatform": false,
+    "link": "mailto:info@foundationcrossfit.com?subject=Seattle%20Barbell%20Classic",
+    "linkLabel": "Email the meet director",
+    "linkKind": "email"
    },
    {
     "id": 15129,
@@ -118,9 +121,10 @@
     "entryUrl": null,
     "website": "https://paramountbarbellclub.com/events",
     "email": "kayla@paramountsc.com",
-    "link": "https://usaweightlifting.sport80.com/public/widget/1?filters=eyJldmVudF9mcm9tX2RhdGUiOiIyMDI3LTA1LTE1IiwiZXZlbnRfdG9fZGF0ZSI6IjIwMjctMDUtMTYiLCJyZWdpb24iOjEwOH0%3D",
-    "linkLabel": "Find it on USAW",
-    "linkKind": "search"
+    "onPlatform": false,
+    "link": "https://paramountbarbellclub.com/events",
+    "linkLabel": "Meet website",
+    "linkKind": "website"
    },
    {
     "id": 15130,
@@ -135,9 +139,10 @@
     "entryUrl": null,
     "website": "https://paramountbarbellclub.com/events",
     "email": "kayla@paramountsc.com",
-    "link": "https://usaweightlifting.sport80.com/public/widget/1?filters=eyJldmVudF9mcm9tX2RhdGUiOiIyMDI3LTA4LTE0IiwiZXZlbnRfdG9fZGF0ZSI6IjIwMjctMDgtMTQiLCJyZWdpb24iOjEwOH0%3D",
-    "linkLabel": "Find it on USAW",
-    "linkKind": "search"
+    "onPlatform": false,
+    "link": "https://paramountbarbellclub.com/events",
+    "linkLabel": "Meet website",
+    "linkKind": "website"
    }
   ],
   "courses": [

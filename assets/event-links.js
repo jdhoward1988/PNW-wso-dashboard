@@ -1,9 +1,9 @@
-// Calendar rows that still link to Sport80's unfiltered search (all meets, all courses, all camps) are
-// pointed at the event, using the link the daily Sport80 check chose (data/sport80-events.json): its Sport80
-// entry page, or the search filtered to the event's state and dates. Same matching as
+// Calendar rows that still link to a Sport80 list page (all meets, all courses, all camps) are pointed at
+// the event itself, using the link the daily Sport80 check chose (data/sport80-events.json): its Sport80
+// entry or event page, the host's website, or an email to the meet director. Same matching as
 // scripts/cloud/calendar_links.py, which fixes the saved page each night; this covers rows added since.
 (function () {
-  var LIST = /^https:\/\/usaweightlifting\.sport80\.com\/public\/widget\/[123](?!\?filters)/;
+  var LIST = /^https:\/\/usaweightlifting\.sport80\.com\/public\/widget\/[123]\b/;
   var rows = [].slice.call(document.querySelectorAll('.event-row')).filter(function (r) {
     var a = r.querySelector('a.ev-link'); return a && LIST.test(a.getAttribute('href') || '');
   });
