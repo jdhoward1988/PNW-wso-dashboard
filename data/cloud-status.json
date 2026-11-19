@@ -1,10 +1,10 @@
 {
- "checked": "2026-11-18",
+ "checked": "2026-11-19",
  "events": {
   "ok": true,
-  "changed": false,
+  "changed": true,
   "counts": {
-   "meets": 8,
+   "meets": 9,
    "courses": 2,
    "camps": 1
   },
@@ -29,18 +29,18 @@
  },
  "referees": {
   "ok": true,
-  "changed": false,
+  "changed": true,
   "nationwide": 734,
-  "pnw": 40,
+  "pnw": 41,
   "by": "state filter",
   "states": {
    "Alaska": 3,
-   "Oregon": 21,
+   "Oregon": 22,
    "Washington": 15
   }
  },
  "sources": {
-  "checked": "2026-11-18",
+  "checked": "2026-11-19",
   "national": {
    "ok": true,
    "changed": false,
@@ -53,16 +53,16 @@
   }
  },
  "results": {
-  "checked": "2026-11-18",
+  "checked": "2026-11-19",
   "ok": true,
   "lifters": 538,
   "results": 1715,
-  "reread": 87,
+  "reread": 69,
   "failed": 0,
   "recentlyLifted": 0
  },
  "qualifying": {
-  "checked": "2026-11-18",
+  "checked": "2026-11-19",
   "ok": true,
   "count": 925,
   "changed": 0,
