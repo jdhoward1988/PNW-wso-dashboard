@@ -1,10 +1,10 @@
 {
- "checked": "2026-11-21",
+ "checked": "2026-11-22",
  "events": {
   "ok": true,
-  "changed": false,
+  "changed": true,
   "counts": {
-   "meets": 9,
+   "meets": 8,
    "courses": 2,
    "camps": 1
   },
@@ -30,7 +30,7 @@
  "referees": {
   "ok": true,
   "changed": false,
-  "nationwide": 732,
+  "nationwide": 731,
   "pnw": 41,
   "by": "state filter",
   "states": {
@@ -40,7 +40,7 @@
   }
  },
  "sources": {
-  "checked": "2026-11-21",
+  "checked": "2026-11-22",
   "national": {
    "ok": true,
    "changed": false,
@@ -53,16 +53,16 @@
   }
  },
  "results": {
-  "checked": "2026-11-21",
+  "checked": "2026-11-22",
   "ok": true,
   "lifters": 538,
   "results": 1715,
-  "reread": 79,
+  "reread": 73,
   "failed": 0,
   "recentlyLifted": 0
  },
  "qualifying": {
-  "checked": "2026-11-21",
+  "checked": "2026-11-22",
   "ok": true,
   "count": 925,
   "changed": 0,
