@@ -1,6 +1,6 @@
 {
  "source": "USA Weightlifting's public Referees listing on Sport80 (widget 5), filtered to the Pacific Northwest WSO; state from the listing's State filter",
- "updated": "2026-11-19",
+ "updated": "2026-11-23",
  "referees": [
   {
    "name": "Holly Arrow",
@@ -178,6 +178,11 @@
   },
   {
    "name": "Kat Ricker",
+   "level": "WSO Referee",
+   "state": "OR"
+  },
+  {
+   "name": "Kailee Simons",
    "level": "WSO Referee",
    "state": "OR"
   },

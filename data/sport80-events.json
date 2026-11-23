@@ -1,26 +1,8 @@
 {
  "source": "Sport80 public widgets (1 = Meets, 2 = Courses, 3 = Camps/Speaker Series), upcoming events located in Alaska, Oregon or Washington",
- "updated": "2026-11-22",
+ "updated": "2026-11-23",
  "lists": {
   "meets": [
-   {
-    "id": 14815,
-    "name": "Valley Strength Harvest Strength Classic",
-    "start": "2026-11-22",
-    "end": "2026-11-22",
-    "city": "Dallas",
-    "state": "OR",
-    "address": "745 Main St, Dallas, Oregon",
-    "type": "Local (WSO) Meet",
-    "url": "https://usaweightlifting.sport80.com/public/widget/1",
-    "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/14815",
-    "website": null,
-    "email": "Sarff_Sarah24@yahoo.com",
-    "link": "https://usaweightlifting.sport80.com/public/wizard/e/14815",
-    "linkLabel": "Register on USAW",
-    "linkKind": "entry",
-    "siteLink": null
-   },
    {
     "id": 15193,
     "name": "Iron Duck Open",
