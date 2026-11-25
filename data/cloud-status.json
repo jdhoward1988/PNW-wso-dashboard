@@ -1,19 +1,28 @@
 {
- "checked": "2026-11-24",
+ "checked": "2026-11-25",
  "events": {
   "ok": true,
-  "changed": false,
+  "changed": true,
   "counts": {
-   "meets": 7,
+   "meets": 6,
    "courses": 2,
    "camps": 1
   },
-  "unlisted": [],
-  "newlyUnlisted": []
+  "unlisted": [
+   {
+    "id": 15193,
+    "name": "Iron Duck Open",
+    "start": "2026-12-05",
+    "pageLive": true
+   }
+  ],
+  "newlyUnlisted": [
+   15193
+  ]
  },
  "rankings": {
   "ok": true,
-  "pnwChanged": true,
+  "pnwChanged": false,
   "result": "OK: 597 Open results + 60 youth results in 4 age groups, 83 clubs, season 2026"
  },
  "adaptive": {
@@ -40,7 +49,7 @@
   }
  },
  "sources": {
-  "checked": "2026-11-24",
+  "checked": "2026-11-25",
   "national": {
    "ok": true,
    "changed": false,
@@ -53,7 +62,7 @@
   }
  },
  "results": {
-  "checked": "2026-11-24",
+  "checked": "2026-11-25",
   "ok": true,
   "lifters": 539,
   "results": 1726,
@@ -62,7 +71,7 @@
   "recentlyLifted": 0
  },
  "qualifying": {
-  "checked": "2026-11-24",
+  "checked": "2026-11-25",
   "ok": true,
   "count": 925,
   "changed": 0,

@@ -1,26 +1,8 @@
 {
  "source": "Sport80 public widgets (1 = Meets, 2 = Courses, 3 = Camps/Speaker Series), upcoming events located in Alaska, Oregon or Washington",
- "updated": "2026-11-23",
+ "updated": "2026-11-25",
  "lists": {
   "meets": [
-   {
-    "id": 15193,
-    "name": "Iron Duck Open",
-    "start": "2026-12-05",
-    "end": "2026-12-05",
-    "city": "Eugene",
-    "state": "OR",
-    "address": "1320 E 15th Ave, Eugene, Oregon",
-    "type": "Local (WSO) Meet",
-    "url": "https://usaweightlifting.sport80.com/public/widget/1",
-    "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/15193",
-    "website": null,
-    "email": "katelyn.guerra2023@gmail.com",
-    "link": "https://usaweightlifting.sport80.com/public/wizard/e/15193",
-    "linkLabel": "Register on USAW",
-    "linkKind": "entry",
-    "siteLink": null
-   },
    {
     "id": 15061,
     "name": "Winter Lifting-Land 2027",
@@ -194,5 +176,31 @@
   ]
  },
  "unlisted_note": "Upcoming events that were listed before but have dropped out of Sport80's public lists (full, unlisted or cancelled). pageLive = their own event page still loads.",
- "unlisted": []
+ "unlisted": [
+  {
+   "id": 15193,
+   "name": "Iron Duck Open",
+   "start": "2026-12-05",
+   "end": "2026-12-05",
+   "city": "Eugene",
+   "state": "OR",
+   "address": "1320 E 15th Ave, Eugene, Oregon",
+   "type": "Local (WSO) Meet",
+   "url": "https://usaweightlifting.sport80.com/public/widget/1",
+   "entryUrl": "https://usaweightlifting.sport80.com/public/wizard/e/15193",
+   "website": null,
+   "email": "katelyn.guerra2023@gmail.com",
+   "link": "https://usaweightlifting.sport80.com/public/wizard/e/15193",
+   "linkLabel": "Event page on USAW",
+   "linkKind": "event",
+   "siteLink": null,
+   "list": "meets",
+   "droppedOn": "2026-11-25",
+   "eventPage": "https://usaweightlifting.sport80.com/public/wizard/e/15193",
+   "pageLive": true,
+   "registrationOpen": "November 17th 2026 1:00 AM (MST)",
+   "registrationClose": "December 4th 2026 12:59 AM (MST)",
+   "checked": "2026-11-25"
+  }
+ ]
 }
