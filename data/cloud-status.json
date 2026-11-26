@@ -1,10 +1,10 @@
 {
- "checked": "2026-11-25",
+ "checked": "2026-11-26",
  "events": {
   "ok": true,
   "changed": true,
   "counts": {
-   "meets": 6,
+   "meets": 7,
    "courses": 2,
    "camps": 1
   },
@@ -16,9 +16,7 @@
     "pageLive": true
    }
   ],
-  "newlyUnlisted": [
-   15193
-  ]
+  "newlyUnlisted": []
  },
  "rankings": {
   "ok": true,
@@ -49,7 +47,7 @@
   }
  },
  "sources": {
-  "checked": "2026-11-25",
+  "checked": "2026-11-26",
   "national": {
    "ok": true,
    "changed": false,
@@ -62,16 +60,16 @@
   }
  },
  "results": {
-  "checked": "2026-11-25",
+  "checked": "2026-11-26",
   "ok": true,
   "lifters": 539,
   "results": 1726,
-  "reread": 87,
+  "reread": 70,
   "failed": 0,
   "recentlyLifted": 0
  },
  "qualifying": {
-  "checked": "2026-11-25",
+  "checked": "2026-11-26",
   "ok": true,
   "count": 925,
   "changed": 0,
