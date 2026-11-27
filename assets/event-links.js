@@ -4,6 +4,13 @@
 // website and the main link goes elsewhere, a second "Meet website" link is added beside it. Same matching as
 // scripts/cloud/calendar_links.py, which fixes the saved page each night; this covers rows added since.
 (function () {
+  // Footer: the date the nightly check last read the sources (data/cloud-status.json), so it moves every
+  // day even when no event changed. scripts/cloud/calendar_links.py writes the same date into the page.
+  var lc = document.getElementById('lastChecked');
+  if (lc && window.fetch) fetch('data/cloud-status.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }).then(function (st) {
+    var d = st && st.checked;
+    if (/^\d{4}-\d\d-\d\d$/.test(d || '')) lc.textContent = new Date(d + 'T12:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }).catch(function () { });
   var LIST = /^https:\/\/usaweightlifting\.sport80\.com\/public\/widget\/[123]\b/;
   var today = new Date().toISOString().slice(0, 10);
   var rows = [].slice.call(document.querySelectorAll('.event-row')).filter(function (r) {

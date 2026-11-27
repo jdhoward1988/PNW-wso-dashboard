@@ -72,6 +72,14 @@ def main():
         return new
 
     out = re.sub(r'<div class="event-row"[^>]*>.*?\n    </div>\n', row, s, flags=re.S)
+    # footer "Last checked" date: the day the nightly check read the sources (data/cloud-status.json)
+    try:
+        import datetime
+        checked = json.loads((ROOT / 'data' / 'cloud-status.json').read_text()).get('checked', '')
+        day = datetime.date.fromisoformat(checked)
+        out = re.sub(r'(<span id="lastChecked">)[^<]*(</span>)', lambda m: m.group(1) + day.strftime('%b %-d, %Y') + m.group(2), out)
+    except Exception:
+        pass
     if out != s:
         PAGE.write_text(out)
     print(f'calendar links: {fixed} rows updated, {left} rows still link to a Sport80 list (no match, usually past events)')
