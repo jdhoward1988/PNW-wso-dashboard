@@ -2,7 +2,7 @@
  "checked": "2026-11-26",
  "events": {
   "ok": true,
-  "changed": true,
+  "changed": false,
   "counts": {
    "meets": 7,
    "courses": 2,
