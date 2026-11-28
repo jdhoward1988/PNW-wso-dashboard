@@ -1,5 +1,5 @@
 {
- "checked": "2026-11-27",
+ "checked": "2026-11-28",
  "events": {
   "ok": true,
   "changed": false,
@@ -20,8 +20,8 @@
  },
  "rankings": {
   "ok": true,
-  "pnwChanged": false,
-  "result": "OK: 597 Open results + 60 youth results in 4 age groups, 83 clubs, season 2026"
+  "pnwChanged": true,
+  "result": "OK: 604 Open results + 60 youth results in 4 age groups, 83 clubs, season 2026"
  },
  "adaptive": {
   "ok": true,
@@ -37,7 +37,7 @@
  "referees": {
   "ok": true,
   "changed": false,
-  "nationwide": 732,
+  "nationwide": 734,
   "pnw": 42,
   "by": "state filter",
   "states": {
@@ -47,7 +47,7 @@
   }
  },
  "sources": {
-  "checked": "2026-11-27",
+  "checked": "2026-11-28",
   "national": {
    "ok": true,
    "changed": false,
@@ -60,16 +60,16 @@
   }
  },
  "results": {
-  "checked": "2026-11-27",
+  "checked": "2026-11-28",
   "ok": true,
-  "lifters": 539,
-  "results": 1726,
-  "reread": 80,
+  "lifters": 544,
+  "results": 1744,
+  "reread": 95,
   "failed": 0,
-  "recentlyLifted": 0
+  "recentlyLifted": 6
  },
  "qualifying": {
-  "checked": "2026-11-27",
+  "checked": "2026-11-28",
   "ok": true,
   "count": 925,
   "changed": 0,
